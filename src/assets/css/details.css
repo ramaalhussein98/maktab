@@ -1,0 +1,12 @@
+.d_flex_space_between {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .Box_ad_num {
+        display: flex;
+        border: 1px solid #cdddd8;
+        border-radius: 25px; /* Removed double quotes and corrected property name */
+        padding: 0.2rem 0.5rem;
+        align-items: center;
+    }
