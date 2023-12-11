@@ -49,7 +49,7 @@ const ContractDetails = () => {
           </Box>
           <Box
             sx={{
-              backgroundColor: "var(--green-color)",
+              backgroundColor: "red",
               color: "white",
               cursor: "pointer",
               padding: "5px 10px",

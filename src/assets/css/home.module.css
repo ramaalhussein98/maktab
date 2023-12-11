@@ -84,6 +84,10 @@
   padding-top: 12rem;
   padding-right: 6rem;
 }
+[lang="en"] .divImgContent {
+  padding-right: 0;
+  padding-left: 6rem;
+}
 .maktabParagraph {
   margin-top: 1rem;
   margin-bottom: 1rem;

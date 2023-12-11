@@ -40,6 +40,8 @@ import LoginSvgGray from "./logingray.svg";
 import Calender from "../icons/calender.svg";
 import SearchGray2 from "./search_gray.svg";
 import StcPay from "./stcpay.svg";
+import KSA from "./KSA.svg";
+import US from "./america.png";
 export {
   HomeSvg,
   Famiy,
@@ -83,4 +85,6 @@ export {
   Calender,
   SearchGray2,
   StcPay,
+  KSA,
+  US,
 };

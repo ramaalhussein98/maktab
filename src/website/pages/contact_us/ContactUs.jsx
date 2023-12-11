@@ -160,7 +160,8 @@ const ContactUs = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  marginRight: "1rem",
+                  marginRight: lang === "ar" ? "1rem" : "0rem",
+                  marginLeft: lang === "en" ? "1rem" : "0rem",
                   marginTop: "-1.5rem",
                 }}
               >
@@ -191,7 +192,8 @@ const ContactUs = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  marginRight: "1rem",
+                  marginRight: lang === "ar" ? "1rem" : "0rem",
+                  marginLeft: lang === "en" ? "1rem" : "0rem",
                   marginTop: "-1.5rem",
                 }}
               >
@@ -319,7 +321,8 @@ const ContactUs = () => {
                 // margin: { xs: "auto", md: "" },
                 // marginLeft: lang === "en" ? { md: "auto !important" } : "",
                 // marginRight: lang === "ar" ? { md: "auto !important" } : "",
-                marginRight: "auto",
+                marginRight: lang === "ar" ? "auto" : "initial",
+                marginLeft: lang === "en" ? "auto" : "initial",
 
                 display: "block",
                 padding: "10px 25px",

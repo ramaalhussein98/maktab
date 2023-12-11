@@ -4,8 +4,14 @@ import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-hot-toast";
+import { useStateContext } from "../../context/userContext";
+import { useNavigate } from "react-router-dom";
 
 const UserName = () => {
+  const { user, setToken, setUser } = useStateContext();
+  const userName = user?.username;
+  const nav= useNavigate()
+
   const userNameContext = "rama";
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
@@ -13,10 +19,10 @@ const UserName = () => {
   const [showLoginList, setShowLoginList] = useState(false);
   const handleSignOut = () => {
     localStorage.removeItem("user_token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userMembership");
+    localStorage.removeItem("user_type");
     localStorage.removeItem("userData");
+    setUser(null);
+    setToken(null);
     toast.success(
       i18n.language === "ar"
         ? "تم تسجيل الخروج بنجاح"
@@ -44,7 +50,7 @@ const UserName = () => {
           }}
         />
         <Typography sx={{ fontWeight: "700" }}>
-          {userNameContext && userNameContext !== "null" ? userNameContext : ""}
+          {userName && userName !== "null" ? userName : ""}
         </Typography>
         <KeyboardArrowDownIcon sx={{ marginRight: "10px" }} />
       </Button>

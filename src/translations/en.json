@@ -13,7 +13,6 @@
   "from": "from",
   "to": "to",
   "save": "Save",
-
   "Newly_added_office": "Newly added office",
   "dashboard": {
     "navLinks": {
@@ -280,7 +279,13 @@
       "incomplete": "You have an incomplete property",
       "complete": "Complete the construction of your property",
       "sure": "Are you sure you want to add a new office and delete the incomplete office?",
-      "yesadd": "Yes, add a new office"
+      "yesadd":"Yes, add a new office"
+    },
+    "Units": {
+      "incomplete": "You have an incomplete Unit",
+      "complete": "You have an incomplete Unit",
+      "sure": "Are you sure you want to add a new Unit and delete the incomplete Unit?",
+      "yesadd": "Yes, add a new Unit"
     },
     "reservation": {
       "Specifyaperiod": "Specify a period",
@@ -563,7 +568,11 @@
   },
   "loginmodal": {
     "title": "welcome!",
-    "title_two": "Please enter the code to continue",
+    "title_two": "complete the code to",
+    "title_three": "Please enter the code to continue",
+    "choose_login_method": "choose way to recive code",
+    "sms_option": "SMS Message",
+    "whatsapp_option": "Whats App",
     "desc": "Enter the mobile phone number associated with WhatsApp to create an account or log in.",
     "input_label": "Your mobile phone number",
     "submit_btn": "continue",
@@ -598,5 +607,12 @@
     "cardNumber": "Card Number ",
     "expireddate": "Expired date",
     "cardname": "Card holder's name"
+  },
+  "about_us": {
+    "aboutus": "About Us",
+    "tryhostig": "Try hosting through",
+    "addoffice": "Add your office, we will help you step by step.",
+    "reg_office": "Register your office",
+    "maktab": "Maktab"
   }
 }

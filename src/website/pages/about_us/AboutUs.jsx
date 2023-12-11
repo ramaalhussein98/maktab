@@ -3,12 +3,14 @@ import styles from "../../../assets/css/home.module.css";
 import { Typography, Container } from "@mui/material";
 import { Home1, Home3, BG } from "../../../assets/images";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AboutUs = () => {
+  const { t, i18n } = useTranslation();
   return (
     <>
       <Container>
-        <p className={styles.headingStyle}>من نحن </p>
+        <p className={styles.headingStyle}> {t("about_us.aboutus")}</p>
         <p className={styles.pExplain}>
           الضرر/التلف المباشر: هو أي تلف أو خسارة يتكبدها المضيف بسبب سوء
           استخدام الضيف للمتلكات الموجودة داخل الوحدة السكنية المغطاة و يكون
@@ -37,12 +39,12 @@ const AboutUs = () => {
         <div className={styles.divImgContent}>
           {/* <img src={Home3} className={styles.imgStyle} /> */}
           <Typography className={styles.headingStyle}>
-            جرب استضيف من خلال
+            {t("about_us.tryhostig")}
           </Typography>
-          <p className={styles.maktabParagraph}>مكتب</p>
-          <p className={styles.addoffice}>أضف مكتبك, رح نساعدك خطوة بخطوة.</p>
+          <p className={styles.maktabParagraph}>{t("about_us.maktab")}</p>
+          <p className={styles.addoffice}>{t("about_us.addoffice")}</p>
           <Link to="/addoffice" className={styles.registerofficeBtn}>
-            سجل مكتبك
+            {t("about_us.reg_office")}
           </Link>
         </div>
         <img src={Home1} className={styles.imgStyle} />

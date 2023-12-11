@@ -7,6 +7,8 @@ const HomepageSide = () => {
   const [typeSide, setTypeSide] = useState();
   const location = useLocation().pathname;
   const { t } = useTranslation();
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   useEffect(() => {
     if (location.split("/").includes("home")) {
       setTypeSide(0);
@@ -73,7 +75,18 @@ const HomepageSide = () => {
       url: "my_info",
     },
   ];
-
+  const filteredNavArray = navArray.filter((item) => {
+    // Check if user_type_bussines is false and the link should be hidden
+    return (
+      user_type_bussines ||
+      ![
+        "properties",
+        "transactions",
+        "prices/main",
+        "home/unit-settings",
+      ].includes(item.url)
+    );
+  });
   const ArrayPricesSide = [
     {
       id: 1,
@@ -135,7 +148,7 @@ const HomepageSide = () => {
     <nav className="flex flex-col w-[300px]">
       {
         typeSide === 0
-          ? navArray.map((ele, i) => (
+          ? filteredNavArray.map((ele, i) => (
               <SideNavLink key={i} title={ele.title} to={ele.url} />
             ))
           : typeSide === 1

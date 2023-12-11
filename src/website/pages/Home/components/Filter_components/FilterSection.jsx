@@ -37,7 +37,7 @@ const FilterSection = () => {
           <div className="searchBoxBorder">
             <span>
               <div className="addvistor">
-                <input type="text" style={{ width: "100%" }} />
+                <input type="text" style={{ width: "100%" , outline:"none"}} />
                 <Box className="searchIcon">
                   <img src={Search} />
                 </Box>

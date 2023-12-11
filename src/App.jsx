@@ -33,9 +33,12 @@ import PaymentReceiption from "./dashboard/pages/paymentReceiption/PaymentReceip
 import BillingStatements from "./dashboard/pages/BillingStatements/BillingStatements";
 import ContactUs from "../src/website/pages/contact_us/ContactUs";
 import AboutUs from "./website/pages/about_us/AboutUs";
+import AddUnit from "./dashboard/pages/add_unit/AddUnit";
+
 function App() {
   const { i18n } = useTranslation();
   const language = i18n.language;
+  const thereisToken = localStorage.getItem("user_token")
 
   // useEffect(() => {
   //   document.documentElement.lang = i18n.language;
@@ -56,87 +59,89 @@ function App() {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <BrowserRouter>
-        <Routes>
-          <Route
-            index
-            element={
-              <Layout>
-                <HomePage />
-              </Layout>
-            }
-          />
-          <Route
-            path="details"
-            element={
-              <Layout>
-                <Details />
-              </Layout>
-            }
-          />
-          <Route
-            path="payment"
-            element={
-              <Layout>
-                <Payment />
-              </Layout>
-            }
-          />
-          <Route
-            path="map"
-            element={
-              <Layout>
-                <Map />
-              </Layout>
-            }
-          />
-          <Route
-            path="contact-us"
-            element={
-              <Layout>
-                <ContactUs />
-              </Layout>
-            }
-          />
-          <Route
-            path="about-us"
-            element={
-              <Layout>
-                <AboutUs />
-              </Layout>
-            }
-          />
-          <Route path="dashboard" element={<DashLayout />}>
-            <Route path="home">
-              <Route index element={<InformationPage />} />
-              <Route path="unit-settings" element={<UnitSettings />} />
-            </Route>
-            <Route path="my_info" element={<MyInfo />} />
-            <Route path="calendar" element={<Calender />} />
-            <Route path="reservations" element={<Reservations />} />
-            <Route path="properties" element={<RealEstates />} />
-            <Route path="transactions" element={<FinancialTransactions />} />
-            <Route path="billing_statements" element={<BillingStatements />} />
-            <Route path="statements" element={<AccountStatements />} />
-            <Route path="paymentReceiption" element={<PaymentReceiption />} />
-            <Route path="acc">
-              <Route index path="requests" element={<Requests />} />
-              <Route path="contracts" element={<Contracts />} />
-              <Route path="contact_details" element={<ContractDetails />} />
-              <Route path="create_contract" element={<CreateContract />} />
-              <Route path="finance" element={<Finance />} />
-              <Route path="InstantPayment" element={<InstantPayment />} />
-            </Route>
-            <Route path="prices">
-              <Route path="main" element={<MainPrices />} />
-              <Route path="offers" element={<Offers />} />
-              <Route path="down-prices" element={<DownPrice />} />
-            </Route>
+
+      <Routes>
+        <Route
+          index
+          element={
+            <Layout>
+              <HomePage />
+            </Layout>
+          }
+        />
+        <Route
+          path="details"
+          element={
+            <Layout>
+              <Details />
+            </Layout>
+          }
+        />
+        <Route
+          path="payment"
+          element={
+            <Layout>
+              <Payment />
+            </Layout>
+          }
+        />
+        <Route
+          path="map"
+          element={
+            <Layout>
+              <Map />
+            </Layout>
+          }
+        />
+        <Route
+          path="contact-us"
+          element={
+            <Layout>
+              <ContactUs />
+            </Layout>
+          }
+        />
+        <Route
+          path="about-us"
+          element={
+            <Layout>
+              <AboutUs />
+            </Layout>
+          }
+        />
+
+        <Route path="dashboard" element={<DashLayout />}>
+          <Route path="home">
+            <Route index element={<InformationPage />} />
+            <Route path="unit-settings" element={<UnitSettings />} />
           </Route>
-          <Route path="addoffice" element={<Addads />} />
-          <Route path="EditAds" element={<EditAds />} />
-        </Routes>
-      </BrowserRouter>
+          <Route path="my_info" element={<MyInfo />} />
+          <Route path="calendar" element={<Calender />} />
+          <Route path="reservations" element={<Reservations />} />
+          <Route path="properties" element={<RealEstates />} />
+          <Route path="transactions" element={<FinancialTransactions />} />
+          <Route path="billing_statements" element={<BillingStatements />} />
+          <Route path="statements" element={<AccountStatements />} />
+          <Route path="paymentReceiption" element={<PaymentReceiption />} />
+          <Route path="acc">
+            <Route index path="requests" element={<Requests />} />
+            <Route path="contracts" element={<Contracts />} />
+            <Route path="contact_details" element={<ContractDetails />} />
+            <Route path="create_contract" element={<CreateContract />} />
+            <Route path="finance" element={<Finance />} />
+            <Route path="InstantPayment" element={<InstantPayment />} />
+          </Route>
+          <Route path="prices">
+            <Route path="main" element={<MainPrices />} />
+            <Route path="offers" element={<Offers />} />
+            <Route path="down-prices" element={<DownPrice />} />
+          </Route>
+        </Route>
+
+        <Route path="addoffice" element={<Addads />} />
+        <Route path="addunit" element={<AddUnit />} />
+        <Route path="EditAds" element={<EditAds />} />
+      </Routes>
     </>
   );
 }

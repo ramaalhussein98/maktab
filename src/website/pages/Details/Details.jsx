@@ -13,6 +13,7 @@ import DetailsTabs from "./details_component/details_lg_components/DetailsTabs";
 import DetailsXsScreens from "./details_component/details_xs_components/DetailsXsScreens";
 import SocailMedaiLinks from "./details_component/SocailMedaiLinks";
 import AdCard from "../Home/components/AdCard";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const Details = () => {
   const { t } = useTranslation();
@@ -255,6 +256,10 @@ const Details = () => {
             </Grid>
             <Grid item xs={12} md={4}>
               <DetailsCard />
+              <button className="chat_button">
+                <ChatIcon className="icon_style" />
+                تواصل مع المعلن
+              </button>
             </Grid>
           </Grid>
           {/* similar ads */}

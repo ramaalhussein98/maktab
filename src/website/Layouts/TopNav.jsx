@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../assets/css/layout.css";
 import { Box, Button, Container, Paper } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   LogoBig,
@@ -20,6 +20,7 @@ import {
   Search,
 } from "../../assets/icons";
 import "../../assets/css/home.css";
+import LoginButton from "../../ui/LoginButton";
 import LanguageBtn from "../../ui/LanguageBtn";
 import { FilterSlick } from "../pages/Home/components";
 import FilterModal from "../pages/Home/components/Modals/FilterModal";
@@ -27,32 +28,48 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import LogInModal from "../../authentication/LogInModal";
 import AddIcon from "@mui/icons-material/Add";
-const TopNav = () => {
+import { Header } from "../../mainComponents/MainPageStyles";
+import UserContext from "../../context/userContext";
+import ChatContext from "../../context/chatContext";
+import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
+import { ChatsHeader } from "../chat/ChatsHeader";
+import { myAxios } from "../../api/myAxios";
+import useDataFetcher from "../../api/useDataFetcher ";
+
+const TopNav = ({ setIsUserSelected }) => {
+  const isLoggedIn = localStorage.getItem("user_token") ? true : false;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
+  const nav = useNavigate();
   const [openFilterModal, setOpenFilterModal] = useState(false);
-  const [showloginBox, setShowLoginBox] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const { data, isLoading, error, get, post } = useDataFetcher();
   const location = useLocation();
   const isPaymentPage = location.pathname.includes("payment");
-  const handleShowloginBox = () => {
-    setShowLoginBox(!showloginBox);
-  };
+  const { setIsChatOpen, showMessages, setShowMessages } =
+    useContext(ChatContext);
+  const { messagesCounter } = useContext(ChatContext);
+  const { userNameContext } = useContext(UserContext);
+  const [menuItems, setMenuItems] = useState([]);
+
   const handleFilerModalOpen = () => {
     setOpenFilterModal(true);
   };
-  const handleOpenModal = () => {
-    // if (isLoggedIn) {
-    //   setShowLogout((prev) => !prev);
-    // } else {
-    //   setOpenModal(true);
-    // }
-    setOpenModal(true);
-  };
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+  useEffect(() => {
+    const fetchMenuData = async () => {
+      try {
+        const response = await myAxios.get("api/v1/user/menus/getHeader");
+        const fetchedMenuItems = response.data.data;
 
+        // Set the menu items in state
+        setMenuItems(fetchedMenuItems);
+      } catch (error) {
+        console.error("Error fetching menu data:", error);
+      }
+    };
+
+    fetchMenuData();
+  }, []);
+  console.log(menuItems);
   const Links = [
     {
       ur: "/",
@@ -92,9 +109,12 @@ const TopNav = () => {
                   </Link>
                 </Box>
                 <ul className="navLinks">
-                  {Links.map((item, index) => (
-                    <Link key={item.title} to={item.ur}>
-                      <span>{item.title}</span>
+                  {menuItems?.links?.map((item, index) => (
+                    <Link key={item.id} to={item.link}>
+                      <span>
+                        {" "}
+                        {lang === "ar" ? item.title_ar : item.title_en}
+                      </span>
                     </Link>
                   ))}
                 </ul>
@@ -102,51 +122,60 @@ const TopNav = () => {
               <Box className="loginBox">
                 <Box className="profileSection">
                   <Box className="displayoffice">
-                    <Link to="/addoffice">
-                      <span
-                        className="displayOfficespan"
-                        style={{
-                          background: "linear-gradient(25deg,#700707,#ff4646)",
-                          color: "white",
-                          padding: "9px 15px",
-                          borderRadius: "20px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <AddIcon />
+                    {/* chat section */}
+                    {/* <Header $dir={lang}>
+                      <div className="messages-container">
+                        {messagesCounter != 0 && messagesCounter !== null ? (
+                          <span className="counter">{messagesCounter}</span>
+                        ) : (
+                          ""
+                        )}
+                        <ChatRoundedIcon
+                          onClick={() => {
+                            if (userNameContext && userNameContext !== "null") {
+                              // Conditionally open the chat and toggle message display
+                              setIsChatOpen(true);
+                              setShowMessages((prev) => !prev);
+                            } else {
+                              // Navigate to the "/userDashboard/myInfo" route with a toast notification
+                              nav("/dashboard/my_info");
+                            }
+                          }}
+                          className="message-icon"
+                          sx={{ display: "flex", justifyContent: "center" }}
+                        />
+                        {showMessages && (
+                          <ChatsHeader
+                            showMessages={showMessages}
+                            setShowMessages={setShowMessages}
+                            setIsUserSelected={setIsUserSelected}
+                          />
+                        )}
+                      </div>
+                    </Header> */}
+                    {isLoggedIn && (
+                      <Link to="/addoffice">
+                        <span
+                          className="displayOfficespan"
+                          style={{
+                            background:
+                              "linear-gradient(25deg,#700707,#ff4646)",
+                            color: "white",
+                            padding: "9px 15px",
+                            borderRadius: "20px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <AddIcon />
 
-                        {t("topNav.Addyouroffice")}
-                      </span>{" "}
-                    </Link>
-                  </Box>
-                  <Box className="profileBox" onClick={handleShowloginBox}>
-                    <Button className="btn_profile">
-                      <img src={Menu} style={{ width: "16px" }} />
-                      <img
-                        src={User}
-                        style={{
-                          width: "30px",
-                          marginRight: lang === "ar" ? "16px" : "auto",
-                          marginLeft: lang === "en" ? "16px" : "auto",
-                        }}
-                      />
-                    </Button>
-                    {showloginBox && (
-                      <Paper className="loginPaperBox">
-                        <ul className="ul1">
-                          <li className="li1">
-                            <Link to="/dashboard/home">
-                              {t("topNav.controlPanel")}
-                            </Link>
-                          </li>
-                          <li className="li1" onClick={handleOpenModal}>
-                            {t("topNav.Login")}
-                          </li>
-                        </ul>
-                      </Paper>
+                          {t("topNav.Addyouroffice")}
+                        </span>{" "}
+                      </Link>
                     )}
                   </Box>
+                  <LoginButton isLoggedIn={isLoggedIn} />
+
                   <LanguageBtn />
                 </Box>
               </Box>
@@ -189,9 +218,6 @@ const TopNav = () => {
           </Box>
         )}
       </Box>
-
-      {/* LoginModal */}
-      <LogInModal open={openModal} onClose={handleCloseModal} />
     </>
   );
 };

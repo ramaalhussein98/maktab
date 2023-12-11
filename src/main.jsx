@@ -1,13 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import {
+  BrowserRouter,
+  BrowserRouter as Router,
+  Route,
+} from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 import "./i18n";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import { ChatProvider } from "./context/chatContext";
+
+import { UserProvider } from "./context/userContext.jsx";
 
 const theme = createTheme({
   direction: "rtl", // Both here and <body dir="rtl">
@@ -24,9 +32,15 @@ const cacheRtl = createCache({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {/* <CacheProvider value={cacheRtl}> */}
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <UserProvider>
+          <ChatProvider>
+            <App />
+          </ChatProvider>
+        </UserProvider>
+      </ThemeProvider>
+    </BrowserRouter>
     {/* </CacheProvider> */}
   </React.StrictMode>
 );

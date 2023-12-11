@@ -19,6 +19,8 @@ const DashLayout = () => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("xs"));
   const isMd = useMediaQuery(theme.breakpoints.up("md"));
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   let paddingClass = "";
   if (isTransactionPage) {
     paddingClass = "p-0";
@@ -68,6 +70,14 @@ const DashLayout = () => {
     },
   ];
   // const hideSideBar = location.pathname.includes("properties");
+  const filteredNavArray = navArray.filter((item) => {
+    // Check if user_type_bussines is false and the link should be hidden
+    return (
+      user_type_bussines ||
+      !["properties", "transactions", "prices/main"].includes(item.url)
+    );
+  });
+
   return (
     <div className="flex flex-row items-start min-h-[100vh] min-w-[300px]">
       <aside
@@ -97,7 +107,7 @@ const DashLayout = () => {
             <MenuIcon fontSize="medium" />
           </Box>
           <div className="flex flex-row flex-nowrap flex-1 sm:max-w-[320px] overflow-y-auto">
-            {navArray.map((ele, i) => (
+            {filteredNavArray.map((ele, i) => (
               <div key={i}>
                 <NavNavLink title={ele.title} to={ele.url} />
               </div>

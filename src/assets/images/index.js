@@ -12,7 +12,7 @@ import DefaultImage from "./defaulthome.jpg";
 import Mada from "./mada.png";
 import MasterCard from "./Mastercard.png";
 import Visa from "./Visa.png";
-import KSA from "./ksapng.png";
+
 import Appstore from "./apple-store.png";
 import Googleplay from "./google-play.png";
 import BG from "./bg.jpg";
@@ -31,7 +31,7 @@ export {
   Mada,
   MasterCard,
   Visa,
-  KSA,
+
   Appstore,
   Googleplay,
   BG,

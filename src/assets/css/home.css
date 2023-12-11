@@ -114,6 +114,8 @@
     padding: 8px 0px;
     position: relative;
     outline: 0px;
+
+    width: 100%;
     .li1 {
       margin: 10px 0px;
       padding-top: 6px;
@@ -125,6 +127,8 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.12);
       border-bottom-color: rgba(0, 0, 0, 0.12);
       border-color: rgba(0, 0, 0, 0.12);
+      display: flex;
+      width: 100%;
     }
     .li1:last-child {
       border-bottom: none;

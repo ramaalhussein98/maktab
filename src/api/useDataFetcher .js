@@ -1,13 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
-import { useAxiosConfig } from "../context/AxiosContext ";
-
+import myAxios from "../api/myAxios";
 const useDataFetcher = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { axiosConfig } = useAxiosConfig();
-  const myAxios = axios.create(axiosConfig);
 
   const fetchData = async (url, options = {}) => {
     try {

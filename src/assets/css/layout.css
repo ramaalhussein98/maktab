@@ -49,6 +49,7 @@
       align-items: center;
       .input1 {
         width: 100%;
+        outline: none !important;
       }
       input:focus {
         outline: none;
@@ -124,6 +125,7 @@
     font-weight: 400;
     font-size: 0.875rem;
     padding: 0px 10px;
+    outline: none !important;
   }
 }
 .searchIcon {
@@ -149,6 +151,7 @@
     justify-content: flex-end !important;
     margin-left: 8px !important;
     margin-right: 8px !important;
+    align-items: center;
   }
 }
 .displayOfficespan {

@@ -13,13 +13,16 @@ import { myAxios } from "../api/myAxios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import UserContext, { useStateContext } from "../context/userContext";
+
 // import { useAxiosConfig } from "../context/AxiosContext ";
 import "../assets/css/login.css";
 import useDataFetcher from "../api/useDataFetcher ";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import MobileScreenShareIcon from "@mui/icons-material/MobileScreenShare";
-const LogInModal = ({ open, onClose }) => {
+import UserContext from "../context/userContext";
+import { useStateContext } from "../context/userContext";
+
+const LogInModalOrdinar = ({ open, onClose }) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
@@ -38,9 +41,9 @@ const LogInModal = ({ open, onClose }) => {
   // const { setToken } = useAxiosConfig();
   const { data, isLoading, error, get, post } = useDataFetcher();
   const [loginMethod, setLoginMethod] = useState("");
-  // const { setIsUserUpdated, setUserNameContext } = useContext(UserContext);
-  const { setIsUserUpdated } = useContext(UserContext);
   const { token, user, setUser, setTokenFun } = useStateContext();
+  // const { setIsUserUpdated, setUserNameContext } = useContext(UserContext);
+  // const { setIsUserUpdated } = useContext(UserContext);
   useEffect(() => {
     validatePhoneNumber();
   }, [phoneNumber]);
@@ -55,7 +58,7 @@ const LogInModal = ({ open, onClose }) => {
 
     // Make API call based on the chosen method (SMS or WhatsApp)
     try {
-      const res = myAxios.post("api/v1/user/login", {
+      const res = myAxios.post("api/v1/ordinaries/login", {
         type_message: method,
         phone: phoneNumber,
       });
@@ -103,48 +106,63 @@ const LogInModal = ({ open, onClose }) => {
   const verifyOTP = async (e) => {
     // e.target.disabled = true;
     try {
-      const res = await myAxios.post("api/v1/user/checkCode", {
+      const res = await myAxios.post("api/v1/ordinaries/checkCode", {
         phone: phoneNumber,
         code: otp,
       });
 
       if (res.data.status === false) {
-        toast.error(res?.data?.message);
+        toast.error(res.data.message);
         setIsDisabled(false);
-        setIsOTPInvalid(true);
 
         // navigate("/userDashbored");
       } else {
         toast.success(res?.data?.message);
         // console.log(res?.data.data.access_token);
+
         // localStorage.setItem("user_token", res?.data?.data?.access_token);
-        localStorage.setItem("user_type", "bussines");
+        localStorage.setItem("user_type", "ordinary");
         setTokenFun(res?.data?.data?.access_token);
 
-        // const res2 = await myAxios.get("api/v1/user/profile", {
+        console.log("sucess");
+        // const res2 = await myAxios.get("api/v1/ordinaries/profile"
+        // , {
         //   headers: {
         //     apiKey: "3YMh-YqHw-x6xY-G1n4-UtsW-lFVm",
         //     authorization: `Bearer ${res?.data?.data?.access_token}`,
         //   },
-        // });
+       
 
         // setToken(res?.data?.data?.access_token);
         setIsDisabled(true);
         setTimeout(() => {
           navigate("/dashboard/my_info");
         }, 1000);
+        // const res2 = await myAxios.get("/api/v1/user/profile");
+
+        // const res2 = await axios.get(
+        //   "https://dashboard.maktab.sa/api/v1/user/profile",
+        //   {
+        //     headers: {
+        //       authorization: `Bearer ${res?.data?.access_token}`,
+        //     },
+        //   }
+        // );
 
         // if (res2) {
-        //   setIsUserUpdated((prev) => prev + 1);
+          // setIsUserUpdated((prev) => prev + 1);
 
-        //   localStorage.setItem("userMembership", res2.data.user.membership_id);
-        //   localStorage.setItem("userId", res2.data?.user.id);
-        //   // setUserNameContext(res2.data?.user.username);
-        //   // setUserId(res2.data?.user.id);
+          // localStorage.setItem("userMembership", res2.data.user.membership_id);
+          // localStorage.setItem("userId", res2.data?.user.id);
+          // setUserNameContext(res2.data?.user.username);
+          // setUserId(res2.data?.user.id);
         //   setTimeout(() => {
         //     navigate("/");
         //   }, 1000);
         // }
+        // localStorage.setItem("user_token", res.data.access_token);
+        // nav("/dashboard/home");
+        // toast.success(res.data.message);
       }
     } catch (err) {}
   };
@@ -161,6 +179,12 @@ const LogInModal = ({ open, onClose }) => {
       verifyOTP();
     }
   };
+  // useEffect(() => {
+  //   // Automatically submit the form when the last OTP input is filled and OTP is valid
+  //   if (step === 2 && otp.length === 4 && isValidOTP) {
+  //     verifyOTP();
+  //   }
+  // }, [step, otp, isValidOTP]);
 
   const handleBack = () => {
     setStep(step - 1);
@@ -171,6 +195,15 @@ const LogInModal = ({ open, onClose }) => {
     let countdown = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer === 0) {
+          //console.log("finished");
+          // try {
+          //   const res = myAxios.post("/api/changeCode", {
+          //     phone: phoneNumber,
+          //   });
+          //   console.log(res);
+          // } catch (err) {
+          //   console.log(err);
+          // }
           setIsCounterActive(false);
           clearInterval(countdown);
           return 0;
@@ -181,7 +214,7 @@ const LogInModal = ({ open, onClose }) => {
 
     return () => {
       clearInterval(countdown);
-      setTimer(180);
+      setTimer(10);
       // after i change this to 180
     };
   }, [step, isCounterActive]);
@@ -190,7 +223,7 @@ const LogInModal = ({ open, onClose }) => {
     setIsCounterActive(true);
     //console.log(resend a gain)
     try {
-      const res = await myAxios.post("api/v1/user/changeCode", {
+      const res = await myAxios.post("api/v1/ordinaries/changeCode", {
         phone: phoneNumber,
       });
     } catch (err) {}
@@ -214,9 +247,10 @@ const LogInModal = ({ open, onClose }) => {
             {t("loginmodal.back_btn")}
           </Button>
         )}
+
         <Typography variant="h5" className="font_bold">
           {step === 1
-            ? t("loginmodal.title")
+            ? t("loginmodal.title2")
             : step === 2
             ? t("loginmodal.title_two")
             : t("loginmodal.title_three")}
@@ -276,7 +310,6 @@ const LogInModal = ({ open, onClose }) => {
             </Box>
           )}
           {step === 2 && renderLoginMethodStep()}
-
           {step === 3 && (
             <Box className="d_flex_space" sx={{ marginY: "2rem" }}>
               <Typography>
@@ -404,7 +437,7 @@ const LogInModal = ({ open, onClose }) => {
             </Typography>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <Box>
               {isCounterActive && (
                 <Typography>
@@ -424,4 +457,4 @@ const LogInModal = ({ open, onClose }) => {
   );
 };
 
-export default LogInModal;
+export default LogInModalOrdinar;
