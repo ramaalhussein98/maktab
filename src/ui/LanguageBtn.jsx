@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { languageImg } from "../assets/icons";
 import { Box, Button, Paper } from "@mui/material";
 import TranslateIcon from "@mui/icons-material/Translate";
 import "../assets/css/language.css";

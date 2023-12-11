@@ -1,17 +1,15 @@
 import { Box, Button, Paper } from "@mui/material";
-import React, { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 
 import { Menu, User } from "../assets/icons";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LogInModal from "../authentication/LogInModal";
 import UserContext from "../context/userContext";
 import useDataFetcher from "../api/useDataFetcher ";
 
 import { toast } from "react-hot-toast";
-import { Token } from "@mui/icons-material";
 import LogInModalOrdinar from "../authentication/LogInModalOrdinar";
-import axios from "axios";
 import myAxios from "../api/myAxios";
 import { useStateContext } from "../context/userContext";
 const LoginButton = ({ isLoggedIn }) => {
@@ -58,31 +56,31 @@ const LoginButton = ({ isLoggedIn }) => {
       toast.error("User is not authenticated");
       return;
     }
-  
-      if (user_type_bussines) {
-        response = await myAxios.post(
-          "https://dashboard.maktab.sa/api/v1/user/logout"
-        );
-      } else {
-        response = await myAxios.post(
-          "https://dashboard.maktab.sa/api/v1/ordinaries/logout"
-        );
-      }
-      console.log(response)
-      if (response?.data?.status === true) {
-        localStorage.removeItem("user_token");
-        localStorage.removeItem("user_type");
-        localStorage.removeItem("userData");
-        setUser(null);
-        setToken(null);
-        toast.success(
-          i18n.language === "ar"
-            ? "تم تسجيل الخروج بنجاح"
-            : "Signed out successfully"
-        );
-      } else {
-        toast.error("Logout failed");
-      }
+
+    if (user_type_bussines) {
+      response = await myAxios.post(
+        "https://dashboard.maktab.sa/api/v1/user/logout"
+      );
+    } else {
+      response = await myAxios.post(
+        "https://dashboard.maktab.sa/api/v1/ordinaries/logout"
+      );
+    }
+    console.log(response);
+    if (response?.data?.status === true) {
+      localStorage.removeItem("user_token");
+      localStorage.removeItem("user_type");
+      localStorage.removeItem("userData");
+      setUser(null);
+      setToken(null);
+      toast.success(
+        i18n.language === "ar"
+          ? "تم تسجيل الخروج بنجاح"
+          : "Signed out successfully"
+      );
+    } else {
+      toast.error("Logout failed");
+    }
     // } catch (error) {
     //   console.error("Logout error:", error);
     //   toast.error("An error occurred during logout");

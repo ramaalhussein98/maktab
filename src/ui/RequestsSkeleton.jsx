@@ -1,5 +1,4 @@
 import { Box, Skeleton } from "@mui/material";
-import React from "react";
 const RequestsSkeleton = () => {
   return (
     <div className="flex gap-0 bg-white rounded-2xl shadow-customTwo mb-5">
