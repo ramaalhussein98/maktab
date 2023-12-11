@@ -54,14 +54,26 @@ const TopNav = ({ setIsUserSelected }) => {
   const handleFilerModalOpen = () => {
     setOpenFilterModal(true);
   };
+
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
-        const response = await myAxios.get("api/v1/user/menus/getHeader");
-        const fetchedMenuItems = response.data.data;
+        // Check if menuItems are available in localStorage
+        const cachedMenuItems = localStorage.getItem("menuItems");
+        if (cachedMenuItems) {
+          // If available, parse and set them in state
+          setMenuItems(JSON.parse(cachedMenuItems));
+        } else {
+          // If not available, make the API call
+          const response = await myAxios.get("api/v1/user/menus/getHeader");
+          const fetchedMenuItems = response?.data.data;
 
-        // Set the menu items in state
-        setMenuItems(fetchedMenuItems);
+          // Set the menu items in state
+          setMenuItems(fetchedMenuItems);
+
+          // Cache the menu items in localStorage for future use
+          localStorage.setItem("menuItems", JSON.stringify(fetchedMenuItems));
+        }
       } catch (error) {
         console.error("Error fetching menu data:", error);
       }
@@ -69,25 +81,7 @@ const TopNav = ({ setIsUserSelected }) => {
 
     fetchMenuData();
   }, []);
-  console.log(menuItems);
-  const Links = [
-    {
-      ur: "/",
-      title: "الرئيسية",
-    },
-    {
-      ur: "/",
-      title: "إعلانات مميزة",
-    },
-    {
-      ur: "/about-us",
-      title: " من نحن",
-    },
-    {
-      ur: "/contact-us",
-      title: "اتصل بنا",
-    },
-  ];
+
   return (
     <>
       <Box

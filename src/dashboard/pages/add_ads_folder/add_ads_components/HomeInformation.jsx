@@ -120,12 +120,12 @@ const HomeInformation = ({
   }, []);
 
   const homedata = [
-    {
-      title: t("dashboard.order_details.label1"),
-      subtitle: t("dashboard.order_details.hint1"),
-      placeholder: t("dashboard.order_details.placeholder1"),
-      name: "price",
-    },
+    // {
+    //   title: t("dashboard.order_details.label1"),
+    //   subtitle: t("dashboard.order_details.hint1"),
+    //   placeholder: t("dashboard.order_details.placeholder1"),
+    //   name: "price",
+    // },
     {
       title: t("dashboard.order_details.label2"),
       subtitle: t("dashboard.order_details.hint2"),
@@ -489,7 +489,7 @@ const HomeInformation = ({
           ))}
         </Select>
       </Box>
-      <Box sx={{ marginY: "5px" }}>
+      {/* <Box sx={{ marginY: "5px" }}>
         <InputLabel sx={{ color: "black", fontWeight: "500" }}>
           {lang === "ar" ? "مدة  الإيجار" : " time rent "}
         </InputLabel>
@@ -525,7 +525,7 @@ const HomeInformation = ({
             </MenuItem>
           ))}
         </Select>
-      </Box>
+      </Box> */}
       {/* {formData?.category_aqar?.en_name.includes("sale") ? (
         ""
       ) : (

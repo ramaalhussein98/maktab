@@ -247,6 +247,16 @@ const FinancialTransactions = () => {
                   150.00000 {t("currency")}
                 </span>
               </div>
+              <div className="d_flex_spaceBetween">
+                <span className="font_gray">
+                  {" "}
+                  {t("dashboard.InstantPayment.Remainingamount")}
+                </span>
+                <span className="font_bold color_Green">
+                  {" "}
+                  150.0 {t("currency")}
+                </span>
+              </div>
             </div>
           </Paper>
         </Box>
