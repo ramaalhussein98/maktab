@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Switch } from "@mui/material";
+import { Divider, Switch } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 
@@ -24,6 +24,8 @@ const ArrayPrices = [
 ];
 
 const UnitPrice = () => {
+  const [deposit, setDeposit] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState("ر.س");
   const [priceStates, setPriceStates] = useState(
     ArrayPrices.reduce((acc, price) => {
       acc[price.id] = { checked: false, value: "" };
@@ -55,7 +57,9 @@ const UnitPrice = () => {
   const logValues = () => {
     console.log("Price States:", priceStates);
   };
-
+  const toggleUnit = () => {
+    setSelectedUnit((prevUnit) => (prevUnit === "ر.س" ? "%" : "ر.س"));
+  };
   return (
     <>
       <div className="UnitDetailsContainer">
@@ -80,7 +84,28 @@ const UnitPrice = () => {
           />
         </div>
       ))}
+      <Divider sx={{ marginY: "1rem" }} />
       {/* <button onClick={logValues}>Log Values</button> */}
+      <div className="CheckedBoxContainer">
+        <p className="priceTitle">العربون</p>
+        <div className="raabon">
+          <input
+            type="number"
+            value={deposit}
+            className="priceInput"
+            onChange={(e) => setDeposit(e.target.value)}
+          />
+          <span className="span1" onClick={toggleUnit}>
+            {selectedUnit}
+          </span>
+          {/* <Switch
+            checked={selectedUnit === "%"}
+            onChange={toggleUnit}
+            sx={{ marginLeft: "10px" }}
+          /> */}
+          {/* <span>%</span> */}
+        </div>
+      </div>
     </>
   );
 };
