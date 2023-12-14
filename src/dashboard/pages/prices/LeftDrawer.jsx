@@ -127,7 +127,7 @@ const LeftDrawer = ({ open, toggleDrawer }) => {
                 onChange={handleSelectPriceChange}
                 style={{ width: "60%" }}
               >
-                <option value="نسبة">{t("percent")}</option>
+                <option value="نسبة">{t("dashboard.prices.percent")}</option>
                 <option value="سعر">{t("dashboard.prices.price")}</option>
               </select>
               <div style={{ position: "relative", width: "100%" }}>

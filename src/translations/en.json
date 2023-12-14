@@ -279,7 +279,7 @@
       "incomplete": "You have an incomplete property",
       "complete": "Complete the construction of your property",
       "sure": "Are you sure you want to add a new office and delete the incomplete office?",
-      "yesadd":"Yes, add a new office"
+      "yesadd": "Yes, add a new office"
     },
     "Units": {
       "incomplete": "You have an incomplete Unit",
@@ -290,11 +290,13 @@
     "reservation": {
       "Specifyaperiod": "Specify a period",
       "search": "Search",
+      "phonenumber": "PhoneNumber",
       "Reservationstatus": "Reservation status",
       "Tenantinformation": "Tenant information",
       "Unitinformation": "Unit information",
       "Lessorinformation": "Lessor information",
       "Paymentdata": "Payment data",
+      "Siteinspectordata": "Site Inspector Data",
       "Procedural": "Procedural",
       "CreateAcontract": "Create a contract",
       "CaneclRequest": "Canecl Request",

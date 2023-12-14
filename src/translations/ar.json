@@ -59,8 +59,8 @@
       "writeoffername": "اكتب اسم العرض",
       "unitoffer": "الوحدات التي تريد أن يطبق عليها العرض",
       "discountvalue": "قيمة الخصم",
-      "percent": "نسبة",
-      "price": "سعر",
+      "percent": "نسبة مئوية",
+      "price": "سعر ثابت",
       "offerDate": "تاريخ تطبيق العرض",
       "offerapply": "العرض سيطبق على تاريخ الوصول وليس تاريخ الحجز",
       "selectdate": "حدد التاريخ",
@@ -284,16 +284,18 @@
       "incomplete": "لديك وحدة غير مكتملة",
       "complete": "استكمل انشاء وحدتك",
       "sure": "هل انت متأكد من إضافة وحدة جديدة و حذف الوحدة الغير مكتمل؟",
-      "yesadd":"نعم ، أضف وحدة جديد"
+      "yesadd": "نعم ، أضف وحدة جديد"
     },
     "reservation": {
       "Specifyaperiod": "تحديد فترة",
       "search": "البحث",
+      "phonenumber": "رقم الجوال",
       "Reservationstatus": "حالة الحجز",
       "Tenantinformation": "معلومات المستأجر",
       "Unitinformation": "معلومات الوحدة",
       "Lessorinformation": "معلومات المؤجر",
       "Paymentdata": "بيانات الدفع",
+      "Siteinspectordata": "بيانات معاين الموقع",
       "Procedural": "الإجرائيات",
       "CreateAcontract": "إنشاء عقد",
       "CaneclRequest": "إلغاء عقد",
@@ -332,7 +334,7 @@
       "Invoices": "الفواتير",
       "Billingstatement": "كشف الفواتير",
       "ReleaseDate": "تاريخ الإصدار",
-      "theamount": "المبلغ",
+      "theamount": "المبلغ الإجمالي",
       "Viewdetails": "عرض التفاصيل"
     },
     "Accountstatements": {
@@ -343,7 +345,7 @@
       "balancelastduration": "رصيد أخر المدة",
       "date": "التاريخ",
       "Statement": "البيان",
-      "Balance": "الرصيد",
+      "Balance": "الرصيد المتبقي",
       "Totalaccountstatement": " إجمالي كشف الحساب"
     },
     "howReaviceMoney": {

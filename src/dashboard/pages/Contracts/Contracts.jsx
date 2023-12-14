@@ -4,7 +4,7 @@ import ContractTable from "./components/ContractTable";
 import { Box, Paper, Typography } from "@mui/material";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Contracts = () => {
   const { t, i18n } = useTranslation();
@@ -47,9 +47,17 @@ const Contracts = () => {
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom style={{ fontWeight: "700" }}>
-        {t("dashboard.BillsNav.link2")}
-      </Typography>
+      <Box className="d_flex_spaceBetween ">
+        <Typography variant="h6" gutterBottom style={{ fontWeight: "700" }}>
+          {t("dashboard.BillsNav.link2")}
+        </Typography>
+        <Link
+          to="/dashboard/acc/create_type_contract"
+          className="createContact"
+        >
+          إنشاء نماذج العقود
+        </Link>
+      </Box>
       <Box className="d_flex_spaceBetween contarctBoxes">
         {tabs.map((tab) => {
           const animatedProps = getAnimatedProps(tab.name);

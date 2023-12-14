@@ -258,7 +258,7 @@ const Details = () => {
               <DetailsCard />
               <button className="chat_button">
                 <ChatIcon className="icon_style" />
-                تواصل مع المعلن
+                تواصل مع المكتب
               </button>
             </Grid>
           </Grid>

@@ -114,6 +114,21 @@
   width: 100%;
   padding: 20px;
 }
+.serach-bills-container {
+  position: relative;
+  width: 40%;
+  margin: auto;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border: 1px solid #eee;
+  border-radius: 30px;
+  padding: 5px 20px;
+  .p1 {
+    font-weight: 600;
+  }
+}
 .paperTotalPrice {
   position: fixed;
   width: 100%;
@@ -299,6 +314,18 @@
   border-radius: 12px;
   font-weight: 600;
   width: 160px;
+}
+.spanfrom {
+  font-weight: 600;
+  margin-left: 10px;
+  color: gray;
+}
+[lang="en"] .spanfrom {
+  margin-left: 0px;
+  margin-right: 10px;
+}
+input {
+  outline: none !important;
 }
 @media screen and (min-width: 300px) and (max-width: 900px) {
   .d_flex {

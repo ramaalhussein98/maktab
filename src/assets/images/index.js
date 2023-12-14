@@ -16,6 +16,7 @@ import Visa from "./Visa.png";
 import Appstore from "./apple-store.png";
 import Googleplay from "./google-play.png";
 import BG from "./bg.jpg";
+import QR from "./qr.jpg";
 export {
   Home1,
   Home2,
@@ -31,8 +32,8 @@ export {
   Mada,
   MasterCard,
   Visa,
-
   Appstore,
   Googleplay,
   BG,
+  QR
 };
