@@ -24,108 +24,23 @@ const customFormControlClass = {
   width: "100%",
 };
 
-const HomeInformation = ({
-  formData,
-  setFormData,
-  inputErrors,
-  setInputErrors,
-  setError,
-  type_aqar,
-  type_res,
-}) => {
+const HomeInformation = ({ typeAqars, state, dispatch }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
 
-  const [inputValues, setInputValues] = useState(formData.inputValues || {});
-
-  useEffect(() => {
-    if (Object.keys(inputValues).length > 0) {
-      return;
-    } else {
-      if (
-        formData.price &&
-        formData.space &&
-        formData.width &&
-        formData.height
-      ) {
-        setInputValues((prev) => ({
-          ...prev,
-          price: formData.price,
-        }));
-        if (formData.space) {
-          setInputValues((prev) => ({
-            ...prev,
-            area: formData.space,
-          }));
-        }
-        if (formData.width) {
-          setInputValues((prev) => ({
-            ...prev,
-            width: formData.width,
-          }));
-        }
-        if (formData.height) {
-          setInputValues((prev) => ({
-            ...prev,
-            height: formData.height,
-          }));
-        }
-      }
-    }
-  }, []);
-
   const [radioSelected, setRadioSelected] = useState(
-    formData.radioSelected || ""
+    state.advertiser_relationship
   );
 
   const [showAdditionalBox, setShowAdditionalBox] = useState(
-    formData.showAdditionalBox || false
+    state.advertiser_relationship === "option3" ? true : false
   );
 
   const [additionalRadioSelected, setAdditionalRadioSelected] = useState(
-    formData.additionalRadioSelected || ""
+    state.advertiser_relationship_type
   );
-  const [selectedtype, setSelectedtype] = useState(
-    formData?.type_aqar_id || ""
-  );
-  const [selectedRes, setSelectedRes] = useState(formData?.type_res_id || "");
 
-  const handleCityChange = (event) => {
-    setSelectedtype(event.target.value);
-    setFormData((prevData) => ({
-      ...prevData,
-      type_aqar_id: event.target.value,
-    }));
-  };
-
-  const handleChangeRes = (event) => {
-    setSelectedRes(event.target.value);
-    setFormData((prevData) => ({
-      ...prevData,
-      type_res_id: event.target.value,
-    }));
-  };
-
-  useEffect(() => {
-    if (formData) {
-      setRadioSelected(formData.advertiser_relationship);
-      setAdditionalRadioSelected(formData.advertiser_relationship_type);
-
-      if (formData.advertiser_relationship === "option3") {
-        setShowAdditionalBox(true);
-      } else {
-        setShowAdditionalBox(false);
-      }
-    }
-  }, []);
-
-  const homedata = [
-    // {
-    //   title: t("dashboard.order_details.label1"),
-    //   subtitle: t("dashboard.order_details.hint1"),
-    //   placeholder: t("dashboard.order_details.placeholder1"),
-    //   name: "price",
-    // },
+  const infoInputs = [
     {
       title: t("dashboard.order_details.label2"),
       subtitle: t("dashboard.order_details.hint2"),
@@ -146,13 +61,18 @@ const HomeInformation = ({
     },
   ];
 
-  useEffect(() => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      advertiser_relationship: radioSelected,
-      advertiser_relationship_type: additionalRadioSelected,
-    }));
-  }, [radioSelected, showAdditionalBox, additionalRadioSelected, setFormData]);
+  const types = [
+    {
+      id: 1,
+      ar_name: "مؤثث",
+      en_name: "furniture",
+    },
+    {
+      id: 2,
+      ar_name: "غير مؤثث",
+      en_name: "Unfurnished",
+    },
+  ];
 
   const formatNumber = (value) => {
     if (!value) return "";
@@ -181,36 +101,22 @@ const HomeInformation = ({
 
     const formattedValue = formatNumber(value);
 
-    const newInputValues = {
-      ...inputValues,
-      [name]: formattedValue,
-    };
-    const allInputsFilled = Object.values(newInputValues).every(
-      (val) => val !== ""
-    );
-
-    setInputValues(newInputValues);
-
-    if (allInputsFilled) {
-      setInputErrors(false);
-    } else {
-      setInputErrors(true);
+    switch (name) {
+      case "width":
+        dispatch({ type: "width", value: formattedValue });
+        break;
+      case "height":
+        dispatch({ type: "height", value: formattedValue });
+        break;
+      case "area":
+        dispatch({ type: "area", value: formattedValue });
+        break;
     }
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      inputValues: newInputValues,
-    }));
   };
 
   const handleRadioChange = (event) => {
-    const { name, value } = event.target;
-
-    setInputValues((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-
+    const { value } = event.target;
+    dispatch({ type: "advertiserRelationship", value: value });
     setRadioSelected(value);
     if (value === "option3") {
       setShowAdditionalBox(true);
@@ -219,9 +125,22 @@ const HomeInformation = ({
       setAdditionalRadioSelected("");
     }
   };
+
   const handleAdditionalRadioChange = (event) => {
     const { value } = event.target;
     setAdditionalRadioSelected(value);
+    dispatch({ type: "advertiser_relationship_type", value: value });
+  };
+
+  const handleTypeChange = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    dispatch({ type: "aqarTypeId", value: value });
+  };
+  const handleTypesChange = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    dispatch({ type: "furnished", value: value });
   };
 
   return (
@@ -365,7 +284,7 @@ const HomeInformation = ({
             </Box>
           )}
         </Box>
-        {homedata.map((item, index) => (
+        {infoInputs.map((item, index) => (
           <Box
             sx={{
               display: "flex",
@@ -396,7 +315,7 @@ const HomeInformation = ({
               name={item.name}
               placeholder={item.placeholder}
               size="small"
-              value={inputValues[`${item.name}`] || ""}
+              value={state[item.name]}
               onChange={handleInputChange}
               // error={inputErrors[`input-${index}`]}
               // helperText={inputErrors[`input-${index}`] ? "قيمة غير صحيحة" : ""}
@@ -418,14 +337,8 @@ const HomeInformation = ({
           {lang === "ar" ? "  التجهيز " : " type "}
         </InputLabel>
         <Select
-          value={
-            selectedtype
-              ? selectedtype
-              : formData.type_aqar
-              ? formData.type_aqar.id
-              : ""
-          }
-          onChange={handleCityChange}
+          value={state.furnished}
+          onChange={handleTypesChange}
           label=""
           required
           IconComponent={ArrowDropDownIcon}
@@ -443,13 +356,14 @@ const HomeInformation = ({
               },
           }}
         >
-          {/* {type_aqar?.map((type) => (
-            <MenuItem key={type.id} value={type.id}>
+          {types?.map((type) => (
+            <MenuItem
+              key={type.id}
+              value={lang === "ar" ? type.ar_name : type.en_name}
+            >
               {lang === "ar" ? type.ar_name : type.en_name}
             </MenuItem>
-          ))} */}
-          <MenuItem>مؤثث</MenuItem>
-          <MenuItem>غير مؤثث</MenuItem>
+          ))}
         </Select>
       </Box>
       <Box sx={{ marginY: "5px" }}>
@@ -457,14 +371,8 @@ const HomeInformation = ({
           {lang === "ar" ? " نوع العقار " : " type "}
         </InputLabel>
         <Select
-          value={
-            selectedtype
-              ? selectedtype
-              : formData.type_aqar
-              ? formData.type_aqar.id
-              : ""
-          }
-          onChange={handleCityChange}
+          value={state?.type_aqar_id}
+          onChange={handleTypeChange}
           label=""
           required
           IconComponent={ArrowDropDownIcon}
@@ -482,91 +390,13 @@ const HomeInformation = ({
               },
           }}
         >
-          {type_aqar?.map((type) => (
+          {typeAqars?.map((type) => (
             <MenuItem key={type.id} value={type.id}>
               {lang === "ar" ? type.ar_name : type.en_name}
             </MenuItem>
           ))}
         </Select>
       </Box>
-      {/* <Box sx={{ marginY: "5px" }}>
-        <InputLabel sx={{ color: "black", fontWeight: "500" }}>
-          {lang === "ar" ? "مدة  الإيجار" : " time rent "}
-        </InputLabel>
-        <Select
-          value={
-            selectedtype
-              ? selectedtype
-              : formData.type_aqar
-              ? formData.type_aqar.id
-              : ""
-          }
-          onChange={handleCityChange}
-          label=""
-          required
-          IconComponent={ArrowDropDownIcon}
-          className={`${styles.select} select`}
-          classes={lang === "ar" && { icon: styles.selectIcon }}
-          sx={{
-            width: "100%",
-            marginTop: ".2rem",
-            padding: 0,
-            borderRadius: "6px",
-            textAlign: lang === "ar" ? "right" : "left",
-            "& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-              {
-                padding: "10px 4px", // Remove padding from the input element
-              },
-          }}
-        >
-          {type_aqar?.map((type) => (
-            <MenuItem key={type.id} value={type.id}>
-              {lang === "ar" ? type.ar_name : type.en_name}
-            </MenuItem>
-          ))}
-        </Select>
-      </Box> */}
-      {/* {formData?.category_aqar?.en_name.includes("sale") ? (
-        ""
-      ) : (
-        <Box sx={{ marginY: "10px" }}>
-          <InputLabel sx={{ color: "black", fontWeight: "500" }}>
-            {lang === "ar" ? "معلومات العقار" : "property type"}
-          </InputLabel>
-          <Select
-            value={
-              selectedRes
-                ? selectedRes
-                : formData.type_res_id
-                ? formData.type_res_id
-                : ""
-            }
-            onChange={handleChangeRes}
-            label=""
-            required
-            IconComponent={ArrowDropDownIcon}
-            className={`${styles.select} select`}
-            classes={lang === "ar" && { icon: styles.selectIcon }}
-            sx={{
-              width: "100%",
-              marginTop: ".2rem",
-              padding: 0,
-              borderRadius: "6px",
-              textAlign: lang === "ar" ? "right" : "left",
-              "& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-                {
-                  padding: "10px 4px", // Remove padding from the input element
-                },
-            }}
-          >
-            {type_res?.map((type) => (
-              <MenuItem key={type?.id} value={type?.id}>
-                {lang === "ar" ? type?.ar_name : type?.en_name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      )} */}
     </>
   );
 };

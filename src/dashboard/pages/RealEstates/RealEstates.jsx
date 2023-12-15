@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../../assets/css/real_estate.css";
-import { Button, Paper, Modal, Box, Typography } from "@mui/material";
+import { Button, Paper, Box } from "@mui/material";
 import { Plus } from "../../../assets/icons";
 import OutGoingOrders from "./outgoing_folder/OutGoingOrders";
 import { Link } from "react-router-dom";

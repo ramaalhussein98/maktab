@@ -48,25 +48,13 @@ const mainCategories = [
   },
 ];
 
-const CatgouryAds = ({
-  formData,
-  setFormData,
-  selectedCategoryId,
-  setSelectedCategoryId,
-  selectedType,
-  setSelectedType,
-}) => {
+const CatgouryAds = ({ categories, dispatch, state }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-
   const [nameError, setNameError] = useState();
-
-  const [selectedCatName, setSelectedCatName] = useState();
-  const [selectedCatId, setSelectedCatId] = useState();
 
   const handleNameChange = (event) => {
     const inputValue = event.target.value;
-
     // Check if the input value contains only Arabic and English letters
     const pattern = /^[\u0600-\u06FF\sA-Za-z]+$/;
     const isValidInput = pattern.test(inputValue);
@@ -77,88 +65,18 @@ const CatgouryAds = ({
     } else {
       setNameError(true);
     }
-
-    setFormData((prevFormData) => ({ ...prevFormData, title: inputValue }));
+    dispatch({ type: "title", title: inputValue });
   };
 
-  // const handleCategoryChange = (selectedCategory, selectedName) => {
-  //   setSelectedCatName(selectedName);
-  //   if (selectedCategoryId === selectedCategory) {
-  //     setSelectedCategoryId(null); // Unselect the category if it's already selected
-  //   } else {
-  //     setSelectedCategoryId(selectedCategory);
-  //   }
-
-  //   setSelectedType(""); // Reset the type when a new category is selected
-  // };
   const handleCategoryChange = (selectedCategory) => {
-    if (selectedCategoryId === selectedCategory) {
-      setSelectedCategoryId(null); // Unselect the category if it's already selected
-    } else {
-      setSelectedCategoryId(selectedCategory);
-    }
-
-    setSelectedType(""); // Reset the type when a new category is selected
-  };
-  const handleTypeChange = (type) => {
-    setSelectedType(type);
+    dispatch({ type: "categoryId", categoryId: selectedCategory });
   };
 
-  // useEffect(() => {
-  //   if (!formData.categort_aqar) {
-  //     if (selectedCatName && !selectedType) {
-  //       const filtered = main_array.filter((item) => {
-  //         return selectedCatName === item.en_name;
-  //       });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({ type: name, value });
+  };
 
-  //       if (filtered.length > 0) {
-  //         if (filtered.length > 0) {
-  //           setFormData((prevFormData) => ({
-  //             ...prevFormData,
-  //             category_aqar: filtered["0"],
-  //           }));
-  //         }
-  //       }
-  //     } else if (selectedCatName && selectedType) {
-  //       const filtered = main_array.filter((item) => {
-  //         const [categoryName, forText, itemType] = item.en_name.split(" ");
-
-  //         if (selectedType) {
-  //           return (
-  //             categoryName === selectedCatName.trim() &&
-  //             forText.toLowerCase() === "for" &&
-  //             itemType.toLowerCase() === selectedType.toLowerCase()
-  //           );
-  //         }
-
-  //         return (
-  //           categoryName === selectedCatName.trim() &&
-  //           forText.toLowerCase() === "for"
-  //         );
-  //       });
-
-  //       if (filtered.length > 0) {
-  //         setFormData((prevFormData) => ({
-  //           ...prevFormData,
-  //           category_aqar: filtered["0"],
-  //         }));
-  //       }
-  //     }
-  //   }
-  // }, [selectedCatName, selectedType]);
-
-  // useEffect(() => {
-  //   if (formData.category_aqar) {
-  //     const selectedCatFullName = formData.category_aqar.en_name
-  //       .toLowerCase()
-  //       .split(" ");
-  //     setSelectedCatId(
-  //       categories.filter((item) =>
-  //         item.en_name.toLowerCase().includes(selectedCatFullName["0"])
-  //       )
-  //     );
-  //   }
-  // }, [formData]);
   return (
     <Box>
       <Typography
@@ -182,7 +100,7 @@ const CatgouryAds = ({
         <TextField
           id="my-text-field"
           type="text"
-          value={formData.title || ""}
+          value={state.title || ""}
           onChange={handleNameChange}
           size="small"
           error={nameError}
@@ -191,6 +109,7 @@ const CatgouryAds = ({
           sx={{
             width: "100%",
             borderRadius: "12px",
+            marginBottom: "6px",
             textAlign: lang === "ar" ? "right" : "left",
             "&[readonly]": {
               backgroundColor: "lightgray",
@@ -198,6 +117,57 @@ const CatgouryAds = ({
             },
           }}
         />
+        <label
+          htmlFor="my-text-field"
+          style={{ fontWeight: "500", marginBottom: "4px" }}
+        >
+          {lang === "ar" ? "اسم المعاين" : "inspector name "}
+        </label>
+        <TextField
+          id="my-text-field"
+          type="text"
+          name="inspector_name"
+          value={state.inspector_name || ""}
+          onChange={handleInputChange}
+          size="small"
+          placeholder={t("dashboard.new_order.order_info.placeholder1")}
+          sx={{
+            width: "100%",
+            borderRadius: "12px",
+            marginBottom: "6px",
+            textAlign: lang === "ar" ? "right" : "left",
+            "&[readonly]": {
+              backgroundColor: "lightgray",
+              color: "darkgray",
+            },
+          }}
+        />
+        <label
+          htmlFor="my-text-field"
+          style={{ fontWeight: "500", marginBottom: "4px" }}
+        >
+          {lang === "ar" ? "رقم الهاتف" : "mobile number"}
+        </label>
+        <TextField
+          id="my-text-field"
+          type="text"
+          name="number_phone"
+          value={state.number_phone || ""}
+          onChange={handleInputChange}
+          size="small"
+          placeholder={t("dashboard.new_order.order_info.placeholder1")}
+          sx={{
+            width: "100%",
+            borderRadius: "12px",
+            marginBottom: "6px",
+            textAlign: lang === "ar" ? "right" : "left",
+            "&[readonly]": {
+              backgroundColor: "lightgray",
+              color: "darkgray",
+            },
+          }}
+        />
+
         <Typography sx={{ fontWeight: "500", marginTop: "18px" }}>
           {t("dashboard.new_order.order_info.title")}
         </Typography>
@@ -214,13 +184,13 @@ const CatgouryAds = ({
           gap: "1rem 10px",
         }}
       >
-        {mainCategories.map((category) => (
+        {categories?.map((category) => (
           <Box
-            key={category.en_name}
+            key={category?.id}
             sx={{
               appearance: "none",
               border:
-                selectedCategoryId === category.id
+                state?.category_id === category.id
                   ? "3px solid var(--main-color)"
                   : "none",
               font: "inherit",
@@ -243,7 +213,7 @@ const CatgouryAds = ({
               overflow: "hidden",
               position: "relative",
               isolation: "isolate",
-              backgroundImage: `linear-gradient(315deg, rgba(0, 0, 0, 0.6) 5%, rgba(255, 255, 255, 0) 90%), url(${category.src}), radial-gradient(circle, rgb(49, 16, 131) 0%, rgb(90, 64, 155) 65%)`,
+              backgroundImage: `linear-gradient(315deg, rgba(0, 0, 0, 0.6) 5%, rgba(255, 255, 255, 0) 90%), url(https://dashboard.maktab.sa/${category.icon}), radial-gradient(circle, rgb(49, 16, 131) 0%, rgb(90, 64, 155) 65%)`,
               "&:hover": {
                 transform: "scale(1.02)",
                 backgroundSize: "115%",

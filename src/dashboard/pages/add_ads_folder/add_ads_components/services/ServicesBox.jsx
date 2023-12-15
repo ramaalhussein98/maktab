@@ -1,5 +1,5 @@
 import { Box, Switch, TextField } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import { useTranslation } from "react-i18next";
@@ -19,28 +19,33 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const label = { inputProps: { "aria-label": "Color switch demo" } };
-
-const ServicesBox = ({ onRemove, onToggle }) => {
-  const [nameInput, setNameInput] = useState("");
-  const [identify, setIdentify] = useState("");
-  const [priceInput, setPriceInput] = useState("");
-  const [toggleServiceBox, setToggleServiceBox] = useState(true);
-  const [checked, setChecked] = useState(false);
+const ServicesBox = ({ onRemove, onToggle, data, index, dispatch }) => {
+  const [id, setId] = useState(data?.id);
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const handleChangeNameInput = (event) => {
-    setNameInput(event.target.value);
+
+  const handleChangeEvent = (event) => {
+    const { name, value } = event.target;
+    dispatch({
+      type: "services",
+      sub_type: "changeService",
+      name,
+      value,
+      index,
+    });
   };
-  const handleIdentifyChange = (event) => {
-    setIdentify(event.target.value);
-  };
-  const handlePriceChange = (event) => {
-    setPriceInput(event.target.value);
-  };
+
   const handleChange = () => {
-    setChecked((prevChecked) => !prevChecked);
+    const toggleNewVal = !data.status;
+    dispatch({
+      type: "services",
+      sub_type: "changeService",
+      name: "status",
+      value: toggleNewVal,
+      index,
+    });
   };
+
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -70,7 +75,8 @@ const ServicesBox = ({ onRemove, onToggle }) => {
             backgroundColor: " #eee",
             padding: "10px 7px",
           }}
-          value={nameInput}
+          readOnly
+          value={data?.ar_name}
         />
         <CloseIcon
           sx={{
@@ -90,13 +96,10 @@ const ServicesBox = ({ onRemove, onToggle }) => {
             color: "blue",
             cursor: "pointer",
           }}
-          onClick={() => {
-            setToggleServiceBox(!toggleServiceBox);
-            onToggle();
-          }}
+          onClick={onToggle}
         />
       </Box>
-      {toggleServiceBox && (
+      {data.service_toggle && (
         <Box
           sx={{
             display: "flex",
@@ -118,10 +121,9 @@ const ServicesBox = ({ onRemove, onToggle }) => {
             <TextField
               id="my-text-field"
               type="text"
-              onChange={handleChangeNameInput}
-              value={nameInput}
-              // value={formData.title || ""}
-              //   onChange={handleNameChange}
+              name="ar_name"
+              onChange={handleChangeEvent}
+              value={data?.ar_name}
               size="small"
               sx={{
                 width: "96%",
@@ -141,15 +143,14 @@ const ServicesBox = ({ onRemove, onToggle }) => {
               htmlFor="identify"
               style={{ fontWeight: "500", marginBottom: "4px" }}
             >
-              {t("dashboard.incoming_orders.card1.ID")}
+              {lang === "ar" ? "الاسم في الانكليزية" : "name in arabic"}
             </label>
             <TextField
               id="identify"
               type="text"
-              value={identify}
-              onChange={handleIdentifyChange}
-              //   value={formData.title || ""}
-              //   onChange={handleNameChange}
+              name="en_name"
+              value={data?.en_name}
+              onChange={handleChangeEvent}
               size="small"
               sx={{
                 width: "96%",
@@ -174,10 +175,9 @@ const ServicesBox = ({ onRemove, onToggle }) => {
             <TextField
               id="price"
               type="text"
-              value={priceInput}
-              onChange={handlePriceChange}
-              //   value={formData.title || ""}
-              //   onChange={handleNameChange}
+              name="price"
+              value={data?.price}
+              onChange={handleChangeEvent}
               size="small"
               sx={{
                 width: "96%",
@@ -192,7 +192,7 @@ const ServicesBox = ({ onRemove, onToggle }) => {
           </div>
           <GreenSwitch
             className="Switch1"
-            checked={checked}
+            checked={data?.status}
             onChange={handleChange}
             sx={{
               "& .MuiSwitch-thumb": { backgroundColor: "#14b183 !important" },

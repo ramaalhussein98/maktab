@@ -11,49 +11,46 @@ import { toast } from "react-hot-toast";
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const HomeImagesAdd = ({
-  formData,
-  setFormData,
   images,
   setImages,
   selectedImage,
   setSelectedImage,
-  thumbnail,
-  setThumbnail,
-  selectedImages,
-  setSelectedImages,
   type,
   deletedImages,
   setDeletedImages,
   readyImages,
   setReadyImages,
+  state,
+  dispatch,
 }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [selectedVideoFile, setSelectedVideoFile] = useState(
-    formData.selectedVideoFile || null
+    state.video || null
   );
 
   useEffect(() => {
     // Update the formData when selectedImages or selectedVideoFile changes
     if (selectedVideoFile) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        video: selectedVideoFile,
-      }));
+      dispatch({ type: "video", value: selectedVideoFile });
+      // setFormData((prevFormData) => ({
+      //   ...prevFormData,
+      //   video: selectedVideoFile,
+      // }));
     }
   }, [selectedVideoFile]);
 
   const handleDeleteImage = (index) => {
-    setSelectedImages((prevImages) => {
-      const updatedImages = [...prevImages];
-      updatedImages.splice(index, 1);
-      return updatedImages;
-    });
-    setImages((prevImages) => {
-      const updatedImages = [...prevImages];
-      updatedImages.splice(index, 1);
-      return updatedImages;
-    });
+    // setSelectedImages((prevImages) => {
+    //   const updatedImages = [...prevImages];
+    //   updatedImages.splice(index, 1);
+    //   return updatedImages;
+    // });
+    // setImages((prevImages) => {
+    //   const updatedImages = [...prevImages];
+    //   updatedImages.splice(index, 1);
+    //   return updatedImages;
+    // });
   };
 
   const handleDeleteReadyImages = (index) => {
@@ -64,12 +61,12 @@ const HomeImagesAdd = ({
     setDeletedImages((prev) => [...prev, index]);
   };
 
-  useEffect(() => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      images: selectedImages, // Append new blob to the array
-    }));
-  }, [selectedImages]);
+  // useEffect(() => {
+  //   // setFormData((prevFormData) => ({
+  //   //   ...prevFormData,
+  //   //   images: selectedImages, // Append new blob to the array
+  //   // }));
+  // }, [selectedImages]);
 
   const handleVideoSelect = (event) => {
     const file = event.target.files[0];
@@ -182,10 +179,7 @@ const HomeImagesAdd = ({
                     margin: "auto",
                   }}
                 />
-                <Typography>
-                  {" "}
-                  {t("dashboard.property_images.btn1")}{" "}
-                </Typography>
+                <Typography> {t("dashboard.property_images.btn1")} </Typography>
               </Box>
             )}
           </Button>
@@ -282,14 +276,11 @@ const HomeImagesAdd = ({
         <CropeerImage
           type={1}
           isFirstButton={true}
-          formData={formData}
-          setFormData={setFormData}
-          setSelectedImages={setSelectedImages}
           setImages={setImages}
           selectedImage={selectedImage}
+          state={state}
+          dispatch={dispatch}
           setSelectedImage={setSelectedImage}
-          thumbnail={thumbnail}
-          setThumbnail={setThumbnail}
         />
 
         <Typography variant="label">
@@ -311,14 +302,11 @@ const HomeImagesAdd = ({
             height="120px"
             maxImages={8}
             hasBackground={false} // Set hasBackground prop to false
-            formData={formData}
-            setFormData={setFormData}
-            setSelectedImages={setSelectedImages}
             setImages={setImages}
             selectedImage={selectedImage}
+            state={state}
+            dispatch={dispatch}
             setSelectedImage={setSelectedImage}
-            thumbnail={thumbnail}
-            setThumbnail={setThumbnail}
           />
 
           {images.map((image, index) => (

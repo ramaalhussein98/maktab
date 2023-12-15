@@ -5,16 +5,14 @@ import { useTranslation } from "react-i18next";
 
 import OrderTitles from "../../new_order_folder/new_order_components/OrderTitles";
 
-const HomeDescription = ({ formData, setFormData }) => {
-  const [description, setDescription] = useState(formData.description || "");
+const HomeDescription = ({ state, dispatch }) => {
+  const [description, setDescription] = useState(state?.description || "");
   const { t } = useTranslation();
   const handleDescriptionChange = (event) => {
     const inputValue = event.target.value;
     setDescription(inputValue);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      description: inputValue,
-    }));
+
+    dispatch({ type: "description", value: inputValue });
   };
 
   return (
