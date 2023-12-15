@@ -8,6 +8,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import RequestsSkeleton from "../../../ui/RequestsSkeleton";
+
+import Map from "../../../assets/images/map.jpg";
 const array = [
   {
     id: 1,
@@ -308,7 +310,7 @@ const Reservations = () => {
                     >
                       <div className="dashCard">
                         <h2 className="font-bold text-lg mb-4">
-                          {t("dashboard.reservation.Identityinformation")}
+                          {t("dashboard.reservation.Lessorinformation")}
                         </h2>
                         <div className="flex flex-col gap-3">
                           <div className="flex justify-between items-center">
@@ -321,7 +323,7 @@ const Reservations = () => {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="font-medium">
-                              {t("dashboard.reservation.Rentalterm")}
+                              {t("dashboard.personal_info.label8")}
                             </span>
                             <span className="text-[#888]">#123456789 </span>
                           </div>
@@ -421,6 +423,41 @@ const Reservations = () => {
                               <p>قيد المعالجة</p>
                             </div>
                           )}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`flex flex-col gap-4 ${
+                        isMD ? "w-1/2" : "w-full !important"
+                      }`}
+                    >
+                      <div className="dashCard">
+                        <h2 className="font-bold text-lg mb-4">
+                          {t("dashboard.reservation.Siteinspectordata")}
+                        </h2>
+                        <div className="flex flex-col gap-3">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">
+                              {t("dashboard.incoming_orders.card1.label1")}
+                            </span>
+                            <span className="text-[#888]">محمد محمد</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">
+                              {t("dashboard.reservation.phonenumber")}
+                            </span>
+                            <span className="text-[#888]"> 050000000</span>
+                          </div>
+                          <Link
+                            // href={`https://www.google.com/maps/dir/My+Location/${adInfo.lat},${adInfo.lng}/@${adInfo.lat},${adInfo.lng},12z/data=!3m1!4b1?entry=ttu`}
+                            target="_blank"
+                          >
+                            <img
+                              src={Map}
+                              alt="mapImg"
+                              style={{ width: "100%", borderRadius: "2rem" }}
+                            />
+                          </Link>
                         </div>
                       </div>
                     </div>

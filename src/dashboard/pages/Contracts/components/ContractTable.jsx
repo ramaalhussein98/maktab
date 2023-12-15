@@ -185,7 +185,7 @@ const ContractTable = () => {
                     sx={{ textAlign: lang === "en" ? "left" : "right" }}
                   >
                     <p>{t("dashboard.contarcts.residential")} </p>
-                    <span style={{ color: "var(--main-color)" }}>
+                    <span style={{ color: "var(--green-color)" }}>
                       {row.column1}
                     </span>
                   </TableCell>

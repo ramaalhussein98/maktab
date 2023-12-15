@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import CircularProgress from "@mui/material/CircularProgress";
 import DeleteIcon from "@mui/icons-material/Delete";
+import QuillEditor from "./components/TinyEditor";
+import TinyEditor from "./components/TinyEditor";
 
 const CreateContract = () => {
   const { t } = useTranslation();
@@ -23,6 +25,12 @@ const CreateContract = () => {
     }, 2000);
   };
   const initialValues = {
+    place: "",
+    city: "",
+    street: "",
+    buildingnum: "",
+    addionatlnum: "",
+    mailcode: "",
     contractNumber: "",
     contractStatus: "",
     contractType: "",
@@ -34,6 +42,12 @@ const CreateContract = () => {
     contractNumberType: "",
   };
   const validationSchema = Yup.object().shape({
+    place: Yup.string().required("المنطقة مطلوبة"),
+    city: Yup.string().required("المدينة مطلوبة"),
+    street: Yup.string().required(" الشارع مطلوب"),
+    buildingnum: Yup.string().required(" رقم المبنى مطلوب"),
+    addionatlnum: Yup.string().required("رقم إضافي "),
+    mailcode: Yup.string().required(" الرمز البريدي مطلوب "),
     contractNumber: Yup.string().required("  رقم العقد مطلوب"),
     contractStatus: Yup.string().required("  حالة العقد مطلوبة"),
     contractType: Yup.string().required(" نوع العقد مطلوب"),
@@ -78,6 +92,48 @@ const CreateContract = () => {
           onSubmit={onSubmit}
         >
           <div className="ModalInputsBox2" style={{ gap: "15px" }}>
+            <div className="div_33">
+              <span> المنطقة:</span>
+              <Field as="select" name="place" className="input1">
+                <option value="">{t("dashboard.contract.Pleasechoose")}</option>
+                <option value="cash">Cash</option>
+                <option value="credit_card">Credit Card</option>
+              </Field>
+              <ErrorMessage name="place" component="div" className="error" />
+            </div>
+            <div className="div_33">
+              <span> المدينة:</span>
+              <Field type="text" name="city" className="input1" />
+              <ErrorMessage name="city" component="div" className="error" />
+            </div>
+            <div className="div_33">
+              <span> اسم الشارع:</span>
+              <Field type="text" name="street" className="input1" />
+              <ErrorMessage name="street" component="div" className="error" />
+            </div>
+            <div className="div_33">
+              <span> رقم المبنى :</span>
+              <Field type="text" name="buildingnum" className="input1" />
+              <ErrorMessage
+                name="buildingnum"
+                component="div"
+                className="error"
+              />
+            </div>
+            <div className="div_33">
+              <span> رقم إضافي :</span>
+              <Field type="text" name="addionatlnum" className="input1" />
+              <ErrorMessage
+                name="addionatlnum"
+                component="div"
+                className="error"
+              />
+            </div>
+            <div className="div_33">
+              <span> الرمز البريدي :</span>
+              <Field type="text" name="mailcode" className="input1" />
+              <ErrorMessage name="mailcode" component="div" className="error" />
+            </div>
             <div className="div_33">
               <span> {t("dashboard.finnace.contractsNumber")}:</span>
               <Field type="text" name="contractNumber" className="input1" />
@@ -188,7 +244,8 @@ const CreateContract = () => {
             </div>
           </div>
         </Formik>
-        <RichTextEditor contractType={selectedContractType} />
+        <TinyEditor />
+        {/* <RichTextEditor contractType={selectedContractType} /> */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box className="uploadBtn" sx={{ marginX: "10px" }}>
             <label htmlFor="fileInput" style={{ cursor: "pointer" }}>

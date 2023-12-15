@@ -34,11 +34,13 @@ import BillingStatements from "./dashboard/pages/BillingStatements/BillingStatem
 import ContactUs from "../src/website/pages/contact_us/ContactUs";
 import AboutUs from "./website/pages/about_us/AboutUs";
 import AddUnit from "./dashboard/pages/add_unit/AddUnit";
+import ElectronicInvoices from "./dashboard/pages/Electronic_invoices/ElectronicInvoices";
+import CreateTypeContract from "./dashboard/pages/create_type_contract/CreateTypeContract";
 
 function App() {
   const { i18n } = useTranslation();
   const language = i18n.language;
-  const thereisToken = localStorage.getItem("user_token")
+  const thereisToken = localStorage.getItem("user_token");
 
   // useEffect(() => {
   //   document.documentElement.lang = i18n.language;
@@ -123,6 +125,8 @@ function App() {
           <Route path="billing_statements" element={<BillingStatements />} />
           <Route path="statements" element={<AccountStatements />} />
           <Route path="paymentReceiption" element={<PaymentReceiption />} />
+          <Route path="electronic_invoices" element={<ElectronicInvoices />} />
+
           <Route path="acc">
             <Route index path="requests" element={<Requests />} />
             <Route path="contracts" element={<Contracts />} />
@@ -130,6 +134,10 @@ function App() {
             <Route path="create_contract" element={<CreateContract />} />
             <Route path="finance" element={<Finance />} />
             <Route path="InstantPayment" element={<InstantPayment />} />
+            <Route
+              path="create_type_contract"
+              element={<CreateTypeContract />}
+            />
           </Route>
           <Route path="prices">
             <Route path="main" element={<MainPrices />} />

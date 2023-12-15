@@ -12,6 +12,30 @@
     font-weight: bold;
   }
 }
+.btnAddContarct {
+  background-color: var(--green-color) !important;
+  color: white !important;
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 6rem;
+  margin-top: 2rem;
+  margin-right: auto;
+  display: block;
+  font-weight: 500;
+
+}
+[lang= "en"] .btnAddContarct {
+  margin-right: initial;
+  margin-left: auto;
+}
+.createContact {
+  color: var(--green-color);
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 10px;
+}
 .color_gray {
   color: gray;
   margin-bottom: 1rem;
@@ -49,7 +73,7 @@
 }
 .calenderIcon {
   font-size: 15px !important;
-  color: var(--main-color);
+  color: gray;
   margin-left: 5px;
 }
 .contarctBoxes {
@@ -68,7 +92,7 @@
       position: absolute;
       left: 1rem;
       top: 1rem;
-      color: var(--main-color);
+      color: black;
       font-size: 2rem;
     }
   }

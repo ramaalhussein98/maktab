@@ -215,9 +215,7 @@ const DetailsCard = () => {
             fontSize: "18px",
           }}
         >
-          <span style={{ marginLeft: "5px" }}>
-             يوم كامل × 400 {t("Rial")}
-          </span>
+          <span style={{ marginLeft: "5px" }}>يوم كامل × 400 {t("Rial")}</span>
           <span>400 {t("Rial")}</span>
         </Box>
         <Box

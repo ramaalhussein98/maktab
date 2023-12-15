@@ -30,6 +30,7 @@ const DateRange = ({
   const isTransactionPage = location.split("/").includes("transactions");
   const detailsPage = location.split("/").includes("details");
   const reservationPage = location.split("/").includes("reservations");
+  const statementsPage = location.split("/").includes("statements");
 
   const handleSelect = (ranges) => {
     if (singleDate) {
@@ -161,6 +162,8 @@ const DateRange = ({
             ? "DateRangeContainerDetailsPage"
             : reservationPage
             ? "DateRangeContainerReservationPage"
+            : statementsPage
+            ? "DateRangeContainerstatementsPage"
             : "DateRangeContainer"
         }
       >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, Divider, Paper, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -6,49 +6,81 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useTranslation } from "react-i18next";
+import DateRange from "../../../website/pages/Details/details_component/DateRange";
 const AccountStatements = () => {
   const { t, i18n } = useTranslation();
+  const singleDate = false;
   const [showEntireBox, setShowEntireBox] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDates, setSelectedDates] = useState([]);
+  const dateRangeRef = useRef(null);
+  const excludedBoxRef = useRef(null);
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+    color: "var(--main-color)",
+  });
   const theme = useTheme();
   const isXS = useMediaQuery(theme.breakpoints.down("md"));
   const rowTitles = [
+    { width: "15%", label: t("dashboard.contract.Tenantname") },
     { width: "10%", label: t("dashboard.Accountstatements.date") },
-    { width: "50%", label: t("dashboard.Accountstatements.Statement") },
-    { width: "20%", label: t("dashboard.Accountstatements.Balance") },
-    { width: "20%", label: t("dashboard.Invoices.theamount") },
+    { width: "30%", label: t("dashboard.Accountstatements.Statement") },
+    { width: "15%", label: t("dashboard.Accountstatements.Balance") },
+    { width: "15%", label: "المبلغ المدفوع" },
+    { width: "20%", label: "المبلغ الإجمالي بعد خصم العمولة" },
   ];
   const rowsdata = [
     {
+      name: { width: "15%", label: "nama1" },
       date: { width: "10%", label: "12-11-2022" },
       statement: {
-        width: "50%",
+        width: "30%",
         label:
           "12-11-2022 إضافة مبلغ مدفوع لحجز مؤكد رقم 12345 - حديقة الفن -  قاعة مناسبات صغيرة",
       },
-      balance: { width: "20%", label: "698.00" },
-      amount: { width: "20%", label: "44666 " },
+      balance: { width: "15%", label: "698.00" },
+      amount: { width: "15%", label: "44666 " },
+      remain: { width: "20%", label: "9876 " },
     },
     {
+      name: { width: "15%", label: "nama122" },
       date: { width: "10%", label: "12-11-2022" },
       statement: {
-        width: "50%",
+        width: "30%",
         label:
-          "12-11-2022 إضافة مبلغ مدفوع لحجز مؤكد رقم 12345 - حديقة الفن -  قاعة مناسبات صغيرة",
+          "12-11-2022 إضافة مبلغ مدفوع لحجز مؤكد رقم 12345 - حrrrrdsadcsديقة الفن -  قاعة مناسبات صغيرة",
       },
-      balance: { width: "20%", label: "698.00" },
-      amount: { width: "20%", label: "44666 " },
+      balance: { width: "15%", label: "698.00" },
+      amount: { width: "15%", label: "44666 " },
+      remain: { width: "20%", label: "9876 " },
     },
+
     // Add more rows as needed
   ];
-  const toggleMenu = () => {
-    setShowEntireBox(true);
+  const toggleCalendar = () => {
+    setShowCalendar(!showCalendar);
   };
-  const toggleClose = () => {
-    setShowEntireBox(false);
+  const handleOutsideClick = (event) => {
+    if (
+      showCalendar &&
+      !dateRangeRef.current.contains(event.target) &&
+      !excludedBoxRef.current.contains(event.target)
+    ) {
+      setShowCalendar(false);
+    }
   };
+
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [showCalendar]);
   return (
     <div className="d_flex">
-      {isXS ? (
+      {/* {isXS ? (
         <div
           style={{
             position: "absolute",
@@ -62,8 +94,8 @@ const AccountStatements = () => {
           {!showEntireBox && <FilterListIcon onClick={toggleMenu} />}
           {showEntireBox && <CloseIcon onClick={toggleClose} />}
         </div>
-      ) : null}
-      {!isXS || showEntireBox ? (
+      ) : null} */}
+      {/* {!isXS || showEntireBox ? (
         <Box
           className="calender"
           sx={{
@@ -79,9 +111,52 @@ const AccountStatements = () => {
             <option>شهر اكتوبر 2022</option>
           </select>
         </Box>
-      ) : null}
+      ) : null} */}
       <div style={{ width: "100%" }}>
-        <Paper className="paperSatement">
+        <Paper
+          className="paperSatement"
+          onClick={toggleCalendar}
+          onChange={toggleCalendar}
+        >
+          <div className="serach-bills-container">
+            <p className="p1">حدد تاريخ البحث</p>
+            <div className="d-flex">
+              <span className="spanfrom"> من </span>
+              <input
+                type="text"
+                placeholder="Select date range"
+                onClick={toggleCalendar}
+                onChange={toggleCalendar}
+                value={`${dateRange.startDate.toLocaleDateString()} `}
+                style={{ width: "100%", cursor: "pointer" }}
+              />
+
+              <span className="spanfrom">إلى </span>
+              <input
+                type="text"
+                placeholder="Select date range"
+                onClick={toggleCalendar}
+                onChange={toggleCalendar}
+                value={` ${dateRange.endDate.toLocaleDateString()}`}
+                style={{ width: "100%", cursor: "pointer" }}
+              />
+            </div>
+
+            <div ref={dateRangeRef}>
+              {showCalendar && (
+                <DateRange
+                  showCalendar={showCalendar}
+                  setShowCalendar={setShowCalendar}
+                  dateRange={dateRange}
+                  setDateRange={setDateRange}
+                  singleDate={singleDate}
+                  selectedDates={selectedDates}
+                  setSelectedDates={setSelectedDates}
+                />
+              )}
+            </div>
+          </div>
+
           <Typography variant="h6" sx={{ marginY: "1rem" }}>
             {t("dashboard.Accountstatements.Monthly")} نوفمبر 2022
           </Typography>
@@ -153,6 +228,26 @@ const AccountStatements = () => {
               >
                 <div
                   style={{
+                    width: data.name.width,
+                    position: "relative",
+                    padding: "1rem 10px ",
+                  }}
+                >
+                  {data.name.label}
+                  <span
+                    style={{
+                      content: '""',
+                      position: "absolute",
+                      width: "1px",
+                      height: "100%",
+                      backgroundColor: "#eee",
+                      left: 0,
+                      top: 0,
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
                     width: data.date.width,
                     position: "relative",
                     padding: "1rem 10px ",
@@ -221,6 +316,28 @@ const AccountStatements = () => {
                   }}
                 >
                   {data.amount.label} +
+                  <span
+                    style={{
+                      content: '""',
+                      position: "absolute",
+                      width: "1px",
+                      height: "100%",
+                      backgroundColor: "#eee",
+                      left: 0,
+                      top: 0,
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    width: data.remain.width,
+                    position: "relative",
+                    padding: "1rem 10px ",
+                    fontWeight: "600",
+                    color: "var(--green-color)",
+                  }}
+                >
+                  {data.remain.label}
                   <span
                     style={{
                       content: '""',
