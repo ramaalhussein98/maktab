@@ -559,13 +559,13 @@ const Addads = ({ type = 0, ad = null }) => {
               state.images.forEach((file) => {
                 addFilesData.append("images[]", file);
               });
-
+              if (state.video) {
+                addFilesData.append("video", state.video);
+              }
               const addFiles = myAxios.post(
                 `api/v1/user/offices/addFiles/${id}`,
                 addFilesData
               );
-
-              console.log(addFiles);
             }
           });
         console.log(res);

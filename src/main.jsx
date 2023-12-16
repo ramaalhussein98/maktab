@@ -16,6 +16,8 @@ import createCache from "@emotion/cache";
 import { ChatProvider } from "./context/chatContext";
 
 import { UserProvider } from "./context/userContext.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const theme = createTheme({
   direction: "rtl", // Both here and <body dir="rtl">
@@ -28,7 +30,8 @@ const cacheRtl = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
 });
-//hi
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {/* <CacheProvider value={cacheRtl}> */}
@@ -36,7 +39,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider theme={theme}>
         <UserProvider>
           <ChatProvider>
-            <App />
+            <QueryClientProvider client={queryClient}>
+              <App />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
           </ChatProvider>
         </UserProvider>
       </ThemeProvider>
