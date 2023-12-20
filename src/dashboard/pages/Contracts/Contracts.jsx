@@ -5,6 +5,8 @@ import { Box, Paper, Typography } from "@mui/material";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink } from "react-router-dom";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const Contracts = () => {
   const { t, i18n } = useTranslation();
@@ -30,18 +32,22 @@ const Contracts = () => {
     {
       name: "tab1",
       text: t("dashboard.contarcts.numbercontracts"),
+      icon: <FileCopyIcon />,
     },
     {
       name: "tab2",
       text: " العقود المقبولة",
-    },
-    {
-      name: "tab3",
-      text: "العقود المنتهية",
+      icon: <DescriptionIcon sx={{color:"var(--green-color)"}}/>,
     },
     {
       name: "tab4",
       text: "قيد الانتظار ",
+      icon: <DescriptionIcon sx={{color:"#fa870d"}}/>,
+    },
+    {
+      name: "tab3",
+      text: "العقود المنتهية",
+      icon: <DescriptionIcon sx={{color:"red"}}/>,
     },
   ];
 
@@ -75,7 +81,8 @@ const Contracts = () => {
             >
               <p className="p1">{tab.text}</p>
               <b>1</b>
-              <RequestPageIcon className="svg1" />
+              <div className="svg1">{tab.icon}</div>
+              {/* <FileCopyIcon /> */}
             </AnimatedPaper>
           );
         })}

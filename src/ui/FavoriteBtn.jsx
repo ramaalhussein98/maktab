@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const FavoriteBtn = () => {
   const [isClicked, setIsClicked] = useState(false);

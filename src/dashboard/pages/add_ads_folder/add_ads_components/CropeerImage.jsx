@@ -13,14 +13,11 @@ const CropeerImage = ({
   height,
   maxImages,
   hasBackground = true,
-  formData,
-  setFormData,
-  setSelectedImages,
   setImages,
   selectedImage,
   setSelectedImage,
-  thumbnail,
-  setThumbnail,
+  state,
+  dispatch,
 }) => {
   const { t } = useTranslation();
   const [isImageSelected, setIsImageSelected] = useState();
@@ -69,7 +66,6 @@ const CropeerImage = ({
         const reader = new FileReader();
         reader.onload = () => {
           setIsImageSelected(reader.result);
-
           handleOpen();
         };
         reader.readAsDataURL(file);
@@ -103,21 +99,15 @@ const CropeerImage = ({
         );
 
         if (type === 1) {
-          setThumbnail(croppedImageUrl);
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            thumbnail: file,
-          }));
+          dispatch({
+            type: "thumbnail",
+            value: { show: croppedImageUrl, file: file },
+          });
         }
         if (type === 2) {
           setImages((prev) => [...prev, croppedImageUrl]);
-          setSelectedImages((prevImages) => [...prevImages, file]);
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            images: prevFormData?.images
-              ? [...prevFormData?.images, file]
-              : [file], // Append new blob to the array
-          }));
+          // setSelectedImages((prevImages) => [...prevImages, file]);
+          dispatch({ type: "images", value: file });
         }
       }
     }
@@ -151,16 +141,18 @@ const CropeerImage = ({
         }}
         style={{
           backgroundImage:
-            hasBackground && thumbnail ? `url(${thumbnail})` : "none", // Set thumbnail as the background image if hasBackground is true
+            hasBackground && state?.thumbnail.show
+              ? `url(${state?.thumbnail.show})`
+              : "none", // Set state?.thumbnail as the background image if hasBackground is true
         }}
         onClick={handleChooseImage}
       >
-        {hasBackground && thumbnail ? (
+        {hasBackground && state?.thumbnail?.show ? (
           <>
             <img
               src={
-                `https://www.dashboard.aqartik.com/assets/images/deal/image/${formData?.thumbnail?.name}` ||
-                thumbnail
+                `https://www.dashboard.aqartik.com/assets/images/deal/image/${state?.thumbnail?.name}` ||
+                state?.thumbnail?.show
               }
               alt="Selected Image"
               style={{ display: "none" }}

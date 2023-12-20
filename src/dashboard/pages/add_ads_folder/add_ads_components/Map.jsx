@@ -17,56 +17,46 @@ const containerStyle = {
 
 const googleMapsApiKey = "AIzaSyCUSxdxRLpvkegxpk9-82sUjCylgekfGUk";
 
-const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
+const Map = ({ state, dispatch }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: googleMapsApiKey,
-    // libraries: ['geometry', 'drawing'],
   });
-
-  const [userMarkers, setUserMarkers] = useState([]);
-  const [cityName, setCityName] = useState();
-  const [neighborhoodName, setNeighborhoodName] = useState();
-  const [rood, setRood] = useState();
-
-  const userLocation = JSON.parse(localStorage.getItem("userLocation"));
-
-  const [centeredMap, setCenteredMap] = useState({
-    lat: userLocation?.latitude,
-    lng: userLocation?.longitude,
-  });
-
-  useEffect(() => {
-    setError(true);
-  }, []);
-
-  const [selectedMarker, setSelectedMarker] = useState(
-    formData.selectedLocation || null
-  );
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const handleMapLoad = () => {
     setMapLoaded(true);
   };
+
+  const [userMarkers, setUserMarkers] = useState([]);
+  // const userLocation = JSON.parse(localStorage.getItem("userLocation"));
+
+  const [centeredMap, setCenteredMap] = useState({
+    lat: 24.786389772943902,
+    lng: 46.41807925635318,
+  });
+
+  // useEffect(() => {
+  //   setError(true);
+  // }, []);
+
   useEffect(() => {
     if (mapLoaded) {
-      if (formData?.selectedLocation?.lat && formData?.selectedLocation?.lng) {
+      if (state?.lat && state?.lng) {
         const clickedPosition = {
-          lat: formData.selectedLocation.lat,
-          lng: formData.selectedLocation.lng,
-          zoom: 10,
+          lat: state.lat,
+          lng: state.lng,
+          zoom: state.zoom,
         };
+
         const newMarker = {
           position: clickedPosition,
           id: new Date().getTime(), // Generate a unique ID
         };
+
         setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
-        setFormData((prevData) => ({
-          ...prevData,
-          selectedLocation: clickedPosition,
-        }));
         setUserMarkers([newMarker]);
-        setError(false);
+        // setError(false);
       } else {
         const clickedPosition = {
           lat: centeredMap.lat,
@@ -78,12 +68,7 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
           id: new Date().getTime(), // Generate a unique ID
         };
         setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
-        setFormData((prevData) => ({
-          ...prevData,
-          selectedLocation: clickedPosition,
-        }));
         setUserMarkers([newMarker]);
-
         let isSaudiArabia = false;
         //getting the country
         fetch(
@@ -99,19 +84,22 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
                     const countryName = component.long_name;
                     if (countryName === "السعودية") {
                       isSaudiArabia = true;
-                      setError(false);
+                      // setError(false);
                     } else {
-                      setError(true);
+                      // setError(true);
                     }
                   }
                   if (component.types.includes("locality")) {
-                    setCityName(component.long_name);
+                    dispatch({ type: "city", value: component.long_name });
                   }
                   if (component.types.includes("sublocality")) {
-                    setNeighborhoodName(component.long_name);
+                    dispatch({
+                      type: "neighborhood",
+                      value: component.long_name,
+                    });
                   }
                   if (component.types.includes("route")) {
-                    setRood(component.long_name);
+                    dispatch({ type: "street", value: component.long_name });
                   }
                 }
               }
@@ -121,7 +109,6 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
                   "لايمكن الاختيار خارج حدود المملكة العربية السعودية"
                 );
               }
-            } else {
             }
           })
           .catch((error) => {
@@ -131,21 +118,13 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
     }
   }, [mapLoaded]);
 
-  const handleCloseInfoWindow = () => {
-    setSelectedMarker(null);
-    setFormData((prevData) => ({
-      ...prevData,
-      selectedLocation: null,
-    }));
-  };
-
   const handleMapClick = (event) => {
     const clickedPosition = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
       zoom: 10,
     };
-
+    dispatch({ type: "mapClick", clickedPosition });
     const newMarker = {
       position: clickedPosition,
       id: new Date().getTime(), // Generate a unique ID
@@ -153,14 +132,9 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
 
     setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
 
-    setFormData((prevData) => ({
-      ...prevData,
-      selectedLocation: clickedPosition,
-    }));
-
     setUserMarkers([newMarker]);
     let isSaudiArabia = false;
-    //getting the country
+    // getting the country
     fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${clickedPosition.lat},${clickedPosition.lng}&key=${googleMapsApiKey}&language=ar`
     )
@@ -174,19 +148,19 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
                 const countryName = component.long_name;
                 if (countryName === "السعودية") {
                   isSaudiArabia = true;
-                  setError(false);
+                  // setError(false);
                 } else {
-                  setError(true);
+                  // setError(true);
                 }
               }
               if (component.types.includes("locality")) {
-                setCityName(component.long_name);
+                dispatch({ type: "city", value: component.long_name });
               }
               if (component.types.includes("sublocality")) {
-                setNeighborhoodName(component.long_name);
+                dispatch({ type: "neighborhood", value: component.long_name });
               }
               if (component.types.includes("route")) {
-                setRood(component.long_name);
+                dispatch({ type: "street", value: component.long_name });
               }
             }
           }
@@ -194,22 +168,12 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
             // The location is not in Saudi Arabia
             toast.error("لايمكن الاختيار خارج حدود المملكة العربية السعودية");
           }
-        } else {
         }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-
-  useEffect(() => {
-    setMapData((prev) => ({
-      ...prev,
-      cityName,
-      neighborhoodName,
-      rood,
-    }));
-  }, [cityName, neighborhoodName, rood]);
 
   return (
     isLoaded && (
@@ -231,17 +195,6 @@ const Map = ({ formData, setFormData, setError, mapData, setMapData }) => {
             }}
           />
         ))}
-        {/* {selectedMarker && (
-          <InfoWindow
-            // position={selectedMarker.position}
-            onCloseClick={handleCloseInfoWindow}
-          >
-            <div>
-              <h3>{selectedMarker.title}</h3>
-              <p>{selectedMarker.description}</p>
-            </div>
-          </InfoWindow>
-        )} */}
       </GoogleMap>
     )
   );

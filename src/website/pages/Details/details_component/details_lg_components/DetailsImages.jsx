@@ -17,7 +17,7 @@ import {
   Home6,
 } from "../../../../../assets/images";
 
-export default function DetailsImages() {
+export default function DetailsImages({ data }) {
   // { adInfo }
   const { t, i18n } = useTranslation();
   const lang = i18n.language;

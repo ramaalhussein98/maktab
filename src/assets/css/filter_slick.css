@@ -48,12 +48,22 @@
       opacity: 1;
     }
   }
-  &.active {
-    span::before {
+}
+.filter_div.activeButton {
+  color: black !important;
+  .span1 {
+    color: black !important;
+    &::before {
       background-color: black !important;
+      display: block;
     }
   }
+  span1::before {
+    color: black !important;
+    background-color: black !important;
+  }
 }
+
 .buttonPrev {
   all: unset;
   width: 25px !important;

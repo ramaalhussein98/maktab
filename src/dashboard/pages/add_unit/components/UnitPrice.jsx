@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Divider, Switch } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
+import { useTranslation } from "react-i18next";
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -15,51 +16,32 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const ArrayPrices = [
-  { id: 1, title: "ساعة" },
-  { id: 2, title: "يومي" },
-  { id: 3, title: "اسبوعي" },
-  { id: 4, title: "شهري" },
-  { id: 5, title: "سنوي" },
-];
-
-const UnitPrice = () => {
-  const [deposit, setDeposit] = useState(false);
+const UnitPrice = ({ state, dispatch, pricesTypes }) => {
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
   const [selectedUnit, setSelectedUnit] = useState("ر.س");
-  const [priceStates, setPriceStates] = useState(
-    ArrayPrices.reduce((acc, price) => {
-      acc[price.id] = { checked: false, value: "" };
-      return acc;
-    }, {})
-  );
+
+  useEffect(() => {
+    dispatch({ type: "prices", sub_type: "add", array: pricesTypes });
+  }, []);
 
   const handleToggleSwitch = (id) => {
-    setPriceStates((prevStates) => ({
-      ...prevStates,
-      [id]: {
-        ...prevStates[id],
-        checked: !prevStates[id].checked,
-      },
-    }));
+    dispatch({ type: "prices", sub_type: "toggleStatus", id });
   };
 
   const handleInputChange = (id, value) => {
-    setPriceStates((prevStates) => ({
-      ...prevStates,
-      [id]: {
-        ...prevStates[id],
-        value,
-      },
-    }));
+    dispatch({ type: "prices", sub_type: "priceChange", id, value });
   };
 
-  //   this i will send values to api
-  const logValues = () => {
-    console.log("Price States:", priceStates);
-  };
   const toggleUnit = () => {
     setSelectedUnit((prevUnit) => (prevUnit === "ر.س" ? "%" : "ر.س"));
   };
+
+  useEffect(() => {
+    const unit = selectedUnit === "ر.س" ? "percent" : "rial";
+    dispatch({ type: "unit", value: unit });
+  }, [selectedUnit]);
+
   return (
     <>
       <div className="UnitDetailsContainer">
@@ -68,22 +50,29 @@ const UnitPrice = () => {
           اكتب أسعار عقارك الأساسية تقدر تعدل الأسعار ونضيف عروض وخصومات لاحقا{" "}
         </span>
       </div>
-      {ArrayPrices.map((data) => (
-        <div key={data.id} className="CheckedBoxContainer">
-          <p className="priceTitle">{data.title}</p>
-          <input
-            type="number"
-            className="priceInput"
-            value={priceStates[data.id].value}
-            onChange={(e) => handleInputChange(data.id, e.target.value)}
-          />
-          <GreenSwitch
-            className="Switch1"
-            checked={priceStates[data.id].checked}
-            onChange={() => handleToggleSwitch(data.id)}
-          />
-        </div>
-      ))}
+      {state?.prices.map((price) => {
+        const matchedObj = pricesTypes.find(
+          (ele) => ele.id === price.type_res_id
+        );
+        return (
+          <div key={matchedObj.id} className="CheckedBoxContainer">
+            <p className="priceTitle">
+              {lang === "ar" ? matchedObj.ar_name : matchedObj?.en_name}
+            </p>
+            <input
+              type="number"
+              className="priceInput"
+              value={price.price}
+              onChange={(e) => handleInputChange(matchedObj.id, e.target.value)}
+            />
+            <GreenSwitch
+              className="Switch1"
+              checked={price.status}
+              onChange={() => handleToggleSwitch(matchedObj.id)}
+            />
+          </div>
+        );
+      })}
       <Divider sx={{ marginY: "1rem" }} />
       {/* <button onClick={logValues}>Log Values</button> */}
       <div className="CheckedBoxContainer">
@@ -91,19 +80,15 @@ const UnitPrice = () => {
         <div className="raabon">
           <input
             type="number"
-            value={deposit}
+            value={state.down_payment}
             className="priceInput"
-            onChange={(e) => setDeposit(e.target.value)}
+            onChange={(e) =>
+              dispatch({ type: "downPayment", value: e.target.value })
+            }
           />
           <span className="span1" onClick={toggleUnit}>
             {selectedUnit}
           </span>
-          {/* <Switch
-            checked={selectedUnit === "%"}
-            onChange={toggleUnit}
-            sx={{ marginLeft: "10px" }}
-          /> */}
-          {/* <span>%</span> */}
         </div>
       </div>
     </>

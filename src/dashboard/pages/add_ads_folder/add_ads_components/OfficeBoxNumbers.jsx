@@ -1,22 +1,58 @@
 // OfficeBoxNumbers.jsx
 import { Box, Paper } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const OfficeBoxNumbers = ({ title, numbers }) => {
+const OfficeBoxNumbers = ({
+  title,
+  numbers,
+  dispatch,
+  state,
+  ar_name,
+  en_name,
+  status,
+}) => {
   const [showMoreNumberBox, setShowMoreNumberBox] = useState(false);
-  const [selectedBox, setSelectedBox] = useState(null);
+  const [selectedBox, setSelectedBox] = useState(() => {
+    const existingObject = state?.details.find(
+      (obj) => obj.en_name === en_name
+    );
+    return existingObject ? existingObject.number_details - 1 : null;
+  });
   const { t } = useTranslation();
   const handleBoxClick = (number, index) => {
     if (selectedBox === index) {
       setSelectedBox(null);
+      dispatch({
+        type: "details",
+        data: {
+          type: "remove",
+          object: {
+            ar_name: ar_name,
+            en_name: en_name,
+            status: status,
+            number_details: number,
+          },
+        },
+      });
     } else {
       setSelectedBox(index);
+      dispatch({
+        type: "details",
+        data: {
+          type: "add",
+          object: {
+            ar_name: ar_name,
+            en_name: en_name,
+            status: status,
+            number_details: number,
+          },
+        },
+      });
     }
     if (showMoreNumberBox && index < 5) {
       setShowMoreNumberBox(false);
     }
-    console.log(number);
   };
 
   return (

@@ -18,8 +18,8 @@ import FiveStars from "./FiveStars";
 import { useTranslation } from "react-i18next";
 // import LogInModal from "../../../../authentication/loginFolder/LogInModal";
 
-const DetailsTabs = () =>
-  // { adInfo }
+const DetailsTabs = ({ adInfo }) =>
+  //
   {
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
@@ -147,9 +147,7 @@ const DetailsTabs = () =>
           <DetailsTabContent
             title={t("details_page.details_tabs.specifications_and_features")}
           />
-          <DetailsFeaturesBox
-          //  adInfo={adInfo}
-          />
+          <DetailsFeaturesBox adInfo={adInfo} />
         </Box>
         <Box hidden={selectedTab !== 1}>
           <DetailsTabContent
@@ -165,8 +163,7 @@ const DetailsTabs = () =>
             }}
           >
             <Link
-              // href={`https://www.google.com/maps/dir/My+Location/${adInfo.lat},${adInfo.lng}/@${adInfo.lat},${adInfo.lng},12z/data=!3m1!4b1?entry=ttu`}
-
+              href={`https://www.google.com/maps/dir/My+Location/${adInfo?.location.lat},${adInfo?.location.lng}/@${adInfo?.location.lat},${adInfo?.location.lng},12z/data=!3m1!4b1?entry=ttu`}
               target="_blank"
             >
               <img
@@ -196,7 +193,7 @@ const DetailsTabs = () =>
                 ..
               </Typography>
               <FiveStars
-              // adInfo={adInfo}
+              adInfo={adInfo}
               />
             </Box>
           )}

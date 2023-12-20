@@ -27,11 +27,14 @@ import {
 } from "../../../../assets/images";
 import { useLocation, useNavigate } from "react-router-dom";
 // SwiperCore.use([Pagination]);
-const AdSlider = () => {
+const AdSlider = ({ officeData }) => {
   // const homeImages = ad.gallery;
   const location = useLocation().pathname;
   const [swiper, setSwiper] = useState(null);
-  const homeImages = [{ src: Home3 }, { src: Home5 }, { src: Home6 }];
+  const ImagePath = { path: officeData?.main_image };
+  const homeImages = [ImagePath, ...(officeData?.ads_files?.length > 0 ? officeData.ads_files : [])];
+
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const isAdMapCardComponent = location.split("/").includes("map");
@@ -117,28 +120,33 @@ const AdSlider = () => {
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        {homeImages.map((image, index) => (
-          <SwiperSlide
-            key={index}
-            className={
-              isAdMapCardComponent ? styles.customSlideMap : styles.customSlide
-            }
-          >
-            <img
-              src={image.src}
-              loading="lazy"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
+        {homeImages.length > 0 &&
+          homeImages.map((image, index) => (
+            <SwiperSlide
+              key={index}
               className={
-                isAdMapCardComponent ? styles.imgBorderMap : styles.imageBorder
+                isAdMapCardComponent
+                  ? styles.customSlideMap
+                  : styles.customSlide
               }
-            />
-            <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-          </SwiperSlide>
-        ))}
+            >
+              <img
+                src={`https://dashboard.maktab.sa/${image.path}`}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+                className={
+                  isAdMapCardComponent
+                    ? styles.imgBorderMap
+                    : styles.imageBorder
+                }
+              />
+              <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+            </SwiperSlide>
+          ))}
       </Swiper>
 
       <CustomPrevArrow onClick={handlePrevClick} />

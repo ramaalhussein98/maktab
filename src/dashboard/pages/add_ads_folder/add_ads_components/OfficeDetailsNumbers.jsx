@@ -1,5 +1,4 @@
-// Main component
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import OfficeBoxNumbers from "./OfficeBoxNumbers";
 import "../../../../assets/css/office_details.css";
@@ -19,18 +18,42 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const OfficeDetailsNumbers = () => {
+const OfficeDetailsNumbers = ({ dispatch, state }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
+  const [showFloors, setShowFloors] = useState(true);
+  const [showAge, setShowAge] = useState(true);
   const [showOffices, setShowOffices] = useState(true);
   const [showMeetingRooms, setShowMeetingRooms] = useState(true);
 
   // Toggle functions to control the switches
-  const handleOfficesToggle = () => {
+  const handleOfficesToggle = (en_name) => {
+    if (showOffices) {
+      dispatch({
+        type: "details",
+        data: {
+          type: "remove",
+          object: {
+            en_name: en_name,
+          },
+        },
+      });
+    }
     setShowOffices(!showOffices);
   };
 
-  const handleMeetingRoomsToggle = () => {
+  const handleMeetingRoomsToggle = (en_name) => {
+    if (showMeetingRooms) {
+      dispatch({
+        type: "details",
+        data: {
+          type: "remove",
+          object: {
+            en_name: en_name,
+          },
+        },
+      });
+    }
     setShowMeetingRooms(!showMeetingRooms);
   };
 
@@ -49,6 +72,11 @@ const OfficeDetailsNumbers = () => {
       </Typography>
       <OfficeBoxNumbers
         title={lang === "ar" ? "الدور" : "Floors"}
+        dispatch={dispatch}
+        state={state}
+        status={showFloors}
+        ar_name="الدور"
+        en_name="floors"
         numbers={[
           t("dashboard.contract.groundfloor"),
           t("dashboard.contract.Peaks"),
@@ -57,7 +85,12 @@ const OfficeDetailsNumbers = () => {
         ]}
       />
       <OfficeBoxNumbers
-        title={lang === "ar" ? "عمر العقار" : "RealEstate Age"}
+        dispatch={dispatch}
+        state={state}
+        ar_name="عمر العقار"
+        status={showAge}
+        en_name="office Age"
+        title={lang === "ar" ? "عمر العقار" : "office Age"}
         numbers={[1, 2, 3, 4]}
       />
       <div
@@ -68,18 +101,23 @@ const OfficeDetailsNumbers = () => {
         }}
       >
         <span style={{ fontWeight: "500" }}>
-          {lang === "ar" ? " عدد المكاتب" : "Number Offices"}
+          {lang === "ar" ? " عدد المكاتب" : "offices numbers"}
         </span>
         <GreenSwitch
           className="Switch1"
           checked={showOffices} // set the value of the switch
-          onChange={handleOfficesToggle} // handle the change of the switch
+          onChange={() => handleOfficesToggle("offices numbers")} // handle the change of the switch
         />
       </div>
 
       {showOffices && (
         <OfficeBoxNumbers
-          title={lang === "ar" ? " " : ""}
+          dispatch={dispatch}
+          ar_name="عدد المكاتب"
+          status={showOffices}
+          en_name="offices numbers"
+          state={state}
+          title={""}
           numbers={[1, 2, 3, 4]}
         />
       )}
@@ -96,12 +134,17 @@ const OfficeDetailsNumbers = () => {
         <GreenSwitch
           className="Switch1"
           checked={showMeetingRooms} // set the value of the switch
-          onChange={handleMeetingRoomsToggle} // handle the change of the switch
+          onChange={() => handleMeetingRoomsToggle("Meeting Rooms")} // handle the change of the switch
         />
       </div>
       {showMeetingRooms && (
         <OfficeBoxNumbers
-          title={lang === "ar" ? "  " : " "}
+          dispatch={dispatch}
+          state={state}
+          status={showMeetingRooms}
+          ar_name="غرف اجتماعات"
+          en_name="Meeting Rooms"
+          title={""}
           numbers={[1, 2, 3, 4]}
         />
       )}

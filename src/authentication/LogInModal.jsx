@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Modal,
   Box,
@@ -12,9 +12,7 @@ import { useTranslation } from "react-i18next";
 import { myAxios } from "../api/myAxios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import UserContext, { useStateContext } from "../context/userContext";
-// import { useAxiosConfig } from "../context/AxiosContext ";
 import "../assets/css/login.css";
 import useDataFetcher from "../api/useDataFetcher ";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";

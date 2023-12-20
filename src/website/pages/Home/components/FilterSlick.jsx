@@ -1,41 +1,10 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import "../../../../assets/css/filter_slick.css";
-import {
-  SmallHouses,
-  Designs,
-  Village,
-  Enough,
-  North,
-  Places,
-  Cabin,
-  PoolIcon,
-  Trend,
-  SpeacialViews,
-} from "../../../../assets/icons";
 import { Button } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-
-const FilterData = [
-  // { src: SmallHouses, label: "  بيوت صغيرة" },
-  // { src: Designs, label: "   تصماميم " },
-  // { src: Village, label: "   في الريف" },
-  // { src: Places, label: "    قلاع" },
-  // { src: Enough, label: "  مكاتب" },
-
-  { src: SmallHouses, label: " مكتب مستقل" },
-  { src: Designs, label: "  مكتب مؤثث" },
-  { src: Village, label: "  مكتب مشترك" },
-  { src: Enough, label: "   مكتب متحرك" },
-  { src: North, label: "  مكتب افتراضي " },
-  { src: Places, label: "  قاعة احتماعات " },
-  // { src: Places, label: "   كراج " },
-
-  // { src: PoolIcon, label: "  مسابح رائعة " },
-  // { src: Trend, label: "  الأكثر رواجا " },
-  // { src: SpeacialViews, label: " إطلالات خلابة  " },
-];
+import { useTranslation } from "react-i18next";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -54,11 +23,24 @@ function SamplePrevArrow(props) {
     </Button>
   );
 }
-
-const FilterSlick = () => {
+const searchData = JSON.parse(localStorage.getItem("searchData"));
+const FilterData = searchData?.category_aqar;
+// console.log("FilterData", FilterData);
+const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
+  const [activeButton, setActiveButton] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  const handleDivClick = (index, label) => {
-    console.log(`Clicked on: ${label}`);
+  const handleDivClick = (index, label, id) => {
+    setActiveButton(id);
+    // setSearchQuery((prev) => prev + `exact[category_aqar.id]=${id}`);
+    setFilter((prevState) => ({
+      ...prevState,
+      "exact[category_aqar.id]": id,
+    }));
+
+    // SearchParams.append("exact[category_aqar.id]", id);
+    refetch();
 
     if (index === activeIndex) {
       setActiveIndex(null);
@@ -66,6 +48,7 @@ const FilterSlick = () => {
       setActiveIndex(index);
     }
   };
+
   const settings = {
     dots: false,
     centerMode: false,
@@ -101,12 +84,21 @@ const FilterSlick = () => {
       <Slider {...settings}>
         {FilterData.map((data, index) => (
           <div
+            id={data.id}
             key={index}
-            className={`filter_div ${index === activeIndex ? "active" : ""}`}
-            onClick={() => handleDivClick(index, data.label)}
+            className={`filter_div ${
+              activeButton === data.id ? "activeButton" : ""
+            }`}
+            // className={`filter_div ${index === activeIndex ? "active" : ""}`}
+            onClick={() => handleDivClick(index, data.label, data.id)}
           >
-            <img src={data.src} style={{ width: "24px", margin: "auto" }} />
-            <span className="span1">{data.label}</span>
+            <img
+              src={`https://dashboard.maktab.sa/${data?.icon}`}
+              style={{ width: "24px", margin: "auto" }}
+            />
+            <span className="span1">
+              {lang === "ar" ? data.ar_name : data.en_name}
+            </span>
           </div>
         ))}
       </Slider>

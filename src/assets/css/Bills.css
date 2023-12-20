@@ -29,7 +29,8 @@
   margin-left: auto;
 }
 .createContact {
-  color: var(--green-color);
+  background-color: var(--green-color) !important;
+  color: white;
   font-weight: 600;
   cursor: pointer;
   background-color: #eee;

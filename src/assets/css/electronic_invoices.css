@@ -74,11 +74,25 @@
 .backgroundBox {
   width: 25%;
   padding: 5px;
- 
+  margin-top: 5px;
 }
 .Gray1 {
   background-color: #a1b8c9;
 }
 .GrayLight {
   background-color: #eee;
+}
+.table-row {
+  background-color: #eee;
+  margin-top: 3rem;
+}
+.payment_container{
+  font-weight: 500;
+  margin-top: 2rem;
+  align-items: center;
+  text-align: center;
+}
+.d_column{
+  display: flex;
+  flex-direction: column;
 }

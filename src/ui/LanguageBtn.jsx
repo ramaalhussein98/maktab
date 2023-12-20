@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { languageImg } from "../assets/icons";
 import { Box, Button, Paper } from "@mui/material";
 import TranslateIcon from "@mui/icons-material/Translate";
+import LanguageIcon from '@mui/icons-material/Language';
 import "../assets/css/language.css";
 import { KSA, US } from "../assets/icons";
 
@@ -34,7 +34,7 @@ const LanguageBtn = () => {
   return (
     <Box ref={languageRef}>
       <Button onClick={toggleshowPaper}>
-        <TranslateIcon sx={{ color: "black" }} />
+        <LanguageIcon sx={{ color: "black" }} />
         {/* <img src={languageImg} alt="language" style={{ width: "16px" }} /> */}
       </Button>
       {showPaper && (

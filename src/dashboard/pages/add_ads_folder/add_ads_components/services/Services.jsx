@@ -1,102 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Switch, TextField, Button } from "@mui/material";
+import { useState } from "react";
+import { Box, Typography, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-import { Bed, Pool } from "../../../../../assets/icons";
 import ServicesBox from "./ServicesBox";
 import AddIcon from "@mui/icons-material/Add";
 
-const Services = ({ formData, setFormData }) => {
-  const { t, i18n } = useTranslation();
+const Services = ({ state, dispatch, features }) => {
+  const { i18n } = useTranslation();
   const lang = i18n.language;
-  const [serviceBoxes, setServiceBoxes] = useState([
-    {
-      toggleServiceBox: true, // Initially set to true for the first box
-    },
-  ]);
 
-  const [checkedTwo, setCheckedTwo] = useState(false);
-  const [selectedBooleansProperties, setSelectedBooleansProperties] = useState(
-    []
-  );
+  const handlePropertyClick = (propertyId) => {
+    dispatch({ type: "features", value: propertyId });
+  };
 
-  const category_bool = [
-    {
-      id: 1,
-      bool_featurea: {
-        id: 1,
-        src: Bed,
-        ar_name: "الميزة 1",
-        en_name: "Feature 1",
-      },
-    },
-    {
-      id: 2,
-      bool_featurea: {
-        id: 2,
-        src: Pool,
-        ar_name: "الميزة 2",
-        en_name: "Feature 2",
-      },
-    },
-    // Add more items as needed
-  ];
   // Function to add a new service box
   const addServiceBox = () => {
-    setServiceBoxes([...serviceBoxes, {}]);
+    dispatch({ type: "services", sub_type: "add" });
   };
 
   // Function to remove a service box
   const removeServiceBox = (index) => {
-    const updatedBoxes = [...serviceBoxes];
-    updatedBoxes.splice(index, 1);
-    setServiceBoxes(updatedBoxes);
+    dispatch({ type: "services", sub_type: "remove", index });
   };
 
   // Function to toggle a service box
   const toggleServiceBox = (index) => {
-    const updatedBoxes = [...serviceBoxes];
-    updatedBoxes[index].toggleServiceBox =
-      !updatedBoxes[index].toggleServiceBox;
-    setServiceBoxes(updatedBoxes);
+    const toggleNewVal = !state.services[index].service_toggle;
+    dispatch({ type: "services", sub_type: "toggle", index, toggleNewVal });
   };
 
-  // useEffect(() => {
-  //   if (formData.BoolFeaturea && selectedBooleansProperties.length === 0) {
-  //     setSelectedBooleansProperties(formData.BoolFeaturea);
-  //   }
-  //   setFormData((prevFormData) => ({
-  //     ...prevFormData,
-  //     selectedBooleansProperties,
-  //   }));
-  // }, []);
-
-  // useEffect(() => {
-
-  // }, [selectedBooleansProperties]);
-  const handlePropertyClick = (propertyId) => {
-    const isInArray = selectedBooleansProperties.some(
-      (item) => item.boolfeaturea_id === propertyId
-    );
-
-    let updatedProperties = [...selectedBooleansProperties];
-
-    if (isInArray) {
-      updatedProperties = updatedProperties.filter(
-        (item) => item.boolfeaturea_id !== propertyId
-      );
-    } else {
-      updatedProperties.push({ boolfeaturea_id: propertyId });
-    }
-
-    setSelectedBooleansProperties(updatedProperties);
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      selectedBooleansProperties: updatedProperties,
-    }));
-  };
-  console.log(formData);
   return (
     <div>
       <Box>
@@ -119,10 +51,10 @@ const Services = ({ formData, setFormData }) => {
             gridTemplateColumns: "1fr 1fr 1fr 1fr",
           }}
         >
-          {category_bool.map((property) => (
+          {features.map((property) => (
             <Box
               key={property.id}
-              onClick={() => handlePropertyClick(property.bool_featurea.id)}
+              onClick={() => handlePropertyClick(property.id)}
               sx={{
                 height: "100px",
                 width: "100px",
@@ -135,18 +67,16 @@ const Services = ({ formData, setFormData }) => {
                 cursor: "pointer",
                 padding: "10px 0px",
                 marginBottom: "1rem",
-                backgroundColor:
-                  formData?.selectedBooleansProperties &&
-                  formData?.selectedBooleansProperties.some(
-                    (item) => item.boolfeaturea_id === property.bool_featurea.id
-                  )
-                    ? "var(--green-color)"
-                    : "transparent",
+                backgroundColor: state?.features.some(
+                  (item) => item === property.id
+                )
+                  ? "var(--green-color)"
+                  : "transparent",
                 transition: "background-color 0.3s, color 0.3s",
               }}
             >
               <img
-                src={property.bool_featurea.src}
+                src={`https://dashboard.maktab.sa/${property.icon}`}
                 alt="img"
                 style={{
                   position: "absolute",
@@ -159,21 +89,14 @@ const Services = ({ formData, setFormData }) => {
                 sx={{
                   width: "100%",
                   textAlign: "center",
-                  color:
-                    formData?.selectedBooleansProperties &&
-                    formData?.selectedBooleansProperties.some(
-                      (item) =>
-                        item.boolfeaturea_id === property.bool_featurea.id
-                    )
-                      ? "white"
-                      : "black",
+                  color: state?.features.some((item) => item === property.id)
+                    ? "white"
+                    : "black",
                 }}
               >
-                {lang === "ar"
-                  ? property.bool_featurea.ar_name
-                  : property.bool_featurea.en_name}
+                {lang === "ar" ? property.ar_name : property.en_name}
               </Typography>
-              <input type="hidden" value={property.bool_featurea.id} />
+              <input type="hidden" value={property.id} />
             </Box>
           ))}
         </Box>
@@ -186,11 +109,14 @@ const Services = ({ formData, setFormData }) => {
       <Typography>
         {lang === "ar" ? "  خدمات إضافية " : "Additional Services  "}
       </Typography>
-      {serviceBoxes.map((serviceBox, index) => (
+      {state?.services.map((serviceBox, index) => (
         <ServicesBox
           key={index}
+          data={serviceBox}
           onRemove={() => removeServiceBox(index)}
           onToggle={() => toggleServiceBox(index)}
+          index={index}
+          dispatch={dispatch}
         />
       ))}
 

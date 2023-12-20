@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, json } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { toast, Toaster } from "react-hot-toast";
 import DashLayout from "./dashboard/components/DashLayout";
 import InformationPage from "./dashboard/pages/homepages/InformationPage";
@@ -36,15 +37,44 @@ import AboutUs from "./website/pages/about_us/AboutUs";
 import AddUnit from "./dashboard/pages/add_unit/AddUnit";
 import ElectronicInvoices from "./dashboard/pages/Electronic_invoices/ElectronicInvoices";
 import CreateTypeContract from "./dashboard/pages/create_type_contract/CreateTypeContract";
+import myAxios from "./api/myAxios";
+import BussinesMainPage from "./website/pages/Busseins_main_page/BussinesMainPage";
 
 function App() {
   const { i18n } = useTranslation();
   const language = i18n.language;
   const thereisToken = localStorage.getItem("user_token");
+  const settingData = JSON.parse(localStorage.getItem("settingData"));
+  useEffect(() => {
+    const searchData = localStorage.getItem("searchData");
+    const getData = async () => {
+      const res = await myAxios.get("api/v1/user/settings/search_data");
+      console.log(res);
+      if (res.data.status === true) {
+        localStorage.setItem("searchData", JSON.stringify(res.data.data));
+      }
+    };
+    if (!searchData) {
+      getData();
+    }
 
-  // useEffect(() => {
-  //   document.documentElement.lang = i18n.language;
-  // }, [i18n.language]);
+    const getSettingData = async () => {
+      const res2 = await myAxios.get("api/v1/user/settings/general");
+      console.log(res2);
+      if (res2.data.status === true) {
+        localStorage.setItem("settingData", JSON.stringify(res2.data.data));
+      }
+    };
+    if (!settingData) {
+      getSettingData();
+    } else {
+      document.title =
+        language === "en"
+          ? settingData.site_title_en
+          : settingData.site_title_ar;
+    }
+  }, [language]);
+
   useEffect(() => {
     // Update CSS variables based on language
     document.documentElement.style.setProperty(
@@ -61,7 +91,24 @@ function App() {
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-
+      <Helmet>
+        <meta
+          name="description"
+          content={
+            language === "ar"
+              ? settingData?.site_desc_ar
+              : settingData?.site_desc_en
+          }
+        />
+        <meta
+          name="keywords"
+          content={
+            language === "ar"
+              ? settingData?.site_keywords_ar
+              : settingData?.site_keywords_en
+          }
+        />
+      </Helmet>
       <Routes>
         <Route
           index
@@ -72,7 +119,7 @@ function App() {
           }
         />
         <Route
-          path="details"
+          path="/details/:id"
           element={
             <Layout>
               <Details />
@@ -108,6 +155,14 @@ function App() {
           element={
             <Layout>
               <AboutUs />
+            </Layout>
+          }
+        />
+        <Route
+          path="business"
+          element={
+            <Layout>
+              <BussinesMainPage />
             </Layout>
           }
         />

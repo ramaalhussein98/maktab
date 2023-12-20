@@ -21,7 +21,8 @@ import { useTranslation } from "react-i18next";
 import styles from "../../../assets/css/home.module.css";
 import { toast, Toaster } from "react-hot-toast";
 // import { useAxiosConfig } from "../../../context/AxiosContext ";
-import axios from "axios";
+
+import myAxios from "../../../api/myAxios";
 
 const StyledSelect = styled(Select)((props) => ({
   "& .MuiSelect-icon": {
@@ -66,7 +67,8 @@ const ContactUs = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  // const { generalData } = useContext(GeneralContext);
+  const settingData = JSON.parse(localStorage.getItem("settingData"));
+
   const { t, i18n } = useTranslation();
   const userToken = localStorage.getItem("user_token");
 
@@ -74,58 +76,62 @@ const ContactUs = () => {
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isPhoneNumberValid = /^\d+$/.test(phoneNumber);
 
-  // const handleSendClick = () => {
-  //   if (!userToken) {
-  //     toast.error(
-  //       i18n.language === "ar"
-  //         ? "يجب تسجيل الدخول لإرسال الرسالة"
-  //         : "You must be logged in to send a message"
-  //     );
-  //     return;
-  //   }
-  //   if (!name || !email || !phoneNumber || !subject || !message) {
-  //     toast.error(
-  //       i18n.language === "ar"
-  //         ? "يرجى ملء جميع الحقول"
-  //         : "Please fill in all fields"
-  //     );
-  //     return;
-  //   }
+  const handleSendClick = () => {
+    if (!userToken) {
+      toast.error(
+        i18n.language === "ar"
+          ? "يجب تسجيل الدخول لإرسال الرسالة"
+          : "You must be logged in to send a message"
+      );
+      return;
+    }
+    if (!name || !email || !phoneNumber || !subject || !message) {
+      toast.error(
+        i18n.language === "ar"
+          ? "يرجى ملء جميع الحقول"
+          : "Please fill in all fields"
+      );
+      return;
+    }
 
-  //   if (!isEmailValid || !isPhoneNumberValid) {
-  //     toast.error(
-  //       i18n.language === "ar"
-  //         ? "يرجى إدخال قيم صحيحة"
-  //         : "Please enter a valid values"
-  //     );
-  //     return;
-  //   }
+    if (!isEmailValid || !isPhoneNumberValid) {
+      toast.error(
+        i18n.language === "ar"
+          ? "يرجى إدخال قيم صحيحة"
+          : "Please enter a valid values"
+      );
+      return;
+    }
 
-  //   const formData = {
-  //     Name: name,
-  //     Email: email,
-  //     "Phone Number": phoneNumber,
-  //     Subject: subject,
-  //     Message: message,
-  //   };
-  //   myAxios
-  //     .post("/api/user/send-support", formData)
-  //     .then((response) => {
-  //       toast.success(
-  //         i18n.language === "ar"
-  //           ? "تم إرسال الرسالة بنجاح"
-  //           : "Message sent successfully"
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       toast.error(
-  //         i18n.language === "ar"
-  //           ? "حدث خطأ أثناء إرسال الرسالة"
-  //           : "An error occurred while sending the message"
-  //       );
-  //     });
-  // };
+    const formData = {
+      from_name: name,
+      from_email: email,
+      PhoneNumber: phoneNumber,
+      details: subject,
+      Message: message,
+    };
+    myAxios
+      .post("api/v1/user/sendMail", formData)
+      .then((response) => {
+        if (response.data.status === true) {
+          toast.success(
+            i18n.language === "ar"
+              ? "تم إرسال الرسالة بنجاح"
+              : "Message sent successfully"
+          );
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(
+          i18n.language === "ar"
+            ? "حدث خطأ أثناء إرسال الرسالة"
+            : "An error occurred while sending the message"
+        );
+      });
+  };
 
   return (
     <Box sx={{ marginTop: "4rem" }}>
@@ -176,9 +182,9 @@ const ContactUs = () => {
                   {lang === "ar" ? "  العنوان " : " address"}
                 </Typography>
                 <Typography sx={{ color: "var(--main-color)" }}>
-                  {/* {lang === "ar"
-                    ? generalData?.contact_t1_ar
-                    : generalData?.contact_t1_en} */}
+                  {lang === "ar"
+                    ? settingData?.contact_t1_ar
+                    : settingData?.contact_t1_en}
                 </Typography>
               </Box>
             </Box>
@@ -207,7 +213,7 @@ const ContactUs = () => {
                   {lang === "ar" ? "  البريد الالكتروني" : " email"}
                 </Typography>
                 <Typography sx={{ color: "var(--main-color)" }}>
-                  {/* {generalData?.contact_t6} */}
+                  {settingData?.contact_t6}
                 </Typography>
               </Box>
             </Box>
@@ -335,7 +341,7 @@ const ContactUs = () => {
                   backgroundColor: "#4b4a4a",
                 },
               }}
-              // onClick={handleSendClick}
+              onClick={handleSendClick}
             >
               <SendIcon
                 sx={{ transform: "rotate(220deg)", marginTop: "-5px" }}

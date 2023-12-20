@@ -27,8 +27,8 @@ const AccountStatements = () => {
     { width: "15%", label: t("dashboard.contract.Tenantname") },
     { width: "10%", label: t("dashboard.Accountstatements.date") },
     { width: "30%", label: t("dashboard.Accountstatements.Statement") },
-    { width: "15%", label: t("dashboard.Accountstatements.Balance") },
     { width: "15%", label: "المبلغ المدفوع" },
+    { width: "15%", label: t("dashboard.Accountstatements.Balance") },
     { width: "20%", label: "المبلغ الإجمالي بعد خصم العمولة" },
   ];
   const rowsdata = [
@@ -52,8 +52,8 @@ const AccountStatements = () => {
         label:
           "12-11-2022 إضافة مبلغ مدفوع لحجز مؤكد رقم 12345 - حrrrrdsadcsديقة الفن -  قاعة مناسبات صغيرة",
       },
-      balance: { width: "15%", label: "698.00" },
       amount: { width: "15%", label: "44666 " },
+      balance: { width: "15%", label: "698.00" },
       remain: { width: "20%", label: "9876 " },
     },
 
@@ -288,26 +288,6 @@ const AccountStatements = () => {
                 </div>
                 <div
                   style={{
-                    width: data.balance.width,
-                    position: "relative",
-                    padding: "1rem 10px ",
-                  }}
-                >
-                  {data.balance.label}
-                  <span
-                    style={{
-                      content: '""',
-                      position: "absolute",
-                      width: "1px",
-                      height: "100%",
-                      backgroundColor: "#eee",
-                      left: 0,
-                      top: 0,
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
                     width: data.amount.width,
                     position: "relative",
                     padding: "1rem 10px ",
@@ -328,6 +308,27 @@ const AccountStatements = () => {
                     }}
                   />
                 </div>
+                <div
+                  style={{
+                    width: data.balance.width,
+                    position: "relative",
+                    padding: "1rem 10px ",
+                  }}
+                >
+                  {data.balance.label}
+                  <span
+                    style={{
+                      content: '""',
+                      position: "absolute",
+                      width: "1px",
+                      height: "100%",
+                      backgroundColor: "#eee",
+                      left: 0,
+                      top: 0,
+                    }}
+                  />
+                </div>
+
                 <div
                   style={{
                     width: data.remain.width,

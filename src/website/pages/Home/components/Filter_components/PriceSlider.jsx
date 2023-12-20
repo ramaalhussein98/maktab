@@ -70,14 +70,13 @@ const CustomSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-function PriceSlider({ setFilterProps, FilterProps }) {
+function PriceSlider({ range, setRange }) {
   const prices = [1000, 500000];
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const minPrice = prices ? Number(prices[0]) : 0;
   const maxPrice = prices ? Number(prices[1]) : 0;
 
-  const [range, setRange] = useState([0, 0]);
   const [shouldRunDebounce, setShouldRunDebounce] = useState(false);
 
   const handleChange = (event, newValue) => {
@@ -85,23 +84,19 @@ function PriceSlider({ setFilterProps, FilterProps }) {
     setShouldRunDebounce(true);
   };
 
-  useEffect(() => {
-    if (shouldRunDebounce) {
-      const debounceHandler = _debounce(() => {
-        setFilterProps((prev) => ({
-          ...prev,
-          min_price: range[0],
-          max_price: range[1],
-        }));
-      }, 2000);
+  // useEffect(() => {
+  //   if (shouldRunDebounce) {
+  //     const debounceHandler = _debounce(() => {
 
-      debounceHandler();
+  //     }, 2000);
 
-      return () => {
-        debounceHandler.cancel();
-      };
-    }
-  }, [range, shouldRunDebounce, setFilterProps]);
+  //     debounceHandler();
+
+  //     return () => {
+  //       debounceHandler.cancel();
+  //     };
+  //   }
+  // }, [range, shouldRunDebounce]);
 
   useEffect(() => {
     if (prices && range[0] === 0 && range[1] === 0) {
