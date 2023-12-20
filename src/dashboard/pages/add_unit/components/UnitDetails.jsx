@@ -1,59 +1,12 @@
-import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 import { Box, Divider, Typography } from "@mui/material";
-import { Bed, Pool } from "../../../../assets/icons";
 import { useTranslation } from "react-i18next";
 
-const UnitDetails = () => {
-  const { t, i18n } = useTranslation();
+const UnitDetails = ({ unit, dispatch, facilities }) => {
+  const { i18n } = useTranslation();
   const lang = i18n.language;
-  const [unitName, setUnitName] = useState("");
-  const [unitSpace, setUnitSpace] = useState();
-  const [selectedBooleansProperties, setSelectedBooleansProperties] = useState(
-    []
-  );
-  const category_bool = [
-    {
-      id: 1,
-      bool_featurea: {
-        id: 1,
-        src: Bed,
-        ar_name: "الميزة 1",
-        en_name: "Feature 1",
-      },
-    },
-    {
-      id: 2,
-      bool_featurea: {
-        id: 2,
-        src: Pool,
-        ar_name: "الميزة 2",
-        en_name: "Feature 2",
-      },
-    },
-    // Add more items as needed
-  ];
+
   const handlePropertyClick = (propertyId) => {
-    const isInArray = selectedBooleansProperties.some(
-      (item) => item.boolfeaturea_id === propertyId
-    );
-
-    let updatedProperties = [...selectedBooleansProperties];
-
-    if (isInArray) {
-      updatedProperties = updatedProperties.filter(
-        (item) => item.boolfeaturea_id !== propertyId
-      );
-    } else {
-      updatedProperties.push({ boolfeaturea_id: propertyId });
-    }
-
-    setSelectedBooleansProperties(updatedProperties);
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      selectedBooleansProperties: updatedProperties,
-    }));
+    dispatch({ type: "facilities", value: propertyId });
   };
   return (
     <div className="UnitDetailsContainer">
@@ -64,8 +17,10 @@ const UnitDetails = () => {
           type="text"
           placeholder="ادخل اسم عقارك الذي سيظهر للضيوف"
           className="unitInput"
-          value={unitName}
-          onChange={(event) => setUnitName(event.target.value)}
+          value={unit.title}
+          onChange={(event) =>
+            dispatch({ type: "title", title: event.target.value })
+          }
         />
       </div>
       <Divider sx={{ marginY: "2rem" }} />
@@ -77,8 +32,10 @@ const UnitDetails = () => {
             placeholder=" المساحة"
             className="unitInput"
             style={{ width: "6rem" }}
-            value={unitSpace}
-            onChange={(event) => setUnitSpace(event.target.value)}
+            value={unit.space}
+            onChange={(event) =>
+              dispatch({ type: "area", value: event.target.value })
+            }
           />
           <span className="spanSquare">متر مربع</span>
         </div>
@@ -94,10 +51,10 @@ const UnitDetails = () => {
             gridTemplateColumns: "1fr 1fr 1fr 1fr",
           }}
         >
-          {category_bool.map((property) => (
+          {facilities.map((property) => (
             <Box
               key={property.id}
-              onClick={() => handlePropertyClick(property.bool_featurea.id)}
+              onClick={() => handlePropertyClick(property.id)}
               sx={{
                 height: "100px",
                 width: "100px",
@@ -110,8 +67,8 @@ const UnitDetails = () => {
                 cursor: "pointer",
                 padding: "10px 0px",
                 marginBottom: "1rem",
-                backgroundColor: selectedBooleansProperties.some(
-                  (item) => item.boolfeaturea_id === property.bool_featurea.id
+                backgroundColor: unit.facilities.some(
+                  (item) => item === property.id
                 )
                   ? "var(--green-color)"
                   : "transparent",
@@ -119,7 +76,7 @@ const UnitDetails = () => {
               }}
             >
               <img
-                src={property.bool_featurea.src}
+                src={`https://dashboard.maktab.sa/${property.icon}`}
                 alt="img"
                 style={{
                   position: "absolute",
@@ -132,18 +89,14 @@ const UnitDetails = () => {
                 sx={{
                   width: "100%",
                   textAlign: "center",
-                  color: selectedBooleansProperties.some(
-                    (item) => item.boolfeaturea_id === property.bool_featurea.id
-                  )
+                  color: unit.facilities.some((item) => item === property.id)
                     ? "white"
                     : "black",
                 }}
               >
-                {lang === "ar"
-                  ? property.bool_featurea.ar_name
-                  : property.bool_featurea.en_name}
+                {lang === "ar" ? property.ar_name : property.en_name}
               </Typography>
-              <input type="hidden" value={property.bool_featurea.id} />
+              <input type="hidden" value={property.id} />
             </Box>
           ))}
         </Box>

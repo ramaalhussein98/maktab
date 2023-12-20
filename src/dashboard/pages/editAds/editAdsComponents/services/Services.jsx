@@ -1,16 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import ServicesBox from "./ServicesBox";
 import AddIcon from "@mui/icons-material/Add";
 
-const Services = ({ state, dispatch, features }) => {
+const Services = ({ state, dispatch, features, officeFeatures }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
+  useEffect(() => {
+    const newArr = officeFeatures?.map((e) => {
+      return {
+        feature_id: e?.boolfeaturea_id,
+      };
+    });
+    if (state.features.length === 0) {
+      dispatch({ type: "features", sub_type: "initial", array: newArr });
+    }
+  }, []);
 
   const handlePropertyClick = (propertyId) => {
-    dispatch({ type: "features", value: propertyId });
+    dispatch({ type: "features", sub_type: "add", value: propertyId });
   };
 
   // Function to add a new service box
@@ -25,7 +35,7 @@ const Services = ({ state, dispatch, features }) => {
 
   // Function to toggle a service box
   const toggleServiceBox = (index) => {
-    const toggleNewVal = !state?.services[index].service_toggle;
+    const toggleNewVal = !state.services[index].service_toggle;
     dispatch({ type: "services", sub_type: "toggle", index, toggleNewVal });
   };
 
@@ -51,7 +61,7 @@ const Services = ({ state, dispatch, features }) => {
             gridTemplateColumns: "1fr 1fr 1fr 1fr",
           }}
         >
-          {features.map((property) => (
+          {features?.map((property) => (
             <Box
               key={property.id}
               onClick={() => handlePropertyClick(property.id)}
@@ -67,8 +77,10 @@ const Services = ({ state, dispatch, features }) => {
                 cursor: "pointer",
                 padding: "10px 0px",
                 marginBottom: "1rem",
-                backgroundColor: state?.features.some(
-                  (item) => item === property.id
+                backgroundColor: state.features.some(
+                  (item) =>
+                    Number(item.feature_id) === Number(property.id) ||
+                    Number(item) === Number(property.id)
                 )
                   ? "var(--green-color)"
                   : "transparent",
@@ -89,7 +101,11 @@ const Services = ({ state, dispatch, features }) => {
                 sx={{
                   width: "100%",
                   textAlign: "center",
-                  color: state?.features.some((item) => item === property.id)
+                  color: state.features.some(
+                    (item) =>
+                      Number(item.feature_id) === Number(property.id) ||
+                      Number(item) === Number(property.id)
+                  )
                     ? "white"
                     : "black",
                 }}

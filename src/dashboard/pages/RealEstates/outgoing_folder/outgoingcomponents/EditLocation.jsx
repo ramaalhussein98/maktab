@@ -11,71 +11,46 @@ import styles from "../../../../../assets/css/confirmLocation.module.css";
 import ClearIcon from "@mui/icons-material/Clear";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useTranslation } from "react-i18next";
-const EditLocation = ({
-  type,
-  // ad,
-  onCancel,
-  // interfaces,
-  setStateLoading,
-  setGetDataState,
-}) => {
+import { toast } from "react-toastify";
+const EditLocation = ({ interfaceId, id, editInterfaceMutation, onCancel }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const ad = "";
-  const interfaces =[]
-  // i will remove it
-  const [selectedInterface, setSelectedInterface] = useState([]
-    // ad.interface_aqar.id || null
-  );
+  const interfaces = JSON.parse(
+    localStorage.getItem("searchData")
+  ).interface_aqars;
+  const [selectedInterface, setSelectedInterface] = useState(interfaceId);
 
   const handleInterfaceChange = (event) => {
     setSelectedInterface(event.target.value);
   };
+
   const handleSubmit = async (e) => {
-    setStateLoading(true);
     e.preventDefault();
-    const formDataSend = new FormData();
-    // Verify that updatedValues is populated
-    formDataSend.append("interface_id", selectedInterface);
-    if (type === 0) {
-      try {
-        const res = await fetch(
-          `https://www.dashboard.aqartik.com/api/deal/update/${ad.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${localStorage.getItem("user_token")}`,
-            },
-            body: JSON.stringify({ interface_id: selectedInterface }),
-          }
-        );
-        if (res) {
-          setGetDataState((prev) => !prev);
-          setStateLoading(false);
-          onCancel();
-        }
-      } catch (err) {}
-    }
-    if (type === 1) {
-      try {
-        const res = await fetch(
-          `https://www.dashboard.aqartik.com/api/real-estate-request/update/${ad.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${localStorage.getItem("user_token")}`,
-            },
-            body: JSON.stringify({ interface_id: selectedInterface }),
-          }
-        );
-        if (res) {
-          setGetDataState((prev) => !prev);
-          setStateLoading(false);
-          onCancel();
-        }
-      } catch (err) {}
+    const toastId = toast.loading("storing...");
+    try {
+      const res = await editInterfaceMutation.mutateAsync({
+        interface_id: selectedInterface,
+        id,
+      });
+      toast.update(toastId, {
+        type: "success",
+        render: res.data.message,
+        closeOnClick: true,
+        isLoading: false,
+        autoClose: true,
+        closeButton: true,
+        pauseOnHover: false,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        type: "error",
+        // render: error.response.data.message,
+        closeOnClick: true,
+        isLoading: false,
+        autoClose: true,
+        closeButton: true,
+        pauseOnHover: false,
+      });
     }
   };
   return (

@@ -11,7 +11,6 @@ import HomePage from "./website/pages/Home/HomePage";
 import Details from "./website/pages/Details/Details";
 import RealEstates from "./dashboard/pages/RealEstates/RealEstates";
 import Addads from "./dashboard/pages/add_ads_folder/Addads";
-import EditAds from "./dashboard/pages/RealEstates/edit_ads_folder/EditAds";
 import Layout from "./website/Layouts/Layout";
 import Payment from "./website/pages/payment/Payment";
 import Prices from "./dashboard/pages/prices/Prices";
@@ -36,17 +35,71 @@ import AboutUs from "./website/pages/about_us/AboutUs";
 import AddUnit from "./dashboard/pages/add_unit/AddUnit";
 import ElectronicInvoices from "./dashboard/pages/Electronic_invoices/ElectronicInvoices";
 import CreateTypeContract from "./dashboard/pages/create_type_contract/CreateTypeContract";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import EditAds from "./dashboard/pages/editAds/EditAds";
+import myAxios from "./api/myAxios";
 
 function App() {
   const { i18n } = useTranslation();
   const language = i18n.language;
-  const thereisToken = localStorage.getItem("user_token");
-
-  // useEffect(() => {
-  //   document.documentElement.lang = i18n.language;
-  // }, [i18n.language]);
   useEffect(() => {
-    // Update CSS variables based on language
+    const searchData = localStorage.getItem("searchData");
+    const getData = async () => {
+      const res = await myAxios.get("api/v1/user/settings/search_data");
+      console.log(res);
+      if (res.data.status === true) {
+        localStorage.setItem("searchData", JSON.stringify(res.data.data));
+      }
+    };
+    if (!searchData) {
+      getData();
+    }
+    setTimeout(() => {
+      const unitsFacilities = localStorage.getItem("unitsFacilities");
+      const getData2 = async () => {
+        const res = await myAxios.get("api/v1/user/units/facilities");
+        console.log(res);
+        if (res.data.status === true) {
+          localStorage.setItem(
+            "unitsFacilities",
+            JSON.stringify(res.data.data)
+          );
+        }
+      };
+      if (!unitsFacilities) {
+        getData2();
+      }
+    }, 750);
+    setTimeout(() => {
+      const roomDetails = localStorage.getItem("roomDetails");
+      const getData4 = async () => {
+        const res = await myAxios.get("api/v1/user/units/room_details");
+        console.log(res);
+        if (res.data.status === true) {
+          localStorage.setItem("roomDetails", JSON.stringify(res.data.data));
+        }
+      };
+      if (!roomDetails) {
+        getData4();
+      }
+    }, 1250);
+    setTimeout(() => {
+      const unitsFeatures = localStorage.getItem("unitsFeatures");
+      const getData3 = async () => {
+        const res = await myAxios.get("api/v1/user/units/features");
+        console.log(res);
+        if (res.data.status === true) {
+          localStorage.setItem("unitsFeatures", JSON.stringify(res.data.data));
+        }
+      };
+      if (!unitsFeatures) {
+        getData3();
+      }
+    }, 1750);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.style.setProperty(
       "direction",
       language === "ar" ? "rtl" : "ltr"
@@ -58,10 +111,19 @@ function App() {
       language === "ar" ? "right" : "left"
     );
   }, [language]);
+
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
-
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+      />
       <Routes>
         <Route
           index
@@ -148,7 +210,7 @@ function App() {
 
         <Route path="addoffice" element={<Addads />} />
         <Route path="addunit" element={<AddUnit />} />
-        <Route path="EditAds" element={<EditAds />} />
+        <Route path="editOffice" element={<EditAds />} />
       </Routes>
     </>
   );

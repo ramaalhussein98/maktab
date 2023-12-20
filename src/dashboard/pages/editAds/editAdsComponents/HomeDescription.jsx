@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { Box, Typography, TextField, Button, Tooltip } from "@mui/material";
-import styles from "./confirmLocation.module.css";
+import styles from "../../../../assets/css/confirmLocation.module.css";
 import { useTranslation } from "react-i18next";
-import { OrderTitles } from "../../../new_order_folder/new_order_components";
 
-const EditHomeDescription = ({ formData, setFormData }) => {
-  const [description, setDescription] = useState(formData.description || "");
+import OrderTitles from "../../new_order_folder/new_order_components/OrderTitles";
+
+const HomeDescription = ({ state, dispatch }) => {
+  const [description, setDescription] = useState(state?.description || "");
   const { t } = useTranslation();
   const handleDescriptionChange = (event) => {
     const inputValue = event.target.value;
     setDescription(inputValue);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      description: inputValue,
-    }));
+
+    dispatch({ type: "description", value: inputValue });
   };
 
   return (
@@ -88,7 +87,7 @@ const EditHomeDescription = ({ formData, setFormData }) => {
               },
             }}
           >
-            <Button sx={{ color: "var(--main-color)", fontSize: "17px" }}>
+            <Button sx={{ color: "var(--green-color)", fontSize: "17px" }}>
               {t("dashboard.property_desc.ex_btn")}
             </Button>
           </Tooltip>
@@ -112,4 +111,4 @@ const EditHomeDescription = ({ formData, setFormData }) => {
   );
 };
 
-export default EditHomeDescription;
+export default HomeDescription;

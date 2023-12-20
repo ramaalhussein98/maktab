@@ -9,81 +9,43 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 // import useDataFetcher from "../../../../api/useDataFetcher ";
 
-const EditInformation = ({
-  type,
-  // ad,
-  onCancel,
-  setStateLoading,
-  setGetDataState,
-}) => {
-  const ad = "" ; 
-  // this will remove it
+const EditInformation = ({ title, onCancel, editTitleMutation, id }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const [title, setTitle] = useState(ad.title);
-  const [updatedValues, setUpdatedValues] = useState();
-  // const { data, isLoading, post } = useDataFetcher();
+  const [_title, setTitle] = useState(title);
 
-  useEffect(() => {
-    setUpdatedValues(ad);
-  }, [ad]);
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-    setUpdatedValues((prev) => ({
-      ...prev,
-      title: event.target.value,
-    }));
+  const handleTitleChange = (e) => {
+    const value = e.target.value;
+    setTitle(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStateLoading(true);
-
-    const formDataSend = new FormData();
-    // Verify that updatedValues is populated
-    formDataSend.append("title", title);
-    if (type === 0) {
-      try {
-        const res = await fetch(
-          `https://www.dashboard.aqartik.com/api/deal/update/${ad.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${localStorage.getItem("user_token")}`,
-            },
-            body: JSON.stringify({ title }),
-          }
-        );
-        if (res) {
-          setStateLoading(false);
-          setGetDataState((prev) => !prev);
-          onCancel();
-        }
-      } catch (err) {}
-    }
-    if (type === 1) {
-      try {
-        const res = await fetch(
-          `https://www.dashboard.aqartik.com/api/real-estate-request/update/${ad.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${localStorage.getItem("user_token")}`,
-            },
-            body: JSON.stringify({ title }),
-          }
-        );
-        if (res) {
-          setStateLoading(false);
-          setGetDataState((prev) => !prev);
-          onCancel();
-        }
-      } catch (err) {}
+    const toastId = toast.loading("storing...");
+    try {
+      const res = await editTitleMutation.mutateAsync({ _title, id });
+      toast.update(toastId, {
+        type: "success",
+        render: res.data.message,
+        closeOnClick: true,
+        isLoading: false,
+        autoClose: true,
+        closeButton: true,
+        pauseOnHover: false,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        type: "error",
+        // render: error.response.data.message,
+        closeOnClick: true,
+        isLoading: false,
+        autoClose: true,
+        closeButton: true,
+        pauseOnHover: false,
+      });
     }
   };
   return (
@@ -97,13 +59,11 @@ const EditInformation = ({
             width: "100%",
           }}
         >
-          <Typography>
-            {t("dashboard.incoming_orders.card1.label1")}
-          </Typography>
+          <Typography>{t("dashboard.incoming_orders.card1.label1")}</Typography>
           <TextField
             type="text"
             name="title"
-            value={updatedValues?.title}
+            value={_title}
             onChange={handleTitleChange}
             sx={{
               maxWidth: "340px",

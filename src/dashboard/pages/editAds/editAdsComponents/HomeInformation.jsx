@@ -29,15 +29,15 @@ const HomeInformation = ({ typeAqars, state, dispatch }) => {
   const lang = i18n.language;
 
   const [radioSelected, setRadioSelected] = useState(
-    state?.advertiser_relationship
+    state.advertiser_relationship
   );
 
   const [showAdditionalBox, setShowAdditionalBox] = useState(
-    state?.advertiser_relationship === "option3" ? true : false
+    state.advertiser_relationship === "option3" ? true : false
   );
 
   const [additionalRadioSelected, setAdditionalRadioSelected] = useState(
-    state?.advertiser_relationship_type
+    state.advertiser_relationship_type
   );
 
   const infoInputs = [
@@ -337,7 +337,7 @@ const HomeInformation = ({ typeAqars, state, dispatch }) => {
           {lang === "ar" ? "  التجهيز " : " type "}
         </InputLabel>
         <Select
-          value={state?.furnished}
+          value={state.furnished}
           onChange={handleTypesChange}
           label=""
           required

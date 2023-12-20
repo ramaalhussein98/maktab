@@ -1,13 +1,9 @@
-import {
-  keepPreviousData,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useQueryHook = (queryKey, getDataFun) => {
   const queryClient = useQueryClient();
 
-  const { data, error, isError, isFetching, status } = useQuery({
+  const { data, error, isError, isFetching, status, isLoading } = useQuery({
     queryKey: queryKey,
     queryFn: getDataFun,
   });
@@ -18,6 +14,7 @@ export const useQueryHook = (queryKey, getDataFun) => {
     isError,
     isFetching,
     status,
+    isLoading,
     queryClient,
   };
 };

@@ -14,27 +14,12 @@ import LogInModal from "../../../authentication/LogInModal";
 import PhoneIcon from "@mui/icons-material/Phone";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import myAxios from "../../../api/myAxios";
 
 const HomePage = () => {
   const isCardLoading = false;
   const [openModal, setOpenModal] = useState(false);
   const location = useLocation().pathname;
   const isMapPage = location.split("/").includes("map");
-
-  useEffect(() => {
-    const searchData = localStorage.getItem("searchData");
-    const getData = async () => {
-      const res = await myAxios.get("api/v1/user/settings/search_data");
-      console.log(res);
-      if (res.data.status === true) {
-        localStorage.setItem("searchData", JSON.stringify(res.data.data));
-      }
-    };
-    if (!searchData) {
-      getData();
-    }
-  }, []);
 
   const handleOpenModal = () => {
     // if (isLoggedIn) {

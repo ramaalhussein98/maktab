@@ -1,20 +1,12 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-const NumberOffices = ({ id, label, count, setCount }) => {
+const NumberOffices = ({ id, label, dispatch, number }) => {
   const handleIncrease = () => {
-    setCount((prevCounts) => ({
-      ...prevCounts,
-      [id]: prevCounts[id] === null ? 1 : prevCounts[id] + 1,
-    }));
+    dispatch({ type: "unit_rooms", sub_type: "increase", id, number });
   };
-
   const handleDecrease = () => {
-    if (count !== null && count > 0) {
-      setCount((prevCounts) => ({
-        ...prevCounts,
-        [id]: prevCounts[id] - 1,
-      }));
-    }
+    dispatch({ type: "unit_rooms", sub_type: "decrease", id, number });
   };
 
   return (
@@ -24,18 +16,18 @@ const NumberOffices = ({ id, label, count, setCount }) => {
         <button
           className="btnStyle"
           onClick={handleDecrease}
-          disabled={count === null || count === 0}
+          disabled={number === null || number === 0}
           style={{
             color:
-              count === null || count === 0 ? "gray" : "var(--green-color)",
+              number === null || number === 0 ? "gray" : "var(--green-color)",
           }}
         >
           -
         </button>
         <input
           className="NumberInput"
-          placeholder={count === null ? "لايوجد" : ""}
-          value={count === null ? "" : count}
+          placeholder={number === null ? "لايوجد" : ""}
+          value={number === null ? "" : number}
           readOnly
         />
         <button className="btnStyle" onClick={handleIncrease}>
@@ -46,46 +38,33 @@ const NumberOffices = ({ id, label, count, setCount }) => {
   );
 };
 
-const OfiicesNumberDetails = () => {
-  const [counts, setCounts] = useState({
-    1: null,
-    2: null,
-    3: null,
-  });
+const OfiicesNumberDetails = ({ unit, dispatch, roomDetails }) => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
 
-  console.log("Counts:", counts);
+  useEffect(() => {
+    if (unit.unit_rooms.length === 0) {
+      dispatch({ type: "unit_rooms", sub_type: "add", arr: roomDetails });
+    }
+  }, []);
 
   return (
     <>
       <div className="UnitDetailsContainer">
         <p className="UnitDetailsTitle">تفاصيل غرف المكتب</p>
       </div>
-      {dataArray.map((data) => (
+      {unit?.unit_rooms?.map((data) => (
         <NumberOffices
           key={data.id}
-          label={data.label}
+          label={lang === "ar" ? data.ar_name : data.en_name}
           id={data.id}
-          count={counts[data.id]}
-          setCount={setCounts}
+          number={data.number}
+          unit={unit}
+          dispatch={dispatch}
         />
       ))}
     </>
   );
 };
-
-const dataArray = [
-  {
-    id: 1,
-    label: "قاعة اجتماعات",
-  },
-  {
-    id: 2,
-    label: " مكتب مستقل",
-  },
-  {
-    id: 3,
-    label: "مكتب مشترك",
-  },
-];
 
 export default OfiicesNumberDetails;

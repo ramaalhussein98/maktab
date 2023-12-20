@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Button, Container, Box } from "@mui/material";
 import {
   HomeImagesAdd,
@@ -9,12 +9,12 @@ import {
   MapAds,
   HomeDescription,
   OfficeDetailsNumbers,
-} from "./add_ads_components";
-import Services from "./add_ads_components/services/Services";
+} from "./editAdsComponents";
+import Services from "./editAdsComponents/services/Services";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { WhiteLogo } from "../../../assets/logos";
-import AddLicensedAdvertising from "./add_ads_components/AddLicensedAdvertising";
+import AddLicensedAdvertising from "./editAdsComponents/AddLicensedAdvertising";
 import "../../../assets/css/addAds.css";
 import UnitPrice from "../add_unit/components/UnitPrice";
 import myAxios from "../../../api/myAxios";
@@ -139,23 +139,34 @@ const reducerFunc = (state, action) => {
         ...state,
         description: action.value,
       };
-    case "features": {
-      const filteredArr = state.features.filter((e) => e !== action.value);
+    case "features":
+      if (action.sub_type === "add") {
+        const filteredArr = state.features.filter(
+          (e) => Number(e?.feature_id) !== action.value
+        );
 
-      const valueIsInArr = state.features.indexOf(action.value);
+        const valueIsInArr2 = state.features.findIndex(
+          (ele) => Number(ele?.feature_id) === action.value
+        );
 
-      if (valueIsInArr > -1) {
+        if (valueIsInArr2 > -1) {
+          return {
+            ...state,
+            features: filteredArr,
+          };
+        } else {
+          return {
+            ...state,
+            features: [...state.features, { feature_id: action.value }],
+          };
+        }
+      } else if (action.sub_type === "initial") {
         return {
           ...state,
-          features: filteredArr,
-        };
-      } else {
-        return {
-          ...state,
-          features: [...state.features, action.value],
+          features: action.array,
         };
       }
-    }
+      break;
     case "services":
       if (action.sub_type === "add") {
         return {
@@ -169,6 +180,7 @@ const reducerFunc = (state, action) => {
               price: "",
               service_toggle: true,
               status: false,
+              type: "random",
             },
           ],
         };
@@ -232,13 +244,32 @@ const reducerFunc = (state, action) => {
       };
     case "prices":
       if (action.sub_type === "add") {
-        const newPrices = action.array.map((ele) => {
-          return {
-            type_res_id: ele.id,
-            status: false,
-            price: "",
-          };
+        const pricesArray = state.prices;
+        const newPrices = action?.array.map((typeResItem) => {
+          const priceItem = pricesArray?.find(
+            (item) => item.type_res_id === typeResItem.id.toString()
+          );
+          if (priceItem) {
+            return {
+              ...priceItem,
+              en_name: typeResItem.en_name,
+              ar_name: typeResItem.ar_name,
+              status: typeResItem.status === "1" ? true : false,
+            };
+          } else {
+            const status = state?.prices?.find(
+              (e) => e.type_res_id === typeResItem.id
+            )?.status;
+            return {
+              price: "",
+              status: status || false,
+              type_res_id: typeResItem.id.toString(),
+              en_name: typeResItem.en_name,
+              ar_name: typeResItem.ar_name,
+            };
+          }
         });
+        console.log(newPrices);
         return {
           ...state,
           prices: newPrices,
@@ -293,21 +324,37 @@ const reducerFunc = (state, action) => {
         video: action.value,
       };
     case "images":
-      return {
-        ...state,
-        images: [...state.images, action.value],
-      };
+      if (action.sub_type === "add") {
+        return {
+          ...state,
+          images: [...state.images, action.value],
+        };
+      } else if (action.sub_type === "remove") {
+        const updatedImages = [...state.images];
+        updatedImages.splice(action.value, 1);
+        return {
+          ...state,
+          images: updatedImages,
+        };
+      }
+      break;
     case "unit":
       return {
         ...state,
         type_down_payment: action.value,
+      };
+    case "deletedFiles":
+      return {
+        ...state,
+        delete_files: [...state.delete_files, action.value],
       };
   }
 
   throw Error("Unknown action: " + action.type);
 };
 
-const Addads = () => {
+const EditAds = () => {
+  let officeData = useLocation().state.office;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -315,6 +362,7 @@ const Addads = () => {
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
   const [afterWidth, setAfterWidth] = useState(10);
+
   const [officeOptions, setOfficeOptions] = useState({
     categories: searchData?.category_aqar,
     type_res: searchData?.type_res,
@@ -322,46 +370,60 @@ const Addads = () => {
     officeFeatures: searchData?.featurea_ads,
     interfaces: searchData?.interface_aqars,
   });
-
   const [error, setError] = useState(false);
+
   const [images, setImages] = useState([]);
   const [selectedCheckLicense, setSelectedCheckLicense] = useState("");
-  const [deletedImages, setDeletedImages] = useState([]);
-  const [readyImages, setReadyImages] = useState([]);
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [readyImages, setReadyImages] = useState(
+    officeData.ads_files.filter((ele) => ele.type_file === "image")
+  );
   const [selectedImage, setSelectedImage] = useState();
+  const parseFormattedNumber = (formattedValue) => {
+    if (!formattedValue) return NaN;
 
+    // Remove thousand separators and any other non-numeric characters
+    const cleanedValue = formattedValue.replace(/[^0-9.-]/g, "");
+
+    // Parse the cleaned value into a number
+    const number = parseFloat(cleanedValue);
+
+    return isNaN(number) ? NaN : number;
+  };
   const [state, dispatch] = useReducer(reducerFunc, {
-    license_number: "",
-    title: "",
-    category_id: "",
-    viewer_name: "",
-    viewer_phone: "",
-    advertiser_relationship: "",
-    advertiser_relationship_type: "",
-    area: "",
-    width: "",
-    height: "",
-    furnished: "",
-    type_aqar_id: "",
-    details: [],
-    description: "",
+    license_number: officeData.license_number,
+    title: officeData.title,
+    category_id: Number(officeData.category_id),
+    viewer_name: officeData.viewer_name,
+    viewer_phone: officeData.viewer_phone,
+    advertiser_relationship: officeData.advertiser_relationship,
+    advertiser_relationship_type: officeData.advertiser_relationship_type,
+    area: parseFormattedNumber(officeData.space),
+    width: parseFormattedNumber(officeData.width),
+    height: parseFormattedNumber(officeData.height),
+    furnished: officeData.furnisher,
+    type_aqar_id: officeData.type_aqar.id,
+    details: officeData.ads_details,
+    description: officeData.description,
     features: [],
-    services: [],
-    lat: "",
-    lng: "",
-    zoom: "",
-    prices: [],
-    down_payment: "",
-    type_down_payment: "",
-    city: "",
-    neighborhood: "",
-    street: "",
-    interface_id: "",
-    video: "",
-    thumbnail: "",
+    services: officeData.services,
+    lat: Number(officeData.location.lat),
+    lng: Number(officeData.location.lng),
+    zoom: officeData.location.zoom,
+    prices: officeData.ads_prices,
+    down_payment: parseFormattedNumber(officeData.down_payment),
+    type_down_payment: officeData.type_down_payment,
+    city: officeData.location.city,
+    neighborhood: officeData.location.neighborhood,
+    street: officeData.location.street,
+    interface_id: officeData.interface_aqar.id,
+    video: officeData.ads_files.find((ele) => ele.type_file === "video")?.path,
+    videoId: officeData.ads_files.find((ele) => ele.type_file === "video")?.id,
+    thumbnail: officeData.main_image,
     images: [],
+    delete_files: [],
   });
-
+  console.log(state);
   //handling steps errors
   useEffect(() => {
     switch (step) {
@@ -427,11 +489,7 @@ const Addads = () => {
           const log = state.prices.filter((e) => e.status === true);
           if (log.length > 0) {
             const log2 = log.find((e) => e.price.length === 0);
-            if (
-              log2 ||
-              state.viewer_phone.length === 0 ||
-              state.viewer_name.length === 0
-            ) {
+            if (log2) {
               setError(true);
             } else {
               setError(false);
@@ -442,7 +500,6 @@ const Addads = () => {
         } else {
           setError(false);
         }
-
         break;
       case 9:
         if (
@@ -484,30 +541,20 @@ const Addads = () => {
     }
   };
 
-  const parseFormattedNumber = (formattedValue) => {
-    if (!formattedValue) return NaN;
-
-    // Remove thousand separators and any other non-numeric characters
-    const cleanedValue = formattedValue.replace(/[^0-9.-]/g, "");
-
-    // Parse the cleaned value into a number
-    const number = parseFloat(cleanedValue);
-
-    return isNaN(number) ? NaN : number;
-  };
-
   const handleSubmit = async () => {
     const formDataSend = new FormData();
     // Iterate through properties of formData and append each property to sendForm
     for (const property in state) {
       if (property === "furnished") {
         formDataSend.append("furnisher", state[property]);
-      } else if (property === "viewer_phone") {
-        formDataSend.append("viewer_phone", Number(state[property]));
       } else if (property === "area") {
         formDataSend.append("space", state[property]);
       } else if (property === "thumbnail") {
-        formDataSend.append("main_image", state[property].file);
+        if (state[property].length > 0) {
+          continue;
+        } else {
+          formDataSend.append("main_image", state[property].file);
+        }
       } else if (property === "prices") {
         const filteredPrices = state[property].filter(
           (price) => price.status === true
@@ -516,6 +563,8 @@ const Addads = () => {
           formDataSend.append(`prices[${i}][type_res_id]`, e.type_res_id);
           formDataSend.append(`prices[${i}][price]`, Number(e.price));
           formDataSend.append(`prices[${i}][status]`, e.status);
+
+          e.id && formDataSend.append(`prices[${i}][id]`, e?.id);
         });
       } else if (property === "details") {
         state[property]?.map((e, i) => {
@@ -526,6 +575,7 @@ const Addads = () => {
             e.number_details === "أرضي" ? 0 : Number(e.number_details)
           );
           formDataSend.append(`details[${i}][status]`, e.status);
+          formDataSend.append(`details[${i}][details_id]`, e.id);
         });
       } else if (property === "services") {
         state[property]?.map((e, i) => {
@@ -533,16 +583,18 @@ const Addads = () => {
           formDataSend.append(`services[${i}][en_name]`, e.en_name);
           formDataSend.append(`services[${i}][status]`, e.service_toggle);
           formDataSend.append(`services[${i}][price]`, e.price);
+          !e?.type && formDataSend.append(`services[${i}][id]`, e.id);
         });
       } else if (property === "features") {
         state[property]?.map((e, i) => {
-          formDataSend.append(`features[${i}][id]`, e);
+          formDataSend.append(`features[${i}][id]`, e?.feature_id);
         });
-      } else if (property === "images") {
+      } else if (
+        property === "images" ||
+        property === "delete_files" ||
+        property === "video"
+      ) {
         continue;
-      } else if (property === "advertiser_relationship_type") {
-        if (state[property].length === 0) continue;
-        formDataSend.append(property, state[property]);
       } else {
         formDataSend.append(property, state[property]);
       }
@@ -552,36 +604,41 @@ const Addads = () => {
       state.city + ", " + state.neighborhood + ", " + state.street;
 
     formDataSend.append("address", address);
-    if (images.length >= 4) {
-      try {
-        const res = await myAxios
-          .post("api/v1/user/offices/save", formDataSend)
-          .then((result) => {
-            if (result.data.status === true) {
-              const addFilesData = new FormData();
-              const id = result.data.data.id;
-              state.images.forEach((file) => {
-                addFilesData.append("images[]", file);
-              });
-              if (state.video) {
+    try {
+      const res = await myAxios
+        .post(`api/v1/user/offices/update/${officeData.id}`, formDataSend)
+        .then((result) => {
+          if (result.data.status === true) {
+            const addFilesData = new FormData();
+            const id = result.data.data.id;
+            console.log(result.data.message);
+            toast.success(result.data.message);
+
+            state.images.forEach((file) => {
+              addFilesData.append("images[]", file);
+            });
+            if (state.video) {
+              if (typeof state.video !== "string") {
                 addFilesData.append("video", state.video);
               }
-              const addFiles = myAxios.post(
-                `api/v1/user/offices/addFiles/${id}`,
-                addFilesData
-              );
             }
-            toast.success(res.data.status);
-          });
-        console.log(res);
-      } catch (error) {
-        console.error("Error sending FormData:", error);
-      }
-    } else {
-      toast.error("يرجى إرفاق 4 صور على الأقل");
+            const addFiles = myAxios
+              .post(`api/v1/user/offices/addFiles/${id}`, addFilesData)
+              .then((res) => {
+                if (res.data.status === false) {
+                  toast.error(
+                    "فشل في رفع الملفات يرجى العودة للمكتب والمحاولة مرة اخرى"
+                  );
+                } else {
+                  toast.success("تم رفع الملفات بنجاح");
+                }
+              });
+          }
+        });
+    } catch (error) {
+      console.error("Error sending FormData:", error);
     }
   };
-
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -589,8 +646,10 @@ const Addads = () => {
           <AddLicensedAdvertising
             selectedCheckLicense={selectedCheckLicense}
             setSelectedCheckLicense={setSelectedCheckLicense}
+            licenseNumber={licenseNumber}
             state={state}
             dispatch={dispatch}
+            setLicenseNumber={setLicenseNumber}
           />
         );
       case 2:
@@ -617,6 +676,7 @@ const Addads = () => {
       case 6:
         return (
           <Services
+            officeFeatures={officeData.featurea_ads}
             features={officeOptions.officeFeatures}
             state={state}
             dispatch={dispatch}
@@ -628,8 +688,9 @@ const Addads = () => {
         return (
           <UnitPrice
             state={state}
+            type={1}
+            parseFormattedNumber={parseFormattedNumber}
             dispatch={dispatch}
-            type={0}
             pricesTypes={officeOptions.type_res}
           />
         );
@@ -644,13 +705,12 @@ const Addads = () => {
       case 10:
         return (
           <HomeImagesAdd
+            officeId={officeData.id}
             step={step}
             images={images}
             setImages={setImages}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
-            deletedImages={deletedImages}
-            setDeletedImages={setDeletedImages}
             readyImages={readyImages}
             setReadyImages={setReadyImages}
             state={state}
@@ -662,8 +722,6 @@ const Addads = () => {
     }
   };
 
-  console.log(state);
-  console.log(state.details);
   return (
     <>
       <Box
@@ -782,4 +840,4 @@ const Addads = () => {
   );
 };
 
-export default Addads;
+export default EditAds;

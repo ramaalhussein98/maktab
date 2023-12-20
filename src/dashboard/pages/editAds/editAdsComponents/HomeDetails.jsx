@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-const EditHomeDetails = ({
-  formData,
-  setFormData,
-  categoryQuantity,
-  setError,
-}) => {
+const HomeDetails = ({ formData, setFormData, categoryQuantity, setError }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -238,4 +233,4 @@ const EditHomeDetails = ({
   );
 };
 
-export default EditHomeDetails;
+export default HomeDetails;

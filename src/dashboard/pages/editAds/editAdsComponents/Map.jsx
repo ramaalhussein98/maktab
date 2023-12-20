@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-
 import {
   GoogleMap,
   LoadScript,
@@ -10,73 +8,69 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { toast } from "react-hot-toast";
-import mapMarkerIcon from "../../../../../assets/icons/mapMarker2.svg";
+import mapMarkerIcon from "../../../../assets/icons/mapMarker2.svg";
 
 const containerStyle = {
   width: "100%",
   height: "400px",
 };
+
 const googleMapsApiKey = "AIzaSyCUSxdxRLpvkegxpk9-82sUjCylgekfGUk";
 
-const EditMapAd = ({
-  formData,
-  setFormData,
-  setError,
-  mapData,
-  setMapData,
-}) => {
+const Map = ({ state, dispatch }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: googleMapsApiKey,
-    // libraries: ['geometry', 'drawing'],
   });
-
-  const [userMarkers, setUserMarkers] = useState([]);
-  const [cityName, setCityName] = useState();
-  const [neighborhoodName, setNeighborhoodName] = useState();
-  const [rood, setRood] = useState();
-
-  const [centeredMap, setCenteredMap] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
-  });
-
-  const [selectedMarker, setSelectedMarker] = useState(
-    formData.selectedLocation || null
-  );
-
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const handleMapLoad = () => {
     setMapLoaded(true);
   };
 
+  const [userMarkers, setUserMarkers] = useState([]);
+  // const userLocation = JSON.parse(localStorage.getItem("userLocation"));
+
+  const [centeredMap, setCenteredMap] = useState({
+    lat: 24.786389772943902,
+    lng: 46.41807925635318,
+  });
+
+  // useEffect(() => {
+  //   setError(true);
+  // }, []);
+
   useEffect(() => {
     if (mapLoaded) {
-      if (formData.lat && formData.lng) {
+      if (state?.lat && state?.lng) {
         const clickedPosition = {
-          lat: Number(formData.lat),
-          lng: Number(formData.lng),
-          zoom: 10,
+          lat: state.lat,
+          lng: state.lng,
+          zoom: state.zoom,
         };
 
         const newMarker = {
           position: clickedPosition,
           id: new Date().getTime(), // Generate a unique ID
         };
+
         setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
-
-        setFormData((prevData) => ({
-          ...prevData,
-          lat: clickedPosition.lat,
-          lng: clickedPosition.lng,
-          zoom: clickedPosition.zoom,
-        }));
-
         setUserMarkers([newMarker]);
-
+        // setError(false);
+      } else {
+        const clickedPosition = {
+          lat: centeredMap.lat,
+          lng: centeredMap.lng,
+          zoom: 10,
+        };
+        const newMarker = {
+          position: clickedPosition,
+          id: new Date().getTime(), // Generate a unique ID
+        };
+        setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
+        setUserMarkers([newMarker]);
         let isSaudiArabia = false;
-
+        //getting the country
         fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${clickedPosition.lat},${clickedPosition.lng}&key=${googleMapsApiKey}&language=ar`
         )
@@ -90,19 +84,22 @@ const EditMapAd = ({
                     const countryName = component.long_name;
                     if (countryName === "السعودية") {
                       isSaudiArabia = true;
-                      setError(false);
+                      // setError(false);
                     } else {
-                      setError(true);
+                      // setError(true);
                     }
                   }
                   if (component.types.includes("locality")) {
-                    setCityName(component.long_name);
+                    dispatch({ type: "city", value: component.long_name });
                   }
                   if (component.types.includes("sublocality")) {
-                    setNeighborhoodName(component.long_name);
+                    dispatch({
+                      type: "neighborhood",
+                      value: component.long_name,
+                    });
                   }
                   if (component.types.includes("route")) {
-                    setRood(component.long_name);
+                    dispatch({ type: "street", value: component.long_name });
                   }
                 }
               }
@@ -112,22 +109,14 @@ const EditMapAd = ({
                   "لايمكن الاختيار خارج حدود المملكة العربية السعودية"
                 );
               }
-            } else {
             }
           })
-          .catch((error) => {});
-      } else {
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
     }
   }, [mapLoaded]);
-
-  const handleCloseInfoWindow = () => {
-    setSelectedMarker(null);
-    setFormData((prevData) => ({
-      ...prevData,
-      selectedLocation: null,
-    }));
-  };
 
   const handleMapClick = (event) => {
     const clickedPosition = {
@@ -135,7 +124,7 @@ const EditMapAd = ({
       lng: event.latLng.lng(),
       zoom: 10,
     };
-
+    dispatch({ type: "mapClick", clickedPosition });
     const newMarker = {
       position: clickedPosition,
       id: new Date().getTime(), // Generate a unique ID
@@ -143,18 +132,9 @@ const EditMapAd = ({
 
     setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
 
-    setFormData((prevData) => ({
-      ...prevData,
-      lat: clickedPosition.lat,
-      lng: clickedPosition.lng,
-      zoom: clickedPosition.zoom,
-    }));
-
     setUserMarkers([newMarker]);
-
-    //getting the country
     let isSaudiArabia = false;
-    //getting the country
+    // getting the country
     fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${clickedPosition.lat},${clickedPosition.lng}&key=${googleMapsApiKey}&language=ar`
     )
@@ -168,41 +148,32 @@ const EditMapAd = ({
                 const countryName = component.long_name;
                 if (countryName === "السعودية") {
                   isSaudiArabia = true;
-                  setError(false);
+                  // setError(false);
+                } else {
+                  // setError(true);
                 }
               }
               if (component.types.includes("locality")) {
-                setCityName(component.long_name);
+                dispatch({ type: "city", value: component.long_name });
               }
               if (component.types.includes("sublocality")) {
-                setNeighborhoodName(component.long_name);
+                dispatch({ type: "neighborhood", value: component.long_name });
               }
               if (component.types.includes("route")) {
-                setRood(component.long_name);
+                dispatch({ type: "street", value: component.long_name });
               }
             }
           }
           if (!isSaudiArabia) {
             // The location is not in Saudi Arabia
             toast.error("لايمكن الاختيار خارج حدود المملكة العربية السعودية");
-            setError(true);
           }
-        } else {
         }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-
-  useEffect(() => {
-    setMapData((prev) => ({
-      ...prev,
-      cityName,
-      neighborhoodName,
-      rood,
-    }));
-  }, [cityName, neighborhoodName, rood]);
 
   return (
     isLoaded && (
@@ -220,25 +191,13 @@ const EditMapAd = ({
             icon={{
               // path: google.maps.SymbolPath.CIRCLE,
               url: mapMarkerIcon,
-
               scale: 1,
             }}
           />
         ))}
-        {selectedMarker && (
-          <InfoWindow
-            position={selectedMarker.position}
-            onCloseClick={handleCloseInfoWindow}
-          >
-            <div>
-              <h3>{selectedMarker.title}</h3>
-              <p>{selectedMarker.description}</p>
-            </div>
-          </InfoWindow>
-        )}
       </GoogleMap>
     )
   );
 };
 
-export default EditMapAd;
+export default Map;

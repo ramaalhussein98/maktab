@@ -72,6 +72,11 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
     dispatch({ type: "categoryId", categoryId: selectedCategory });
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({ type: name, value });
+  };
+
   return (
     <Box>
       <Typography
@@ -95,7 +100,7 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
         <TextField
           id="my-text-field"
           type="text"
-          value={state?.title || ""}
+          value={state.title || ""}
           onChange={handleNameChange}
           size="small"
           error={nameError}
@@ -112,6 +117,7 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
             },
           }}
         />
+
         <Typography sx={{ fontWeight: "500", marginTop: "18px" }}>
           {t("dashboard.new_order.order_info.title")}
         </Typography>
