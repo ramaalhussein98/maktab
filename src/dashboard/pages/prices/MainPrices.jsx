@@ -26,8 +26,12 @@ const PriceCard = ({ img, day, prices, editMode, handleInputChange }) => {
                     : index === 1
                     ? "يومي"
                     : index === 2
+                    ? "أسبوعي"
+                    : index === 3
                     ? "شهري"
-                    : "سنوي "}
+                    : index === 4
+                    ? "سنوي"
+                    : ""}
                 </p>
                 <div className="space"></div>
                 {editMode ? (
@@ -63,13 +67,11 @@ const MainPrices = () => {
   );
 };
 
-export default MainPrices;
-
 const MainPriceItem = () => {
   const { t } = useTranslation();
   const initialPrices = [
-    [1000, 1000, 1000, 1000],
-    [2000, 3000, 4000, 1000],
+    [1000, 1000, 20, 1000, 1000],
+    [2000, 3000, 20, 4000, 1000],
   ];
   const [editMode, setEditMode] = useState(false);
   const [prices, setPrices] = useState(initialPrices);
@@ -149,3 +151,4 @@ const MainPriceItem = () => {
     </Box>
   );
 };
+export default MainPrices;

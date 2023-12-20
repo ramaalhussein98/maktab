@@ -167,6 +167,21 @@ const TopNav = ({ setIsUserSelected }) => {
                         </span>{" "}
                       </Link>
                     )}
+                    <Link to="/business">
+                      <span
+                        className="displayOfficespan"
+                        style={{
+                          background: "linear-gradient(25deg,#700707,#ff4646)",
+                          color: "white",
+                          padding: "9px 15px",
+                          borderRadius: "20px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        مكتب أعمال
+                      </span>
+                    </Link>
                   </Box>
                   <LoginButton isLoggedIn={isLoggedIn} />
 

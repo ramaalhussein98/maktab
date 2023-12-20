@@ -14,12 +14,61 @@ import LogInModal from "../../../authentication/LogInModal";
 import PhoneIcon from "@mui/icons-material/Phone";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import myAxios from "../../../api/myAxios";
+import Pagination from "../../../ui/Pagination";
+import { useQueryHook } from "../../../hooks/useQueryHook";
+import { useOfficeHook } from "../../../hooks/useOfficeHook";
+
+// const getOfficesData = async (page, SearchParams) => {
+//   const res = await myAxios.get(
+//     `api/v1/user/offices?page=${page}&${SearchParams}`
+//   );
+//   return res.data.data;
+// };
 
 const HomePage = () => {
   const isCardLoading = false;
   const [openModal, setOpenModal] = useState(false);
   const location = useLocation().pathname;
+
+  const [filter, setFilter] = useState({
+    "exact[category_aqar.id]": null,
+    "contains[title]": "",
+    "exact[units.room_details.ar_name]": "",
+    "exact[units.room_details.number]": "",
+  });
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setpage] = useState(1);
+  const SearchParams = new URLSearchParams();
+
+  // console.log("serach", searchQuery);
+  // const { data, error, isError, isLoading, queryClient, refetch } =
+  //   useQueryHook(["offices", page, SearchParams], () =>
+  //     getOfficesData(page, SearchParams)
+  //   );
+
+  const {
+    isLoading,
+    isError,
+    data = { data: [], totalPages: 0 },
+    refetch,
+    isRefetching,
+  } = useOfficeHook({
+    page: page,
+    filter: filter,
+  });
+  // console.log("offices", data);
   const isMapPage = location.split("/").includes("map");
+  // useEffect(() => {
+  //   refetch;
+  // }, [SearchParams]);
+  const paginationData = {
+    data: {
+      currentPage: data?.current_page,
+      lastPage: data?.last_page,
+    },
+  };
 
   const handleOpenModal = () => {
     // if (isLoggedIn) {
@@ -45,7 +94,12 @@ const HomePage = () => {
         }}
       >
         {/* filters section */}
-        <FilterSection />
+        <FilterSection
+          setSearchQuery={setSearchQuery}
+          SearchParams={SearchParams}
+          refetch={refetch}
+          setFilter={setFilter}
+        />
         {/* this ads section */}
         <div className="cards_container">
           {/* button map */}
@@ -82,7 +136,7 @@ const HomePage = () => {
               margin: { xs: "auto" },
             }}
           >
-            {isCardLoading
+            {isLoading
               ? Array.from({ length: 8 }, (_, index) => (
                   <Grid
                     item
@@ -101,7 +155,8 @@ const HomePage = () => {
                     <CardSkeleton key={index} />
                   </Grid>
                 ))
-              : Array.from({ length: 8 }, (_, index) => (
+              : data?.data.length > 0 &&
+                data?.data.map((ele, index) => (
                   <Grid
                     item
                     xs={10}
@@ -116,10 +171,11 @@ const HomePage = () => {
                       },
                     }}
                   >
-                    <AdCard id={index} />
+                    <AdCard officeData={ele} />
                   </Grid>
                 ))}
           </Grid>
+          <Pagination data={paginationData} setPage={setpage} />
         </div>
       </Container>
 

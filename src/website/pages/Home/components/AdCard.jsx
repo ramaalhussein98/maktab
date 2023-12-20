@@ -2,34 +2,34 @@ import React, { useEffect, useState } from "react";
 import "../../../../assets/css/ad_card.css";
 import StarIcon from "@mui/icons-material/Star";
 import AdSlider from "./AdSlider";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 
-const AdCard = ({ id }) => {
+const AdCard = ({ officeData }) => {
   const { t } = useTranslation();
-  // const [isRendered, setIsRendered] = useState(false);
-
-  // useEffect(() => {
-  //   setIsRendered(true);
-  // }, []);
+  // console.log("officeData", officeData);
   const { i18n } = useTranslation();
   const lang = i18n.language;
   const location = useLocation().pathname;
   const isAdMapCardComponent = location.split("/").includes("map");
-  const fullTitle = "   مكتب للإيجار في الرياض";
+  const fullTitle = officeData?.title;
   // Get the first 25 characters of the title
-  const truncatedTitle = fullTitle.slice(0, 38);
-  // Add ellipsis (...) if the title was truncated
-  const displayedTitle =
-    truncatedTitle.length < fullTitle.length
-      ? `${truncatedTitle}...`
-      : truncatedTitle;
+  // const truncatedTitle = fullTitle.slice(0, 38);
+
+  // const displayedTitle =
+  //   truncatedTitle.length < fullTitle.length
+  //     ? `${truncatedTitle}...`
+  //     : truncatedTitle;
+  const navigate = useNavigate();
+  const handleAdClick = (officeData) => {
+    navigate(`/details/${officeData?.id}`, { state: { officeData } });
+  };
   return (
     <div
     // className="AdContainer"
     >
-      <Link to="/details">
+      <div onClick={() => handleAdClick(officeData)}>
         <div
           className={
             isAdMapCardComponent
@@ -37,17 +37,17 @@ const AdCard = ({ id }) => {
               : "slider_img_container"
           }
         >
-          <AdSlider />
+          <AdSlider officeData={officeData} />
         </div>
         <div className="card-content">
           <div className="d-flex">
-            <div className="title">{displayedTitle} </div>
+            <div className="title">{fullTitle} </div>
             <div className="d-flex">
               <StarIcon sx={{ fontSize: "16px" }} />
               5.0
             </div>
           </div>
-          <div className="descrption"> الرياض</div>
+          <div className="descrption"> {officeData?.location?.address}</div>
           <div className="descrption">29 أكتوبر – 3 نوفمبر</div>
           <div className="price">
             <span
@@ -57,12 +57,13 @@ const AdCard = ({ id }) => {
                 marginRight: lang === "en" ? "5px" : "0",
               }}
             >
-              $429
+              {/* {officeData?.ads_prices?.price} */}
+              155$
             </span>
             <span>{t("day")}</span>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 };

@@ -1,13 +1,43 @@
 import React from "react";
 import "../../../assets/css/electronic_invoices.css";
-import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EmailIcon from "@mui/icons-material/Email";
+
+import {
+  LocalPrintshop as LocalPrintshopIcon,
+  ArrowBack as ArrowBackIcon,
+  Email as EmailIcon,
+} from "@mui/icons-material";
+
 import { QR } from "../../../assets/images";
 import { RedLogo } from "../../../assets/logos";
 const ElectronicInvoices = () => {
+  const billDetails = [
+    { label: "فاتورة رقم", value: "04555" },
+    { label: "التاريخ", value: "01-01-2023" },
+    { label: "رقم الجوال", value: "05555555555" },
+  ];
+
+  const customerDetails = [
+    { label: "اسم العميل", value: "نجوم التقنية للمعلومات" },
+    { label: "نوع الفاتورة", value: "فاتورة ضريبة تفصيلية" },
+    { label: "العنوان", value: "الرياض" },
+    { label: "الرقم الضريبي", value: "023444" },
+    { label: "حالة الفاتورة", value: "مفعلة" },
+    { label: "تفاصيل الفاتورة", value: "lorem lorem lorem" },
+  ];
+  const tableRowData = {
+    id: 1,
+    البيان: "منتج 1",
+    الكمية: 5,
+    الوحدة: "قطعة",
+    السعر: 20.0,
+    المبلغ: 100.0,
+    الإجمالي: 120.0,
+    قيمة_مضافة: 20.0,
+    السعر_شامل_القيمة_المضافة: 140.0,
+  };
+
   return (
-    <div>
+    <>
       <div className="d-flex-justify-space ">
         <p className="details_title">تفاصيل الفاتورة</p>
         <div className="d-flex">
@@ -50,31 +80,73 @@ const ElectronicInvoices = () => {
         </div>
       </div>
       <div className="Bills-details-container">
-        <span>فاتورة رقم :04555</span>
-        <span>التاريخ: 01-01-2023</span>
-        <span>رقم الجوال</span>
-        <span>05555555555</span>
-        <span></span>
+        {billDetails.map((detail, index) => (
+          <span key={index}>{`${detail.label}: ${detail.value}`}</span>
+        ))}
       </div>
-      <div className="d-flex">
-        <div className="backgroundBox Gray1">اسم العميل</div>
-        <div className="backgroundBox GrayLight">نجوم التقنية للمعلومات </div>
-        <div className="backgroundBox Gray1"> نوع الفاتورة</div>
-        <div className="backgroundBox GrayLight"> فاتورة ضريبة تفصيلية </div>
+      <div className="d-flex flex-wrap mb-4">
+        {customerDetails.map((detail, index) => (
+          <>
+            <div key={index} className="backgroundBox Gray1">
+              {detail.label}
+            </div>
+            <div key={index} className="backgroundBox GrayLight">
+              {detail.value}
+            </div>
+          </>
+        ))}
       </div>
-      <div className="d-flex">
-        <div className="backgroundBox Gray1"> العنوان</div>
-        <div className="backgroundBox GrayLight">الرياض </div>
-        <div className="backgroundBox Gray1"> الرقم الضريبي</div>
-        <div className="backgroundBox GrayLight"> 023444 </div>
+      {/* table of total prices */}
+      <table className="invoice-table">
+        <thead>
+          <tr className="table-row text-center">
+            <th style={{ width: "5%" }}>id</th>
+            <th style={{ width: "15%" }}>البيان</th>
+            <th style={{ width: "10%" }}>الكمية</th>
+            <th style={{ width: "10%" }}>الوحدة</th>
+            <th style={{ width: "10%" }}>السعر</th>
+            <th style={{ width: "10%" }}>المبلغ</th>
+            <th style={{ width: "10%" }}>الإجمالي</th>
+            <th style={{ width: "10%" }}>قيمة مضافة</th>
+            <th style={{ width: "10%" }}>السعر شامل القيمة المضافة</th>
+          </tr>
+        </thead>
+        <tbody className="text-center">
+          <tr key={tableRowData.id} className="text-center">
+            <td>{tableRowData.id}</td>
+            <td>{tableRowData.البيان}</td>
+            <td>{tableRowData.الكمية}</td>
+            <td>{tableRowData.الوحدة}</td>
+            <td>{tableRowData.السعر}</td>
+            <td>{tableRowData.المبلغ}</td>
+            <td>{tableRowData.الإجمالي}</td>
+            <td>{tableRowData.قيمة_مضافة}</td>
+            <td>{tableRowData.السعر_شامل_القيمة_المضافة}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="d-flex-justify-space payment_container">
+        <div className="d_column">
+          <span>الإجمالي</span>
+        </div>
+        <div className="d_column">
+          <span>أجمالي الخصم</span>
+          <span>0.00 ر.س</span>
+        </div>
+        <div className="d_column">
+          <span> الأجمالي الخاضع للضريبة</span>
+          <span>200 ر.س</span>
+        </div>
+        <div className="d_column">
+          <span> إجمالي القيمة المضافة</span>
+          <span>200 ر.س</span>
+        </div>
+        <div className="d_column">
+          <span>   الاجمالي الشامل لضريبة قيمة مضافة</span>
+          <span>621 ر.س</span>
+        </div>
       </div>
-      <div className="d-flex">
-        <div className="backgroundBox Gray1"> حالة الفاتورة</div>
-        <div className="backgroundBox GrayLight">مفعلة </div>
-        <div className="backgroundBox Gray1">  تفاصيل الفاتورة</div>
-        <div className="backgroundBox GrayLight"> lorem lorem lorem </div>
-      </div>
-    </div>
+    </>
   );
 };
 

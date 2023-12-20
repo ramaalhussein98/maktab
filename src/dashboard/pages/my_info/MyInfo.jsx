@@ -23,7 +23,7 @@ const MyInfo = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { user, setUser, updateUserInformation } = useStateContext();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState();
   // const [membershipId, setMembershipId] = useState(user?.type?.id);
   const [license, setLicense] = useState("");
   const [isFormCompleted, setIsFormCompleted] = useState(false);
@@ -47,9 +47,44 @@ const MyInfo = () => {
       setSelectedImage(null);
     }
   };
+  // const handleMembershipTypeChange = (e) => {
+  //   setMembershipId(Number(e.target.value));
+  // };
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  // useEffect(() => {
+  //   const token = localStorage.getItem("user_token");
+  //   const getData = async () => {
+  //     const res2 = await myAxios.get(`api/v1/user/profile`, {
+  //       headers: {
+  //         authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     if (res2) {
+  //       setIsLoadingData(false);
+  //       setMemberShips(res2.data.types);
+  //     } else if (
+  //       res2.data.status === 0 &&
+  //       res2.data.message === "401 Unauthorized"
+  //     ) {
+  //       setIsLoadingData(false);
+  //       toast.error(
+  //         lang === "ar"
+  //           ? "غير مصرح، يرجى تسجيل الدخول"
+  //           : "unauthorized, please login again"
+  //       );
+  //       localStorage.removeItem("user_token");
+  //       localStorage.removeItem("userId");
+  //       localStorage.removeItem("userName");
+  //       localStorage.removeItem("userMembership");
+  //       localStorage.removeItem("userData");
+  //       nav("/");
+  //     } else {
+  //     }
+  //   };
+  //   getData();
+  // }, []);
 
   const initialValues = {
     type_id: user?.type?.id,
@@ -68,21 +103,13 @@ const MyInfo = () => {
 
     // Add other initial values here
   };
-
+  // console.log(user);
   const validationSchema = Yup.object({
     username: Yup.string()
       .required("اسم المستخدم مطلوب")
       .min(3, "يجب على أقل ثلاث أحرف"),
-    company_name: Yup.string().when("type_id", {
-      is: 1, // type_id for Company
-      then: Yup.string().required("اسم الشركة مطلوب"),
-      otherwise: Yup.string(),
-    }),
-    office_name: Yup.string().when("type_id", {
-      is: 5, // type_id for Office
-      then: Yup.string().required("اسم المكتب مطلوب"),
-      otherwise: Yup.string(),
-    }),
+    company_name: Yup.string().required("اسم الشركة مطلوب"),
+    office_name: Yup.string().required("اسم المكتب مطلوب"),
     email: Yup.string()
       .required("الايميل  مطلوب")
       .email("يجب أن يكون بنية صحيحة"),
@@ -98,6 +125,7 @@ const MyInfo = () => {
     licenseLink: Yup.string().required("رابط الترخيص مطلوب"),
     license_number: Yup.string().required("  رقم الرخصة مطلوب"),
     about: Yup.string().required().min(6, " يجب على الأقل 6 أحرف"),
+    // Add other validations here
   });
 
   const handleLicenseChange = (e) => {
@@ -140,8 +168,37 @@ const MyInfo = () => {
     } catch (err) {
       // Handle API call error
     }
+    // try {
+    //   const formData = new FormData();
+
+    //   // Append text fields to the FormData object
+    //   Object.keys(values).forEach((key) => {
+    //     formData.append(key, values[key]);
+    //   });
+
+    //   // Append the image file to the FormData object
+    //   if (imageFile) {
+    //     formData.append("profileImage", imageFile);
+    //   }
+
+    //   // const response = await myAxios.post("/api/v1/user/profile", formData, {
+    //   //   headers: {
+    //   //     "Content-Type": "multipart/form-data",
+    //   //     // Authorization: `Bearer ${yourAuthToken}`,
+    //   //   },
+    //   // });
+
+    //   // console.log("Data posted successfully:", response.data);
+    // } catch (error) {
+    //   console.error("Failed to post data:", error);
+    // }
+    // console.log(values);
+    // console.log(selectedImage);
   };
 
+  // const handleData = () => {
+  //   console.log("hi");
+  // };
   return (
     <div style={{ overflowX: "hidden" }}>
       <Formik
@@ -161,15 +218,33 @@ const MyInfo = () => {
         }) => (
           <Form>
             {/* this box image */}
-            <Box className="boxImage">
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                textAlign: "center",
+                alignItems: "center",
+                marginBottom: "2rem",
+              }}
+            >
               <Button
-                className="BoxImageLabel"
                 component="label"
                 sx={{
+                  width: "12rem",
+                  height: "12rem",
                   border: selectedImage ? "none" : "1px dashed gray",
+                  margin: "auto",
+                  marginBottom: "1rem",
+                  borderRadius: "50%",
+                  color: "gray",
                   backgroundImage: selectedImage
                     ? `url(${selectedImage})`
                     : `url(https://dashboard.maktab.sa/${user?.image?.name})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  alignItems: "center",
+                  display: "flex",
                 }}
               >
                 <Field
@@ -184,7 +259,7 @@ const MyInfo = () => {
 
                 {selectedImage ? null : t("dashboard.personal_info.img_btn")}
               </Button>
-              <Typography className="color-gray">
+              <Typography sx={{ color: "gray" }}>
                 {t("dashboard.personal_info.title1")}
               </Typography>
               <Typography sx={{ color: "red" }}>
@@ -196,12 +271,13 @@ const MyInfo = () => {
               item
               container
               spacing={2}
-              className="GridStyle"
               sx={{
                 justifyContent: {
                   xs: "center",
                   md: "right",
                 },
+                margin: "0px",
+                width: "100%",
               }}
             >
               <Grid item xs={10} md={12}>
@@ -226,7 +302,6 @@ const MyInfo = () => {
                     >
                       {memberships?.map((membership, index) => (
                         <FormControlLabel
-                          className="RadioStyle"
                           key={membership.id}
                           value={membership.id}
                           control={<Radio sx={{ opacity: "0" }} />}
@@ -244,6 +319,17 @@ const MyInfo = () => {
                               values.type_id === membership.id
                                 ? "white"
                                 : "black",
+                            border: "1px solid #cdcdcd",
+                            flex: "1",
+                            minWidth: "8rem",
+                            marginBottom: "0.5rem",
+                            marginLeft: "0",
+                            marginRight: "0",
+                            borderRadius: "0",
+                            padding: "0.3rem",
+                            position: "relative",
+                            margin: "0px 5px",
+                            borderRadius: "10px",
                             marginTop: { xs: "1rem", md: "0rem" },
                             "& .MuiFormControlLabel-label": {
                               position: "absolute",
@@ -463,7 +549,6 @@ const MyInfo = () => {
                         sx={{ flexDirection: "row", marginTop: "1rem" }}
                       >
                         <FormControlLabel
-                          className="secoundlabel"
                           value="yes"
                           control={<Radio sx={{ opacity: "0" }} />}
                           label={t("dashboard.personal_info.license_btn1")}
@@ -473,6 +558,13 @@ const MyInfo = () => {
                                 ? "var(--green-color)"
                                 : "white",
                             color: license === "yes" ? "white" : "black",
+                            border: "1px solid #cdcdcd",
+
+                            width: "8rem",
+                            marginBottom: "0.5rem",
+                            borderRadius: "2rem",
+                            padding: "0.3rem",
+                            position: "relative",
                             "& .MuiFormControlLabel-label": {
                               position: "absolute",
                               top: "50%",
@@ -482,7 +574,6 @@ const MyInfo = () => {
                           }}
                         />
                         <FormControlLabel
-                          className="secoundlabel"
                           value="no"
                           control={<Radio sx={{ opacity: "0" }} />}
                           label={t("dashboard.personal_info.license_btn2")}
@@ -490,6 +581,13 @@ const MyInfo = () => {
                             backgroundColor:
                               license === "no" ? "var(--main-color)" : "white",
                             color: license === "no" ? "white" : "black",
+                            border: "1px solid #cdcdcd",
+
+                            width: "8rem",
+                            marginBottom: "0.5rem",
+                            borderRadius: "2rem",
+                            padding: "0.3rem",
+                            position: "relative",
                             "& .MuiFormControlLabel-label": {
                               position: "absolute",
                               top: "50%",
@@ -549,16 +647,32 @@ const MyInfo = () => {
                         aria-labelledby="modal-title"
                       >
                         <Box
-                          className="BoxModalButtons"
                           sx={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
                             width: { xs: "300px", md: "500px" },
+                            bgcolor: "white",
+                            border: "2px solid transparent",
+                            borderRadius: "1rem",
+                            boxShadow: 24,
+                            textAlign: "center",
+                            p: 4,
                           }}
                         >
                           <Typography>
                             {t("dashboard.personal_info.license_modal_desc")}
                           </Typography>
                           <Box sx={{ marginY: "1rem" }}>
-                            <Button className="LicenseModalBtn">
+                            <Button
+                              sx={{
+                                border: "1px solid var(--green-color)",
+                                color: "var(--green-color)",
+                                padding: "0.5rem 2rem",
+                                marginX: "0.3rem",
+                              }}
+                            >
                               <Link
                                 href="https://eservicesredp.rega.gov.sa/auth/register"
                                 sx={{
@@ -572,8 +686,13 @@ const MyInfo = () => {
                               </Link>
                             </Button>
                             <Button
-                              className="btnCloseModal"
                               onClick={handleCloseModal}
+                              sx={{
+                                border: "1px solid var(--main-color)",
+                                color: "var(--main-color)",
+                                padding: "0.5rem 2rem",
+                                marginX: "0.3rem",
+                              }}
                             >
                               {t("dashboard.personal_info.license_modal_btn2")}
                             </Button>
@@ -588,8 +707,14 @@ const MyInfo = () => {
             <Button
               type="submit"
               // disabled={!(isValid && dirty)}
-              className="buttonSubmit"
               sx={{
+                backgroundColor: "var(--green-color)",
+                color: "white",
+                marginY: "2rem",
+                fontSize: "18px",
+                padding: "0.5rem 2rem",
+                display: "block",
+                marginX: "auto",
                 "&:hover": {
                   backgroundColor: "var(--green-color)",
                   color: "white",
@@ -626,7 +751,14 @@ const MyInfo = () => {
             {t("dashboard.personal_info.license_modal_desc")}
           </Typography>
           <Box sx={{ marginY: "1rem" }}>
-            <Button className="registerBtn">
+            <Button
+              sx={{
+                border: "1px solid var(--green-color)",
+                color: "var(--green-color)",
+                padding: "0.5rem 2rem",
+                marginX: "0.3rem",
+              }}
+            >
               <Link
                 href="https://eservicesredp.rega.gov.sa/auth/register"
                 sx={{
@@ -637,7 +769,15 @@ const MyInfo = () => {
                 {t("dashboard.personal_info.license_modal_btn1")}
               </Link>
             </Button>
-            <Button onClick={handleCloseModal} className="closeButton">
+            <Button
+              onClick={handleCloseModal}
+              sx={{
+                border: "1px solid var(--main-color)",
+                color: "var(--main-color)",
+                padding: "0.5rem 2rem",
+                marginX: "0.3rem",
+              }}
+            >
               {t("dashboard.personal_info.license_modal_btn2")}
             </Button>
           </Box>

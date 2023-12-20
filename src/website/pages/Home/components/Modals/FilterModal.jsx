@@ -7,18 +7,33 @@ import "../../../../../assets/css/filtermodal.css";
 import OfficeType from "../Filter_components/OfficeType";
 import Features from "../Filter_components/Features";
 import PriceSlider from "../Filter_components/PriceSlider";
-
-import { SmallHouses, Designs, Village } from "../../../../../assets/icons";
 import RoomsOfficeNumbers from "../Filter_components/RoomsOfficeNumbers";
 import { useTranslation } from "react-i18next";
 
-const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
+const FilterModal = ({
+  openFilterModal,
+  setOpenFilterModal,
+  setSearchQuery,
+  SearchParams,
+  refetch,
+  setFilter,
+}) => {
   const { t } = useTranslation();
-  const OfficesType = [
-    { type: "مكتب مستقل", src: SmallHouses },
-    { type: "مكتب مشترك", src: Designs },
-    { type: " قاعة اجتماعات", src: Village },
-  ];
+  const [range, setRange] = useState([0, 0]);
+  const [officeTypeId, setOfficeTypeId] = useState();
+  const [selectedItemoffice, setSelectedItemOffice] = useState({});
+  const [selectedItemMeeting, setSelectedItemMeeting] = useState({});
+  const [selectedItemBathroom, setSelectedItemBathroom] = useState({});
+
+  console.log(
+    "office",
+    selectedItemoffice,
+    "met",
+    selectedItemMeeting,
+    "bath",
+    selectedItemBathroom
+  );
+
   const OfficesFeatures = [
     { id: 1, label: "واي فاي" },
     { id: 2, label: "مطبخ " },
@@ -59,6 +74,20 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
   const handleFilerModalClose = () => {
     setOpenFilterModal(false);
   };
+  const handleShowFilterRes = () => {
+    setFilter((prevState) => ({
+      ...prevState,
+      "min[ads_prices.price]": encodeURIComponent(range[0]),
+      "max[ads_prices.price]": encodeURIComponent(range[1]),
+      "exact[category_aqar.id]": officeTypeId,
+      "exact[units.room_details.ar_name]":selectedItemoffice.title,
+      "exact[units.room_details.number]":selectedItemoffice.num,
+      "exact[units.room_details.ar_name]":selectedItemMeeting.title,
+      "exact[units.room_details.number]":selectedItemMeeting.num,
+     
+    }));
+  };
+  const handleDeleteFilterRes = () => setFilter({});
   return (
     <Modal
       open={openFilterModal}
@@ -96,7 +125,7 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
             <Typography className="filter_title">
               {t("home.FilterModal.price_range")}
             </Typography>
-            <PriceSlider />
+            <PriceSlider range={range} setRange={setRange} />
           </Box>
           <Box className="price_div">
             <Typography className="filter_title">
@@ -108,6 +137,12 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
                 key={index}
                 title={ele.title}
                 items={ele.items}
+                selectedItemoffice={selectedItemoffice}
+                selectedItemMeeting={selectedItemMeeting}
+                selectedItemBathroom={selectedItemBathroom}
+                setSelectedItemMeeting={setSelectedItemMeeting}
+                setSelectedItemOffice={setSelectedItemOffice}
+                setSelectedItemBathroom={setSelectedItemBathroom}
               />
             ))}
           </Box>
@@ -117,11 +152,10 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
               {t("home.FilterModal.office_type")}
             </Typography>
             <Box sx={{ display: "flex", width: "100%" }}>
-              {OfficesType.map((data, index) => {
-                return (
-                  <OfficeType key={index} type={data.type} src={data.src} />
-                );
-              })}
+              <OfficeType
+                officeTypeId={officeTypeId}
+                setOfficeTypeId={setOfficeTypeId}
+              />
             </Box>
           </Box>
           <Box className="price_div">
@@ -139,7 +173,14 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
             >
               {OfficesFeatures.map((feature, index) => {
                 return (
-                  <Features key={index} id={feature.id} label={feature.label} />
+                  <Features
+                    key={index}
+                    id={feature.id}
+                    label={feature.label}
+                    setSearchQuery={setSearchQuery}
+                    SearchParams={SearchParams}
+                    refetch={refetch}
+                  />
                 );
               })}
             </Box>
@@ -158,16 +199,25 @@ const FilterModal = ({ openFilterModal, setOpenFilterModal }) => {
             >
               {LocationFeatures.map((feature, index) => {
                 return (
-                  <Features key={index} id={feature.id} label={feature.label} />
+                  <Features
+                    key={index}
+                    id={feature.id}
+                    label={feature.label}
+                    setSearchQuery={setSearchQuery}
+                    SearchParams={SearchParams}
+                    refetch={refetch}
+                  />
                 );
               })}
             </Box>
           </Box>
           <Box className="boxBtnDeleteShow">
-            <Button className="delete">
+            <Button className="delete" onClick={handleDeleteFilterRes}>
               {t("home.FilterModal.delete_all")}
             </Button>
-            <Button className="show">{t("home.FilterModal.show_all")}</Button>
+            <Button className="show" onClick={handleShowFilterRes}>
+              {t("home.FilterModal.show_all")}
+            </Button>
           </Box>
         </Box>
       </>

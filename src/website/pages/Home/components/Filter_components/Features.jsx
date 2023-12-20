@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import React from "react";
 import "../../../../../assets/css/filtermodal.css";
-const Features = ({ label, id }) => {
+const Features = ({ label, id, setSearchQuery, SearchParams, refetch }) => {
   return (
     <FormGroup sx={{ width: "50% !important" }}>
       <FormControlLabel

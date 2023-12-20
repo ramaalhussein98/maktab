@@ -8,15 +8,37 @@ import FilterModal from "../Modals/FilterModal";
 import ListIcon from "@mui/icons-material/List";
 import { useTranslation } from "react-i18next";
 
-const FilterSection = () => {
+const FilterSection = ({
+  setSearchQuery,
+  SearchParams,
+  refetch,
+  setFilter,
+}) => {
   const { t } = useTranslation();
   const [openFilterModal, setOpenFilterModal] = useState(false);
+  const [inputSearch, setInputSearch] = useState();
   const isLoading = false;
   const location = useLocation().pathname;
   const isMapPage = location.split("/").includes("map");
   const handleFilerModalOpen = () => {
     setOpenFilterModal(true);
   };
+  const handleInputChange = (e) => {
+    // setSearchQuery(`contains[title]=${encodeURIComponent(inputSearch)}`);
+    // SearchParams.append("contains[title]", encodeURIComponent(inputSearch));
+    // refetch();
+    setFilter((prevState) => ({
+      ...prevState,
+      "contains[title]": encodeURIComponent(inputSearch),
+    }));
+
+    // setFilter({
+    //   query: `"exact[category_aqar.id]"=${null}&"contains[title]"=${encodeURIComponent(
+    //     inputSearch
+    //   )}`,
+    // });
+  };
+
   return (
     <>
       {/* filters section */}
@@ -26,7 +48,12 @@ const FilterSection = () => {
             <FilterSkeleton key={index} />
           ))
         ) : (
-          <FilterSlick />
+          <FilterSlick
+            setSearchQuery={setSearchQuery}
+            SearchParams={SearchParams}
+            refetch={refetch}
+            setFilter={setFilter}
+          />
         )}
 
         <Button className="filter_btn" onClick={handleFilerModalOpen}>
@@ -37,8 +64,13 @@ const FilterSection = () => {
           <div className="searchBoxBorder">
             <span>
               <div className="addvistor">
-                <input type="text" style={{ width: "100%" , outline:"none"}} />
-                <Box className="searchIcon">
+                <input
+                  value={inputSearch}
+                  type="text"
+                  onChange={(event) => setInputSearch(event.target.value)}
+                  style={{ width: "100%", outline: "none" }}
+                />
+                <Box className="searchIcon" onClick={handleInputChange}>
                   <img src={Search} />
                 </Box>
               </div>
@@ -62,6 +94,10 @@ const FilterSection = () => {
       <FilterModal
         openFilterModal={openFilterModal}
         setOpenFilterModal={setOpenFilterModal}
+        setSearchQuery={setSearchQuery}
+        SearchParams={SearchParams}
+        refetch={refetch}
+        setFilter={setFilter}
       />
     </>
   );

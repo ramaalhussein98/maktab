@@ -5,10 +5,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Autoplay, Pagination } from "swiper";
 import { Box, Button, useMediaQuery, Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
-// import useDataFetcher from "../../../../api/useDataFetcher ";
 import SwiperCore from "swiper";
 import { AnimatePresence, motion } from "framer-motion";
 import { Home1, Home4, Home5 } from "../../../../assets/images";
+import myAxios from "../../../../api/myAxios";
 
 const fakeBannersData = [
   {
@@ -31,17 +31,6 @@ const fakeBannersData = [
     button_text_en: "Banner Button 2",
     image: { name: Home4 },
   },
-  // {
-  //   ar_title: "عنوان البنر 3",
-  //   en_title: "Banner Title 3",
-  //   ar_description: "وصف البنر 3",
-  //   en_description: "Banner Description 3",
-  //   button_url: "https://example.com",
-  //   button_text_ar: "زر البنر 3",
-  //   button_text_en: "Banner Button 3",
-  //   image: { name: Home5 },
-  // },
-  // Add more banner objects as needed
 ];
 SwiperCore.use([Pagination]);
 const AUTOPLAY_DELAY = 8000;
@@ -49,46 +38,46 @@ const SPRING_DURATION = 0.1;
 const MEDIUM_BREAKPOINT = "md";
 
 const Banner = () => {
-  //   const { data, isLoading, error, get, post } = useDataFetcher();
-  const [bannersData, setBannersData] = useState(fakeBannersData);
-  const [isLoading, setIsLoading] = useState(true);
+  const [bannersData, setBannersData] = useState(
+    JSON.parse(localStorage.getItem("bannersData"))
+  );
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
+  const [isLoading, setIsLoading] = useState(false);
+
+  // useEffect(() => {
+  //   // Simulate data loading time
+  //   const delay = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000); // Adjust the delay time as needed
+
+  //   return () => clearTimeout(delay); // Clear timeout on unmount
+  // }, []);
   useEffect(() => {
-    // Simulate data loading time
-    const delay = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000); // Adjust the delay time as needed
+    const getBannerData = async () => {
+      try {
+        const res = await myAxios.get("api/v1/user/settings/banners");
+        console.log(res);
+        if (res.data.status === true) {
+          setBannersData(res?.data.data);
+          localStorage.setItem("bannersData", JSON.stringify(res.data.data));
+        }
+      } catch (error) {
+        console.error("Error fetching banner data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return () => clearTimeout(delay); // Clear timeout on unmount
-  }, []);
-  //   useEffect(() => {
-  //     setDataLoading(true);
-  //     const storedData = localStorage.getItem("bannersData");
-  //     if (storedData) {
-  //       setBannersData(JSON.parse(storedData));
-  //     } else {
-  //       get("/api/settings/banners/all");
-  //     }
-  //     setDataLoading(false);
-  //   }, []);
-
-  //   useEffect(() => {
-  //     if (data) {
-  //       localStorage.setItem("bannersData", JSON.stringify(data.banners));
-  //     }
-  //   }, [data]);
+    if (!bannersData) {
+      getBannerData();
+    }
+  }, [bannersData]);
 
   const isXsScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(MEDIUM_BREAKPOINT)
   );
-  //   useEffect(() => {
-  //     const storedData = localStorage.getItem("bannersData");
-  //     if (storedData) {
-  //       setBannersData(JSON.parse(storedData));
-  //     } else {
-  //     }
-  //   }, []);
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language;
+
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const swiperRef = useRef(null);
 
@@ -150,7 +139,7 @@ const Banner = () => {
                       }}
                     >
                       <img
-                        src={banner.image.name}
+                        src={`https://dashboard.maktab.sa/${banner?.image}`}
                         alt={banner.ar_title}
                         style={{ width: "100%", height: "100%" }}
                       />

@@ -14,20 +14,28 @@ import DetailsXsScreens from "./details_component/details_xs_components/DetailsX
 import SocailMedaiLinks from "./details_component/SocailMedaiLinks";
 import AdCard from "../Home/components/AdCard";
 import ChatIcon from "@mui/icons-material/Chat";
+import { useParams } from "react-router";
+import { useQueryHook } from "../../../hooks/useQueryHook";
+import myAxios from "../../../api/myAxios";
 
 const Details = () => {
   const { t } = useTranslation();
   const [isListOpen, setListOpen] = useState(false);
-
   const [isNewHome, setIsNewHome] = useState(false);
   const socialMediaLinksRef = useRef();
+  const id = useParams().id;
 
-  //   useEffect(() => {
-  //     if (adInfo) {
-  //       const adCreatedAt = new Date(adInfo?.created_at).getTime();
-  //       setIsNewHome(adCreatedAt > TimeNew.getTime());
-  //     }
-  //   }, [adInfo]);
+  const getOfficeData = async () => {
+    const res = await myAxios.get(`/api/v1/user/offices/${id}`);
+    return res?.data?.data;
+  };
+  const { data, error, isError, isLoading, queryClient } = useQueryHook(
+    "officeDetails",
+    getOfficeData
+  );
+  const timestamp = data?.created_at;
+  const date = new Date(timestamp);
+  const formattedDate = date.toLocaleDateString();
   useEffect(() => {
     const handleDocumentClick = (event) => {
       if (
@@ -45,6 +53,7 @@ const Details = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
+  console.log(data);
   const filteredAds = [1, 2, 3, 4];
   return (
     <>
@@ -63,8 +72,7 @@ const Details = () => {
               fontSize: { xs: "1.5rem", md: "2.25rem" },
             }}
           >
-            مكتب للإيجار
-            {/* {adInfo?.title} */}
+            {data?.title}
           </Typography>
           <Box sx={{ display: "flex", marginY: "1rem" }}>
             <Box className="Box_ad_num">
@@ -73,7 +81,7 @@ const Details = () => {
               </Typography>{" "}
               <Typography sx={{ marginX: "0.5rem", fontSize: "12px" }}>
                 {/* {adInfo?.ref_number} */}
-                6311
+                {data?.ref_number}
               </Typography>
             </Box>
             <Box
@@ -86,8 +94,7 @@ const Details = () => {
                 {t("details_page.ad_date")}:
               </Typography>
               <Typography sx={{ marginX: "0.5rem", fontSize: "12px" }}>
-                {/* {formattedDate} */}
-                Sep 21, 2023
+                {formattedDate}
               </Typography>
             </Box>
           </Box>
@@ -139,8 +146,7 @@ const Details = () => {
                     fomtSize: "1.2rem",
                   }}
                 />
-                الرياض - قصور أل مقبل
-                {/* {adInfo?.city} {adInfo?.neighborhood} {adInfo?.road} */}
+                {data?.location?.address}
               </Typography>
               <Typography
                 sx={{
@@ -158,8 +164,8 @@ const Details = () => {
                   }}
                 />
                 {t("details_page.unit_area")}
-                {/* {adInfo?.space} */}
-                310
+
+                {data?.space}
               </Typography>
             </Box>
             <Box
@@ -201,7 +207,7 @@ const Details = () => {
               </Button>
             </Box>
           </Box>
-          <DetailsImages />
+          <DetailsImages data={data} />
           <Grid container spacing={2}>
             <Grid item xs={12} md={8}>
               <Typography
@@ -214,9 +220,7 @@ const Details = () => {
                 {t("details_page.details_title")}
               </Typography>
               <Typography sx={{ fontSize: { xs: "15px", md: "18px" } }}>
-                {/* {adInfo?.description} */}
-                مكتب شرقي الرياض راقي,مؤثث بالكامل مكون من اربع مكاتب وغرف
-                اجتماعات
+                {data?.description}
               </Typography>
 
               <Box
@@ -250,9 +254,7 @@ const Details = () => {
                 </Box>
               </Box>
 
-              <DetailsTabs
-              //    adInfo={adInfo}
-              />
+              <DetailsTabs adInfo={data} />
             </Grid>
             <Grid item xs={12} md={4}>
               <DetailsCard />
@@ -307,9 +309,7 @@ const Details = () => {
       </Box>
 
       {/* this section page for xs screens */}
-      <DetailsXsScreens
-      // adInfo={adInfo}
-      />
+      <DetailsXsScreens adInfo={data} />
     </>
   );
 };

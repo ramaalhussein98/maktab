@@ -42,6 +42,7 @@ import SearchGray2 from "./search_gray.svg";
 import StcPay from "./stcpay.svg";
 import KSA from "./KSA.svg";
 import US from "./america.png";
+import BackWhite from "./block-bg.svg"
 export {
   HomeSvg,
   Famiy,
@@ -87,4 +88,5 @@ export {
   StcPay,
   KSA,
   US,
+  BackWhite
 };
