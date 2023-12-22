@@ -81,6 +81,7 @@
   background-color: var(--green-color) !important;
   color: white !important;
   min-width: 8rem !important;
+  padding: 15px 20px !important;
   .svg1 {
     margin-right: 10px !important;
     margin-left: 10px !important;
@@ -90,6 +91,7 @@
   background-color: #0399d4 !important;
   color: white !important;
   min-width: 8rem !important;
+  padding: 15px 20px !important;
   .svg1 {
     margin-right: 10px !important;
     margin-left: 10px !important;

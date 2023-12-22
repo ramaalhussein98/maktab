@@ -82,7 +82,7 @@ const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
   return (
     <div className="slick_container">
       <Slider {...settings}>
-        {FilterData.map((data, index) => (
+        {FilterData?.map((data, index) => (
           <div
             id={data.id}
             key={index}

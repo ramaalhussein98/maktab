@@ -46,32 +46,31 @@
 }
 .maktab_numbers_div {
   position: relative;
-  height: 100%;
-  width: 90%;
   margin: auto;
   border-radius: 32px;
   overflow: hidden;
-  background: linear-gradient(25deg, rgb(112, 7, 7), rgb(255, 70, 70));
+  height: 450px;
+  width: 95%;
+  background: linear-gradient(
+    25deg,
+    rgb(89, 111, 133),
+    rgba(200, 236, 239, 0.88)
+  );
   text-align: center;
   .maktab_title {
     color: #c20000;
     font-weight: 700;
     font-size: 2.625rem;
+    margin-top: 3rem;
   }
   .numbers_box {
     display: flex;
     flex-direction: row;
-    /* padding-right: 60px;
-    padding-left: 60px; */
-    -moz-box-pack: justify;
     justify-content: space-between;
-    -moz-box-align: center;
     align-items: center;
     .internal {
       display: flex;
-
       flex-direction: column;
-
       align-items: center;
       position: relative;
       height: 260px;
@@ -146,4 +145,46 @@
 }
 .space_between {
   justify-content: space-around;
+}
+.mobileAppContainer {
+  height: 500px;
+  width: 95%;
+  margin: auto;
+  margin-top: 2rem;
+  position: relative;
+  .titleMobile {
+    color: white;
+    font-weight: 500;
+    font-size: 3rem;
+    position: absolute;
+    right: 7%;
+    top: 8rem;
+  }
+  .mobile_sub_title {
+    font-size: 1.5rem;
+    color: #fed106;
+    font-weight: 500;
+    position: absolute;
+    right: 7%;
+    top: 17rem;
+  }
+}
+.mobile_bg {
+  width: 100%;
+  margin: auto;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 32px;
+  z-index: -1;
+}
+.divMobileApps{
+  display: flex;
+  position: absolute;
+  right: 7%;
+  top:22rem;
+  .img1{
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
 }

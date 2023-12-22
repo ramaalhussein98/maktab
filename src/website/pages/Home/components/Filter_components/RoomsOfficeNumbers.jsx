@@ -32,28 +32,34 @@ const RoomsOfficeNumbers = ({
     <Box>
       <span>{title}</span>
       <Box sx={{ display: "flex", margin: "1rem" }}>
-        {items.map((item , index) => (
+        {items.map((item, index) => (
           <Button
             key={index}
             variant="contained"
             onClick={() => handleItemClick(title, item.id, item.num)}
             sx={{
               backgroundColor:
-              selectedItemoffice.itemId === item.id
-                ? "black"
-                : selectedItemMeeting.itemId === item.id
-                ? "black"
-                : selectedItemBathroom.itemId === item.id 
-                ? "black"
-                : "transparent",
-            color:
-              selectedItemoffice.itemId === item.id
-                ? "white"
-                : selectedItemMeeting.itemId === item.id
-                ? "white"
-                : selectedItemBathroom.itemId === item.id 
-                ? "white"
-                : "inherit",
+                title === t("dashboard.Offices.offices") &&
+                selectedItemoffice.itemId === item.id
+                  ? "black"
+                  : title === t("home.FilterModal.Meetings") &&
+                    selectedItemMeeting.itemId === item.id
+                  ? "black"
+                  : title === t("home.FilterModal.Bathrooms") &&
+                    selectedItemBathroom.itemId === item.id
+                  ? "black"
+                  : "transparent",
+              color:
+                title === t("dashboard.Offices.offices") &&
+                selectedItemoffice.itemId === item.id
+                  ? "white"
+                  : title === t("home.FilterModal.Meetings") &&
+                    selectedItemMeeting.itemId === item.id
+                  ? "white"
+                  : title === t("home.FilterModal.Bathrooms") &&
+                    selectedItemBathroom.itemId === item.id
+                  ? "white"
+                  : "inherit",
               marginRight: "8px",
               borderRadius: "24px !important",
               "&:hover": {

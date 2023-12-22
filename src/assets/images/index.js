@@ -12,12 +12,12 @@ import DefaultImage from "./defaulthome.jpg";
 import Mada from "./mada.png";
 import MasterCard from "./Mastercard.png";
 import Visa from "./Visa.png";
-
 import Appstore from "./apple-store.png";
 import Googleplay from "./google-play.png";
 import BG from "./bg.jpg";
 import QR from "./qr.jpg";
 import Step from "./step.jpg"
+import MobileBg from "./mobile-app-bg.svg"
 
 export {
   Home1,
@@ -38,6 +38,7 @@ export {
   Googleplay,
   BG,
   QR,
-  Step
+  Step,
+  MobileBg
 
 };

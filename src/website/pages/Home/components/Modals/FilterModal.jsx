@@ -80,11 +80,10 @@ const FilterModal = ({
       "min[ads_prices.price]": encodeURIComponent(range[0]),
       "max[ads_prices.price]": encodeURIComponent(range[1]),
       "exact[category_aqar.id]": officeTypeId,
-      "exact[units.room_details.ar_name]":selectedItemoffice.title,
-      "exact[units.room_details.number]":selectedItemoffice.num,
-      "exact[units.room_details.ar_name]":selectedItemMeeting.title,
-      "exact[units.room_details.number]":selectedItemMeeting.num,
-     
+      "exact[units.room_details.ar_name]": selectedItemoffice.title,
+      "exact[units.room_details.number]": selectedItemoffice.num,
+      "exact[units.room_details.ar_name]": selectedItemMeeting.title,
+      "exact[units.room_details.number]": selectedItemMeeting.num,
     }));
   };
   const handleDeleteFilterRes = () => setFilter({});

@@ -39,6 +39,7 @@ import ElectronicInvoices from "./dashboard/pages/Electronic_invoices/Electronic
 import CreateTypeContract from "./dashboard/pages/create_type_contract/CreateTypeContract";
 import myAxios from "./api/myAxios";
 import BussinesMainPage from "./website/pages/Busseins_main_page/BussinesMainPage";
+import TermOfService from "./website/pages/term-of-service/TermOfService";
 
 function App() {
   const { i18n } = useTranslation();
@@ -163,6 +164,15 @@ function App() {
           element={
             <Layout>
               <BussinesMainPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="term-of-service-agreement"
+          element={
+            <Layout>
+              <TermOfService />
             </Layout>
           }
         />
