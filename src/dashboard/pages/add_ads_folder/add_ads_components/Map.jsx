@@ -44,9 +44,9 @@ const Map = ({ state, dispatch }) => {
     if (mapLoaded) {
       if (state?.lat && state?.lng) {
         const clickedPosition = {
-          lat: state.lat,
-          lng: state.lng,
-          zoom: state.zoom,
+          lat: state?.lat,
+          lng: state?.lng,
+          zoom: state?.zoom,
         };
 
         const newMarker = {

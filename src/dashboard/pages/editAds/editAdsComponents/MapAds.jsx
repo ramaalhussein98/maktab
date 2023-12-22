@@ -1,14 +1,8 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import Map from "./Map";
 import { useTranslation } from "react-i18next";
-import EditMapAd from "./EditMapAd";
-const EditMapAds = ({
-  formData,
-  setFormData,
-  setError,
-  mapData,
-  setMapData,
-}) => {
+const MapAds = ({ state, dispatch }) => {
   const { t } = useTranslation();
   return (
     <Box>
@@ -37,16 +31,10 @@ const EditMapAds = ({
           marginTop: "1rem",
         }}
       >
-        <EditMapAd
-          formData={formData}
-          setFormData={setFormData}
-          setError={setError}
-          mapData={mapData}
-          setMapData={setMapData}
-        />
+        <Map state={state} dispatch={dispatch} />
       </Box>
     </Box>
   );
 };
 
-export default EditMapAds;
+export default MapAds;

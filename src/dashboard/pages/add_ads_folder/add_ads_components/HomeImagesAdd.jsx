@@ -26,7 +26,7 @@ const HomeImagesAdd = ({
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [selectedVideoFile, setSelectedVideoFile] = useState(
-    state.video || null
+    state?.video || null
   );
 
   useEffect(() => {

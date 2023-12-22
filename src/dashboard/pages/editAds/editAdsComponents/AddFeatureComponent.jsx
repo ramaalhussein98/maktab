@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const EditFeatureComponent = ({ formData, setFormData, category_bool }) => {
+const AddFeatureComponent = ({ formData, setFormData, category_bool }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -26,26 +26,23 @@ const EditFeatureComponent = ({ formData, setFormData, category_bool }) => {
 
   const handlePropertyClick = (propertyId) => {
     const isInArray = selectedBooleansProperties.some(
-      (item) => item.bool_featurea?.id === propertyId
+      (item) => item.boolfeaturea_id === propertyId
     );
 
     if (isInArray) {
       setSelectedBooleansProperties(
         selectedBooleansProperties.filter(
-          (item) => item.bool_featurea?.id !== propertyId
+          (item) => item.boolfeaturea_id !== propertyId
         )
       );
     } else {
       setSelectedBooleansProperties([
         ...selectedBooleansProperties,
-        {
-          bool_featurea: {
-            id: propertyId,
-          },
-        },
+        { boolfeaturea_id: propertyId },
       ]);
     }
   };
+  
   return (
     <Box>
       <Typography
@@ -83,7 +80,7 @@ const EditFeatureComponent = ({ formData, setFormData, category_bool }) => {
               backgroundColor:
                 formData?.selectedBooleansProperties &&
                 formData?.selectedBooleansProperties.some(
-                  (item) => item.bool_featurea?.id === property.bool_featurea.id
+                  (item) => item.boolfeaturea_id === property.bool_featurea.id
                 )
                   ? "var(--main-color)"
                   : "transparent",
@@ -97,8 +94,7 @@ const EditFeatureComponent = ({ formData, setFormData, category_bool }) => {
                 color:
                   formData?.selectedBooleansProperties &&
                   formData?.selectedBooleansProperties.some(
-                    (item) =>
-                      item.bool_featurea?.id === property.bool_featurea.id
+                    (item) => item.boolfeaturea_id === property.bool_featurea.id
                   )
                     ? "white"
                     : "black",
@@ -116,4 +112,4 @@ const EditFeatureComponent = ({ formData, setFormData, category_bool }) => {
   );
 };
 
-export default EditFeatureComponent;
+export default AddFeatureComponent;

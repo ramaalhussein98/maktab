@@ -9,36 +9,26 @@ import {
 } from "@react-google-maps/api";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-hot-toast";
 import mapMarkerIcon from "../../../../../assets/icons/mapMarker2.svg";
+import { toast } from "react-toastify";
 const googleMapsApiKey = "AIzaSyCUSxdxRLpvkegxpk9-82sUjCylgekfGUk";
 
 const containerStyle = {
   width: "100%",
   height: "400px",
 };
-const EditMap = ({ type, 
-  // ad,
-   onCancel, setStateLoading, setGetDataState }) => {
-    const ad="";
-    //  this will remove it later
+const EditMap = ({ location, onCancel, editMapLocationMutation, id }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: googleMapsApiKey,
-    // libraries: ['geometry', 'drawing'],
   });
   const { t } = useTranslation();
   const [userMarkers, setUserMarkers] = useState([]);
-  const [cityName, setCityName] = useState();
-  const [neighborhoodName, setNeighborhoodName] = useState();
-  const [rood, setRood] = useState();
+  const [city, setCity] = useState(location.city);
+  const [neighborhood, setNeighborhood] = useState(location.neighborhood);
+  const [street, setStreet] = useState(location.street);
   const [error, setError] = useState(false);
-  const [centeredMap, setCenteredMap] = useState({
-    lat: 23.8859,
-    lng: 45.0792,
-  });
-
-  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [centeredMap, setCenteredMap] = useState();
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const handleMapLoad = () => {
@@ -46,34 +36,21 @@ const EditMap = ({ type,
   };
   useEffect(() => {
     if (mapLoaded) {
-      if (ad.lat && ad.lng) {
+      if (location.lat && location.lng) {
         const clickedPosition = {
-          lat: Number(ad?.lat),
-          lng: Number(ad?.lng),
+          lat: Number(location?.lat),
+          lng: Number(location?.lng),
           zoom: 10,
         };
         const newMarker = {
           position: clickedPosition,
-          id: new Date().getTime(), // Generate a unique ID
+          id: new Date().getTime(),
         };
         setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
-        // setFormData((prevData) => ({
-        //   ...prevData,
-        //   selectedLocation: clickedPosition,
-        // }));
         setUserMarkers([newMarker]);
       }
     }
   }, [mapLoaded]);
-  // console.log(userMarkers);
-
-  // const handleCloseInfoWindow = () => {
-  //   setSelectedMarker(null);
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     selectedLocation: null,
-  //   }));
-  // };
 
   const handleMapClick = (event) => {
     const clickedPosition = {
@@ -83,15 +60,10 @@ const EditMap = ({ type,
     };
     const newMarker = {
       position: clickedPosition,
-      id: new Date().getTime(), // Generate a unique ID
+      id: new Date().getTime(),
     };
 
     setCenteredMap({ lat: clickedPosition.lat, lng: clickedPosition.lng });
-
-    // setFormData((prevData) => ({
-    //   ...prevData,
-    //   selectedLocation: clickedPosition,
-    // }));
 
     setUserMarkers([newMarker]);
     let isSaudiArabia = false;
@@ -116,13 +88,13 @@ const EditMap = ({ type,
                 }
               }
               if (component.types.includes("locality")) {
-                setCityName(component.long_name);
+                setCity(component.long_name);
               }
               if (component.types.includes("sublocality")) {
-                setNeighborhoodName(component.long_name);
+                setNeighborhood(component.long_name);
               }
               if (component.types.includes("route")) {
-                setRood(component.long_name);
+                setStreet(component.long_name);
               }
             }
           }
@@ -130,7 +102,6 @@ const EditMap = ({ type,
             // The location is not in Saudi Arabia
             toast.error("لايمكن الاختيار خارج حدود المملكة العربية السعودية");
           }
-        } else {
         }
       })
       .catch((error) => {
@@ -138,74 +109,43 @@ const EditMap = ({ type,
       });
   };
 
-  // useEffect(() => {
-  //   setMapData((prev) => ({
-  //     ...prev,
-  //     cityName,
-  //     neighborhoodName,
-  //     rood,
-  //   }));
-  // }, [cityName, neighborhoodName, rood]);
-
-  // console.log(mapData);
   const handleSubmit = async (e) => {
-    setStateLoading(true);
     e.preventDefault();
-    if (type === 0) {
-      try {
-        const res = await fetch(
-          `https://www.dashboard.aqartik.com/api/deal/update/${ad.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${localStorage.getItem("user_token")}`,
-            },
-            body: JSON.stringify({
-              lat: userMarkers["0"].position.lat,
-              lng: userMarkers["0"].position.lng,
-              zoom: userMarkers["0"].position.zoom,
-              road: rood,
-              neighborhood: neighborhoodName,
-              city: cityName,
-            }),
-          }
-        );
-        if (res) {
-          setGetDataState((prev) => !prev);
-          setStateLoading(false);
-          onCancel();
-        }
-      } catch (err) {}
-    }
-    if (type === 1) {
-      try {
-        const res = await fetch(
-          `https://www.dashboard.aqartik.com/api/real-estate-request/update/${ad.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `Bearer ${localStorage.getItem("user_token")}`,
-            },
-            body: JSON.stringify({
-              lat: userMarkers["0"].position.lat,
-              lng: userMarkers["0"].position.lng,
-              zoom: userMarkers["0"].position.zoom,
-              road: rood,
-              neighborhood: neighborhoodName,
-              city: cityName,
-            }),
-          }
-        );
-        if (res) {
-          setGetDataState((prev) => !prev);
-          setStateLoading(false);
-          onCancel();
-        }
-      } catch (err) {}
+    const toastId = toast.loading("storing...");
+    try {
+      const res = await editMapLocationMutation.mutateAsync({
+        location: {
+          lat: centeredMap.lat,
+          lng: centeredMap.lng,
+          zoom: centeredMap.zoom,
+          city,
+          neighborhood,
+          street,
+        },
+        id,
+      });
+      toast.update(toastId, {
+        type: "success",
+        render: res.data.message,
+        closeOnClick: true,
+        isLoading: false,
+        autoClose: true,
+        closeButton: true,
+        pauseOnHover: false,
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        type: "error",
+        // render: error.response.data.message,
+        closeOnClick: true,
+        isLoading: false,
+        autoClose: true,
+        closeButton: true,
+        pauseOnHover: false,
+      });
     }
   };
+
   return (
     <Box>
       <form>

@@ -3,8 +3,6 @@ import { Box, Typography } from "@mui/material";
 
 import { useTranslation } from "react-i18next";
 
-import { EditMapAd } from "../../RealEstates/edit_ads_folder/edit_components";
-
 const OrderMap = ({ formData, setFormData, setError, mapData, setMapData }) => {
   const { t } = useTranslation();
   return (
@@ -33,16 +31,7 @@ const OrderMap = ({ formData, setFormData, setError, mapData, setMapData }) => {
           border: "1px solid black",
           marginTop: "1rem",
         }}
-      >
-        <EditMapAd
-          // type={type}
-          formData={formData}
-          setFormData={setFormData}
-          setError={setError}
-          mapData={mapData}
-          setMapData={setMapData}
-        />
-      </Box>
+      ></Box>
     </Box>
   );
 };

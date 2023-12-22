@@ -6,11 +6,9 @@ import { useTranslation } from "react-i18next";
 import OrderTitles from "../../new_order_folder/new_order_components/OrderTitles";
 
 const HomeDescription = ({ state, dispatch }) => {
-  const [description, setDescription] = useState(state?.description || "");
   const { t } = useTranslation();
   const handleDescriptionChange = (event) => {
     const inputValue = event.target.value;
-    setDescription(inputValue);
 
     dispatch({ type: "description", value: inputValue });
   };
@@ -99,7 +97,7 @@ const HomeDescription = ({ state, dispatch }) => {
         rows={7}
         placeholder={t("dashboard.property_desc.placeholder")}
         required
-        value={description}
+        value={state?.description}
         onChange={handleDescriptionChange}
         InputProps={{
           sx: {

@@ -53,9 +53,9 @@ const ConfimLocation = ({ state, dispatch, interfaces }) => {
         type="text"
         size="small"
         InputProps={{
-          readOnly: state.city.length > 0 ? true : false,
+          readOnly: state?.city.length > 0 ? true : false,
         }}
-        value={state.city}
+        value={state?.city}
         onChange={handleCityChange}
         sx={{
           width: "100%",
@@ -74,9 +74,9 @@ const ConfimLocation = ({ state, dispatch, interfaces }) => {
         type="text"
         size="small"
         InputProps={{
-          readOnly: state.neighborhood.length > 0 ? true : false,
+          readOnly: state?.neighborhood.length > 0 ? true : false,
         }}
-        value={state.neighborhood}
+        value={state?.neighborhood}
         onChange={handleNeighborhoodChange}
         sx={{
           width: "100%",
@@ -90,7 +90,7 @@ const ConfimLocation = ({ state, dispatch, interfaces }) => {
       <TextField
         type="text"
         size="small"
-        value={state.street}
+        value={state?.street}
         onChange={handleRoadChange}
         sx={{
           width: "100%",
@@ -109,7 +109,7 @@ const ConfimLocation = ({ state, dispatch, interfaces }) => {
         {t("dashboard.property_location.hint")}
       </Typography>
       <Select
-        value={state.interface_id}
+        value={state?.interface_id}
         onChange={handleInterfaceChange}
         label=""
         required

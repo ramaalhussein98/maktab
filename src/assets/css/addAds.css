@@ -239,23 +239,35 @@ input[type="number"] {
 
 .raabon {
   position: relative;
-
-  .span1 {
-    position: absolute;
-    left: 0px;
-    bottom: 0;
-    width: 3rem;
-    justify-content: center;
-    text-align: center;
-    font-weight: 800;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    background-color: #eee;
-    padding: 5px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    /* border-radius: 5px; */
-  }
+  width: 220px;
+}
+.span1 {
+  position: absolute;
+  left: 0px;
+  bottom: 0;
+  justify-content: center;
+  text-align: center;
+  font-weight: 800;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  /* border-radius: 5px; */
+  display: flex;
+  align-items: stretch;
+}
+.span1 span {
+  padding: 5px;
+  overflow: hidden;
+  display: flex;
+  width: 40px;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+}
+.span1 span:last-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }

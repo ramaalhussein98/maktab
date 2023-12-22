@@ -27,17 +27,17 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const AddLicensedAdvertising = ({
-  selectedCheckLicense,
   setSelectedCheckLicense,
+  licenseNumber,
+  setLicenseNumber,
   state,
   dispatch,
 }) => {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(state.license_number.length > 0);
   const [checkedRequest, setCheckedRequest] = useState(false);
   const { t } = useTranslation();
 
   const handleLicesneNumbervaule = (event) => {
-    // setLicenseNumber(event.target.value);
     dispatch({ type: "license_number", value: event.target.value });
   };
   const handleToggleSwitch = () => {
@@ -126,7 +126,7 @@ const AddLicensedAdvertising = ({
             {t("dashboard.contract.Advertnumber")}
           </span>
           <input
-            value={state?.license_number}
+            value={state.license_number}
             onChange={handleLicesneNumbervaule}
             placeholder={t("dashboard.contract.plzenter")}
             style={{
