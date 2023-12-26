@@ -1,6 +1,5 @@
 .filters_container {
   padding-block-start: 20px;
-  /* position: sticky; */
   top: calc(80px -20px, 0px);
   width: 100%;
   z-index: 9;
@@ -13,6 +12,7 @@
 @media only screen and (max-width: 900px) {
   .filters_container {
     height: 82px;
+    /* display: none !important; */
   }
 }
 .addvistor {

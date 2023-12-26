@@ -7,7 +7,7 @@ import { ar, enUS } from "date-fns/locale";
 import { Box, Button } from "@mui/material";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useLocation } from "react-router-dom";
 

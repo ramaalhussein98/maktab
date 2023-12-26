@@ -12,8 +12,9 @@ import AdCard from "../../Home/components/AdCard";
 import AdMapCard from "./AdMapCard";
 import { Box } from "@mui/material";
 
-const CustomMarker = ({ price, isActive, onClick }) => {
+const CustomMarker = ({ id, price, isActive, onClick, visitedMarkers }) => {
   const { t } = useTranslation();
+  const isVisited = visitedMarkers.includes(id);
   return (
     <div
       onClick={onClick}
@@ -24,21 +25,24 @@ const CustomMarker = ({ price, isActive, onClick }) => {
         textOverflow: "ellipsis",
         whiteSpace: "nowrap",
         overflow: "hidden",
-
         padding: "0px 8px",
         height: "35px",
-        backgroundColor: isActive ? "var(--main-color)" : "rgb(255, 255, 255)",
+        backgroundColor: isActive
+          ? "var(--main-color)"
+          : isVisited
+          ? "#eee" // Change to your desired color for visited markers
+          : "rgb(255, 255, 255)",
         border: isActive
           ? "2px solid var(--main-color)"
+          : isVisited
+          ? "2px solid #eee"
           : "2px solid rgb(255, 255, 255)",
-        color: isActive ? "white" : "rgb(0, 0, 0)",
+        color: isActive ? "white" : isVisited ? "black" : "rgb(0, 0, 0)",
         borderRadius: "20px",
         zIndex: isActive ? "20000" : "1",
         transform: "translate(-50%, -50%)",
         display: "flex",
-
         justifyContent: "center",
-
         alignItems: "center",
         fontWeight: "700",
         fontSize: "15px",
@@ -69,6 +73,7 @@ const MapCreate = (props) => {
   ];
 
   const {
+    data,
     state,
     setLngZoom,
     setLatZoom,
@@ -79,13 +84,14 @@ const MapCreate = (props) => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [overlayViews, setOverlayViews] = useState([]);
   const [activeMarkerIndex, setActiveMarkerIndex] = useState(null);
+  const [visitedMarkers, setVisitedMarkers] = useState([]);
   const [isMarkerClicked, setMarkerClicked] = useState(false);
   const [cityCenter, setCityCenter] = useState({
     lat: 24.633333,
     lng: 46.716667,
     zoom: 10,
   });
-
+  // console.log(data.data)
   const handleMapLoad = (map) => {
     setMapLoaded(true);
     mapRef.current = map;
@@ -102,9 +108,11 @@ const MapCreate = (props) => {
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
             <CustomMarker
+              id={location.id}
               price={location.price}
               isActive={activeMarkerIndex === location.id}
               onClick={() => handleMarkerClick(location.id, location)}
+              visitedMarkers={visitedMarkers}
             />
           </OverlayView>
         </>
@@ -116,12 +124,27 @@ const MapCreate = (props) => {
   }, [mapLoaded, activeMarkerIndex]);
 
   const handleMarkerClick = (id, loc) => {
-    setActiveMarkerIndex(id);
+    // Toggle the active state of the marker
+    console.log(selectedAd);
+    const newActiveMarkerIndex = activeMarkerIndex === id ? null : id;
+
+    setActiveMarkerIndex(newActiveMarkerIndex);
     setMarkerClicked(true);
     setBoxVisible(true);
-    setSelectedAd(id);
+
+    setSelectedAd((prevSelectedAd) => {
+      console.log(prevSelectedAd);
+      console.log(newActiveMarkerIndex);
+      return newActiveMarkerIndex;
+    });
+    // Add the clicked marker to the array of visited markers
+    setVisitedMarkers((prevVisitedMarkers) =>
+      prevVisitedMarkers.includes(id)
+        ? prevVisitedMarkers // Already visited, no change
+        : [...prevVisitedMarkers, id]
+    );
+
     setCityCenter({ lat: loc.lat, lng: loc.lng, zoom: loc.zoom });
-    console.log(selectedAd);
   };
 
   const mapStyles = {
@@ -190,6 +213,7 @@ const MapCreate = (props) => {
             position: "absolute",
             top: { md: "53%" },
             bottom: { xs: "0px !important", md: "auto" },
+            height:{xs:"125px" , md:"277px"} ,
             left: { xs: "calc(50%)", md: "calc(50% + 30px)" },
             transform: "translate(-50%, -50%)",
             width: { xs: "80%", md: "20rem" },

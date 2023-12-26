@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../assets/css/layout.css";
 import { Box, Button, Container, Paper } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 
 import {
   LogoBig,
@@ -38,6 +38,8 @@ import useDataFetcher from "../../api/useDataFetcher ";
 
 const TopNav = ({ setIsUserSelected }) => {
   const isLoggedIn = localStorage.getItem("user_token") ? true : false;
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const nav = useNavigate();
@@ -104,12 +106,14 @@ const TopNav = ({ setIsUserSelected }) => {
                 </Box>
                 <ul className="navLinks">
                   {menuItems?.links?.map((item, index) => (
-                    <Link key={item.id} to={item.link}>
+                    <NavLink key={index} to={item.link} exact>
                       <span>
-                        {" "}
                         {lang === "ar" ? item.title_ar : item.title_en}
                       </span>
-                    </Link>
+                    </NavLink>
+                    //    <Link  to={item.link} replace>
+
+                    //  </Link>
                   ))}
                 </ul>
               </Box>
@@ -147,7 +151,7 @@ const TopNav = ({ setIsUserSelected }) => {
                         )}
                       </div>
                     </Header> */}
-                    {isLoggedIn && (
+                    {isLoggedIn && user_type_bussines && (
                       <Link to="/addoffice">
                         <span
                           className="displayOfficespan"
@@ -167,21 +171,24 @@ const TopNav = ({ setIsUserSelected }) => {
                         </span>{" "}
                       </Link>
                     )}
-                    <Link to="/business">
-                      <span
-                        className="displayOfficespan"
-                        style={{
-                          background: "linear-gradient(25deg,#700707,#ff4646)",
-                          color: "white",
-                          padding: "9px 15px",
-                          borderRadius: "20px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        مكتب أعمال
-                      </span>
-                    </Link>
+                    {!user_type_bussines && (
+                      <Link to="/business">
+                        <span
+                          className="displayOfficespan"
+                          style={{
+                            background:
+                              "linear-gradient(25deg,#700707,#ff4646)",
+                            color: "white",
+                            padding: "9px 15px",
+                            borderRadius: "20px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          مكتب أعمال
+                        </span>
+                      </Link>
+                    )}
                   </Box>
                   <LoginButton isLoggedIn={isLoggedIn} />
 
@@ -201,7 +208,7 @@ const TopNav = ({ setIsUserSelected }) => {
                     <input
                       type="text"
                       className="input1"
-                      style={{ outline: "none" }}
+                      style={{ outline: "none" , backgroundColor:"transparent"}}
                     />
                     <Box
                       className="searchIcon"

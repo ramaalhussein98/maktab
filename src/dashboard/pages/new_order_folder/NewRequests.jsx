@@ -23,7 +23,7 @@ import useDataFetcher from "../../../api/useDataFetcher ";
 import OrderInputs from "./new_order_components/OrderInputs";
 
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import Loader from "../../../common/Loading/Loader";
 
 const NewRequests = () => {

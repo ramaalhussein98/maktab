@@ -3,7 +3,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useStateContext } from "../../context/userContext";
 import { Link, useNavigate } from "react-router-dom";
 

@@ -48,6 +48,7 @@ function App() {
   const language = i18n.language;
   const thereisToken = localStorage.getItem("user_token");
   const settingData = JSON.parse(localStorage.getItem("settingData"));
+
   useEffect(() => {
     const searchData = localStorage.getItem("searchData");
     const getData = async () => {
@@ -211,7 +212,7 @@ function App() {
           }
         />
         <Route
-          path="contact-us"
+          path="/contact-us"
           element={
             <Layout>
               <ContactUs />
@@ -219,7 +220,7 @@ function App() {
           }
         />
         <Route
-          path="about-us"
+          path="/about-us"
           element={
             <Layout>
               <AboutUs />

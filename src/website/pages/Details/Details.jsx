@@ -29,6 +29,7 @@ const Details = () => {
     const res = await myAxios.get(`/api/v1/user/offices/${id}`);
     return res?.data?.data;
   };
+  // console.log(res)
   const { data, error, isError, isLoading, queryClient } = useQueryHook(
     "officeDetails",
     getOfficeData

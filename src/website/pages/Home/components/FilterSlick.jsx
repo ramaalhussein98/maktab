@@ -26,27 +26,32 @@ function SamplePrevArrow(props) {
 const searchData = JSON.parse(localStorage.getItem("searchData"));
 const FilterData = searchData?.category_aqar;
 // console.log("FilterData", FilterData);
-const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
+const FilterSlick = ({ refetch, setFilter }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [activeButton, setActiveButton] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const handleDivClick = (index, label, id) => {
-    setActiveButton(id);
-    // setSearchQuery((prev) => prev + `exact[category_aqar.id]=${id}`);
-    setFilter((prevState) => ({
-      ...prevState,
-      "exact[category_aqar.id]": id,
-    }));
+    // Toggle the active state based on the current state
+    setActiveButton((prevId) => (prevId === id ? null : id));
 
-    // SearchParams.append("exact[category_aqar.id]", id);
+    // Toggle the filter state based on the current state
+    setFilter((prevState) => {
+      const newFilter = { ...prevState };
+      if (newFilter["exact[category_aqar.id]"] === id) {
+        // If the category is already selected, remove it
+        delete newFilter["exact[category_aqar.id]"];
+      } else {
+        // If the category is not selected, add it
+        newFilter["exact[category_aqar.id]"] = id;
+      }
+      return newFilter;
+    });
+
     refetch();
 
-    if (index === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(index);
-    }
+    // Toggle the active state based on the current state
+    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const settings = {
@@ -97,7 +102,7 @@ const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
               style={{ width: "24px", margin: "auto" }}
             />
             <span className="span1">
-              {lang === "ar" ? data.ar_name : data.en_name}
+              {lang === "ar" ? data?.ar_name : data?.en_name}
             </span>
           </div>
         ))}

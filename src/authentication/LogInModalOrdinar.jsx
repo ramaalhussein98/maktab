@@ -10,7 +10,7 @@ import {
 import { KSA } from "../assets/icons";
 import { useTranslation } from "react-i18next";
 import { myAxios } from "../api/myAxios";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import axios from "axios";
 

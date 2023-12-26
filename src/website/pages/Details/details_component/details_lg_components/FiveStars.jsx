@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 // import LogInModal from "../../../authentication/loginFolder/LogInModal";
 
 const FiveStars = () =>

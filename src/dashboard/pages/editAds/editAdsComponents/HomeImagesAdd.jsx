@@ -5,7 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 // import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import myAxios from "../../../../api/myAxios";
 // import Image from "next/image";

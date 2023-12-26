@@ -7,7 +7,7 @@ import {
   InfoWindow,
   useJsApiLoader,
 } from "@react-google-maps/api";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import mapMarkerIcon from "../../../../assets/icons/mapMarker2.svg";
 
 const containerStyle = {

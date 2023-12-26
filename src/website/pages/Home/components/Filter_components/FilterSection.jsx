@@ -8,12 +8,7 @@ import FilterModal from "../Modals/FilterModal";
 import ListIcon from "@mui/icons-material/List";
 import { useTranslation } from "react-i18next";
 
-const FilterSection = ({
-  setSearchQuery,
-  SearchParams,
-  refetch,
-  setFilter,
-}) => {
+const FilterSection = ({ refetch, setFilter }) => {
   const { t } = useTranslation();
   const [openFilterModal, setOpenFilterModal] = useState(false);
   const [inputSearch, setInputSearch] = useState();
@@ -24,19 +19,16 @@ const FilterSection = ({
     setOpenFilterModal(true);
   };
   const handleInputChange = (e) => {
-    // setSearchQuery(`contains[title]=${encodeURIComponent(inputSearch)}`);
-    // SearchParams.append("contains[title]", encodeURIComponent(inputSearch));
-    // refetch();
     setFilter((prevState) => ({
-      ...prevState,
-      "contains[title]": encodeURIComponent(inputSearch),
+      "contains[title]": inputSearch,
     }));
-
-    // setFilter({
-    //   query: `"exact[category_aqar.id]"=${null}&"contains[title]"=${encodeURIComponent(
-    //     inputSearch
-    //   )}`,
-    // });
+  };
+  const handleInputBlur = () => {
+    if (!inputSearch) {
+      setFilter((prevState) => ({
+        "contains[title]": "",
+      }));
+    }
   };
 
   return (
@@ -48,12 +40,7 @@ const FilterSection = ({
             <FilterSkeleton key={index} />
           ))
         ) : (
-          <FilterSlick
-            setSearchQuery={setSearchQuery}
-            SearchParams={SearchParams}
-            refetch={refetch}
-            setFilter={setFilter}
-          />
+          <FilterSlick refetch={refetch} setFilter={setFilter} />
         )}
 
         <Button className="filter_btn" onClick={handleFilerModalOpen}>
@@ -68,7 +55,12 @@ const FilterSection = ({
                   value={inputSearch}
                   type="text"
                   onChange={(event) => setInputSearch(event.target.value)}
-                  style={{ width: "100%", outline: "none" }}
+                  onBlur={handleInputBlur}
+                  style={{
+                    width: "100%",
+                    outline: "none",
+                    backgroundColor: "transparent",
+                  }}
                 />
                 <Box className="searchIcon" onClick={handleInputChange}>
                   <img src={Search} />
@@ -94,8 +86,6 @@ const FilterSection = ({
       <FilterModal
         openFilterModal={openFilterModal}
         setOpenFilterModal={setOpenFilterModal}
-        setSearchQuery={setSearchQuery}
-        SearchParams={SearchParams}
         refetch={refetch}
         setFilter={setFilter}
       />

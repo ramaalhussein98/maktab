@@ -27,13 +27,15 @@ import {
 } from "../../../../assets/images";
 import { useLocation, useNavigate } from "react-router-dom";
 // SwiperCore.use([Pagination]);
-const AdSlider = ({ officeData }) => {
+const AdSlider = ({ officeData, handleAdClick }) => {
   // const homeImages = ad.gallery;
   const location = useLocation().pathname;
   const [swiper, setSwiper] = useState(null);
   const ImagePath = { path: officeData?.main_image };
-  const homeImages = [ImagePath, ...(officeData?.ads_files?.length > 0 ? officeData.ads_files : [])];
-
+  const homeImages = [
+    ImagePath,
+    ...(officeData?.ads_files?.length > 0 ? officeData.ads_files : []),
+  ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -129,6 +131,7 @@ const AdSlider = ({ officeData }) => {
                   ? styles.customSlideMap
                   : styles.customSlide
               }
+              onClick={() => handleAdClick(officeData)}
             >
               <img
                 src={`https://dashboard.maktab.sa/${image.path}`}

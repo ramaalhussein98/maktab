@@ -8,7 +8,7 @@ import LogInModal from "../authentication/LogInModal";
 import UserContext from "../context/userContext";
 import useDataFetcher from "../api/useDataFetcher ";
 
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import LogInModalOrdinar from "../authentication/LogInModalOrdinar";
 import myAxios from "../api/myAxios";
 import { useStateContext } from "../context/userContext";

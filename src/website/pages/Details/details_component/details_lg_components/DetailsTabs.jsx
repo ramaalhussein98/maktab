@@ -163,7 +163,7 @@ const DetailsTabs = ({ adInfo }) =>
             }}
           >
             <Link
-              href={`https://www.google.com/maps/dir/My+Location/${adInfo?.location.lat},${adInfo?.location.lng}/@${adInfo?.location.lat},${adInfo?.location.lng},12z/data=!3m1!4b1?entry=ttu`}
+              href={`https://www.google.com/maps/dir/My+Location/${adInfo?.location?.lat},${adInfo?.location?.lng}/@${adInfo?.location?.lat},${adInfo?.location?.lng},12z/data=!3m1!4b1?entry=ttu`}
               target="_blank"
             >
               <img

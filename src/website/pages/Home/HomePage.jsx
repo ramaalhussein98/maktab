@@ -18,6 +18,7 @@ import myAxios from "../../../api/myAxios";
 import Pagination from "../../../ui/Pagination";
 import { useQueryHook } from "../../../hooks/useQueryHook";
 import { useOfficeHook } from "../../../hooks/useOfficeHook";
+import NoData from "../../../ui/NoData";
 
 // const getOfficesData = async (page, SearchParams) => {
 //   const res = await myAxios.get(
@@ -30,17 +31,18 @@ const HomePage = () => {
   const isCardLoading = false;
   const [openModal, setOpenModal] = useState(false);
   const location = useLocation().pathname;
+  const [page, setpage] = useState(1);
 
   const [filter, setFilter] = useState({
-    "exact[category_aqar.id]": null,
-    "contains[title]": "",
-    "exact[units.room_details.ar_name]": "",
-    "exact[units.room_details.number]": "",
+    // "exact[category_aqar.id]": null,
+    // "contains[title]": "",
+    // "in[ads_rooms.number][0]": "",
+    // "in[ads_rooms.id][0]": "",
+    // "in[ads_rooms.number][1]": "",
+    // "in[ads_rooms.id][1]": "",
+    // "in[ads_rooms.number][2]": "",
+    // "in[ads_rooms.id][2]": "",
   });
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [page, setpage] = useState(1);
-  const SearchParams = new URLSearchParams();
 
   // console.log("serach", searchQuery);
   // const { data, error, isError, isLoading, queryClient, refetch } =
@@ -94,12 +96,7 @@ const HomePage = () => {
         }}
       >
         {/* filters section */}
-        <FilterSection
-          setSearchQuery={setSearchQuery}
-          SearchParams={SearchParams}
-          refetch={refetch}
-          setFilter={setFilter}
-        />
+        <FilterSection refetch={refetch} setFilter={setFilter} />
         {/* this ads section */}
         <div className="cards_container">
           {/* button map */}
@@ -136,44 +133,47 @@ const HomePage = () => {
               margin: { xs: "auto" },
             }}
           >
-            {isLoading
-              ? Array.from({ length: 8 }, (_, index) => (
-                  <Grid
-                    item
-                    xs={10}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    key={index}
-                    sx={{
-                      paddingLeft: {
-                        xs: "0px !important",
-                        sm: "16px !important",
-                      },
-                    }}
-                  >
-                    <CardSkeleton key={index} />
-                  </Grid>
-                ))
-              : data?.data.length > 0 &&
-                data?.data.map((ele, index) => (
-                  <Grid
-                    item
-                    xs={10}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    key={index}
-                    sx={{
-                      paddingLeft: {
-                        xs: "0px !important",
-                        sm: "16px !important",
-                      },
-                    }}
-                  >
-                    <AdCard officeData={ele} />
-                  </Grid>
-                ))}
+            {isLoading ? (
+              Array.from({ length: 8 }, (_, index) => (
+                <Grid
+                  item
+                  xs={10}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  key={index}
+                  sx={{
+                    paddingLeft: {
+                      xs: "0px !important",
+                      sm: "16px !important",
+                    },
+                  }}
+                >
+                  <CardSkeleton key={index} />
+                </Grid>
+              ))
+            ) : data?.data.length > 0 ? (
+              data?.data.map((ele, index) => (
+                <Grid
+                  item
+                  xs={10}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  key={index}
+                  sx={{
+                    paddingLeft: {
+                      xs: "0px !important",
+                      sm: "16px !important",
+                    },
+                  }}
+                >
+                  <AdCard officeData={ele} />
+                </Grid>
+              ))
+            ) : (
+              <NoData />
+            )}
           </Grid>
           <Pagination data={paginationData} setPage={setpage} />
         </div>
