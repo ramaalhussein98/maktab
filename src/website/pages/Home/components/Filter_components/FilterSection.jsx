@@ -8,7 +8,12 @@ import FilterModal from "../Modals/FilterModal";
 import ListIcon from "@mui/icons-material/List";
 import { useTranslation } from "react-i18next";
 
-const FilterSection = ({ refetch, setFilter }) => {
+const FilterSection = ({
+  refetch,
+  setFilter,
+  toggleMapAds,
+  setToggleMapAds,
+}) => {
   const { t } = useTranslation();
   const [openFilterModal, setOpenFilterModal] = useState(false);
   const [inputSearch, setInputSearch] = useState();
@@ -43,11 +48,18 @@ const FilterSection = ({ refetch, setFilter }) => {
           <FilterSlick refetch={refetch} setFilter={setFilter} />
         )}
 
-        <Button className="filter_btn" onClick={handleFilerModalOpen}>
+        <Button
+          className="filter_btn"
+          sx={{ display: { xs: "none", md: "flex" } }}
+          onClick={handleFilerModalOpen}
+        >
           <img src={Filter} alt="filter img" className="filter_btn_img" />
           {t("home.FilterModal.Filter_Factors")}
         </Button>
-        <Box className="searchBox">
+        <Box
+          className="searchBox"
+          sx={{ display: { xs: "none", md: "block" } }}
+        >
           <div className="searchBoxBorder">
             <span>
               <div className="addvistor">
@@ -70,17 +82,22 @@ const FilterSection = ({ refetch, setFilter }) => {
           </div>
         </Box>
         {/* button map */}
-        {isMapPage ? (
-          <Link to="/" className="mapButton">
+        {toggleMapAds ? (
+          <button
+            className="mapButton"
+            onClick={() => setToggleMapAds(!toggleMapAds)}
+          >
             {t("displayMenu")}
             <ListIcon sx={{ color: "white", marginX: "5px" }} />
-            {/* <img src={MapIcon} style={{ width: "16px" }} /> */}
-          </Link>
+          </button>
         ) : (
-          <Link to="/map" className="mapButton">
+          <button
+            className="mapButton"
+            onClick={() => setToggleMapAds(!toggleMapAds)}
+          >
             {t("displayMap")}
             <img src={MapIcon} className="img1" style={{ width: "16px" }} />
-          </Link>
+          </button>
         )}
       </div>
       <FilterModal

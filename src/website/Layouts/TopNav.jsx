@@ -202,23 +202,22 @@ const TopNav = ({ setIsUserSelected }) => {
         {!isPaymentPage && (
           <Box className="topSmallNavContainer">
             <Box className="smallBoxBorder" sx={{ minHeight: "47px" }}>
-              <div className="searchBoxBorder">
-                <span className="span1">
-                  <div className="addvistor">
-                    <input
-                      type="text"
-                      className="input1"
-                      style={{ outline: "none" , backgroundColor:"transparent"}}
-                    />
-                    <Box
-                      className="searchIcon"
-                      sx={{ position: "absolute", left: "0px" }}
-                    >
-                      <img src={Search} />
-                    </Box>
-                  </div>
-                </span>
-              </div>
+              <span className="span1">
+                <div className="addvistor">
+                  <input
+                    type="text"
+                    className="input1"
+                    placeholder="أي مكان"
+                    style={{ outline: "none", backgroundColor: "transparent" }}
+                  />
+                  <Box
+                    className="searchIcon"
+                    sx={{ position: "absolute", left: "0px" }}
+                  >
+                    <img src={Search} />
+                  </Box>
+                </div>
+              </span>
             </Box>
             <Button
               className="FilterBtnSmall"

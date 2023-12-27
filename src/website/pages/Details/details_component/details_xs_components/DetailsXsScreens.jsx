@@ -111,10 +111,14 @@ const DetailsXsScreens = () =>
                 </IconButton>
                 <Box
                   sx={{
+                    position: "absolute",
+                    top: "4rem",
+                    left: "5px",
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "row",
                     marginLeft: "0px",
+                    zIndex: "222222222",
                   }}
                 >
                   <FavoriteButton

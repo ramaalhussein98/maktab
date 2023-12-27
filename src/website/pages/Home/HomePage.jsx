@@ -13,26 +13,26 @@ import FilterSection from "./components/Filter_components/FilterSection";
 import LogInModal from "../../../authentication/LogInModal";
 import PhoneIcon from "@mui/icons-material/Phone";
 import StarIcon from "@mui/icons-material/Star";
+import ListIcon from "@mui/icons-material/List";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import myAxios from "../../../api/myAxios";
 import Pagination from "../../../ui/Pagination";
 import { useQueryHook } from "../../../hooks/useQueryHook";
 import { useOfficeHook } from "../../../hooks/useOfficeHook";
 import NoData from "../../../ui/NoData";
-
-// const getOfficesData = async (page, SearchParams) => {
-//   const res = await myAxios.get(
-//     `api/v1/user/offices?page=${page}&${SearchParams}`
-//   );
-//   return res.data.data;
-// };
+import Map from "../map/Map";
+import { useTranslation } from "react-i18next";
+import Footer from "../../Layouts/Footer";
 
 const HomePage = () => {
   const isCardLoading = false;
   const [openModal, setOpenModal] = useState(false);
   const location = useLocation().pathname;
   const [page, setpage] = useState(1);
+  const { t, i18n } = useTranslation();
+  const [toggleMapAds, setToggleMapAds] = useState(false);
 
+  const [toggleMapAdsClass, setToggleMapAdsClass] = useState(false);
   const [filter, setFilter] = useState({
     // "exact[category_aqar.id]": null,
     // "contains[title]": "",
@@ -43,13 +43,6 @@ const HomePage = () => {
     // "in[ads_rooms.number][2]": "",
     // "in[ads_rooms.id][2]": "",
   });
-
-  // console.log("serach", searchQuery);
-  // const { data, error, isError, isLoading, queryClient, refetch } =
-  //   useQueryHook(["offices", page, SearchParams], () =>
-  //     getOfficesData(page, SearchParams)
-  //   );
-
   const {
     isLoading,
     isError,
@@ -60,11 +53,9 @@ const HomePage = () => {
     page: page,
     filter: filter,
   });
-  // console.log("offices", data);
+
   const isMapPage = location.split("/").includes("map");
-  // useEffect(() => {
-  //   refetch;
-  // }, [SearchParams]);
+
   const paginationData = {
     data: {
       currentPage: data?.current_page,
@@ -84,127 +75,170 @@ const HomePage = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+  const handleToggleMapAds = () => {
+    const element = document.querySelector(".numberAdsInMapContainer");
+    if (element) {
+      element.classList.toggle("slideUp");
+    }
+
+    setTimeout(() => {
+      setToggleMapAds(!toggleMapAds);
+    }, 500);
+  };
 
   return (
     <>
-      <Banner />
-      <Container
+      {!toggleMapAds ? (
+        <div>
+          <Banner />
+          <Container
+            sx={{
+              maxWidth: "1400px !important",
+              padding: { xs: "0px", sm: "24px" },
+              position: "relative",
+            }}
+          >
+            {/* filters section */}
+            <FilterSection
+              refetch={refetch}
+              setFilter={setFilter}
+              toggleMapAds={toggleMapAds}
+              setToggleMapAds={setToggleMapAds}
+            />
+            {/* this ads section */}
+            <div className="cards_container">
+              {/* button map */}
+
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  justifyContent: "center",
+                  width: "100%",
+                  margin: { xs: "auto" },
+                }}
+              >
+                {isLoading ? (
+                  Array.from({ length: 8 }, (_, index) => (
+                    <Grid
+                      item
+                      xs={10}
+                      sm={6}
+                      md={4}
+                      lg={3}
+                      key={index}
+                      sx={{
+                        paddingLeft: {
+                          xs: "0px !important",
+                          sm: "16px !important",
+                        },
+                      }}
+                    >
+                      <CardSkeleton key={index} />
+                    </Grid>
+                  ))
+                ) : data?.data.length > 0 ? (
+                  data?.data.map((ele, index) => (
+                    <Grid
+                      item
+                      xs={10}
+                      sm={6}
+                      md={4}
+                      lg={3}
+                      key={index}
+                      sx={{
+                        paddingLeft: {
+                          xs: "0px !important",
+                          sm: "16px !important",
+                        },
+                      }}
+                    >
+                      <AdCard officeData={ele} />
+                    </Grid>
+                  ))
+                ) : (
+                  <NoData />
+                )}
+              </Grid>
+              <Pagination data={paginationData} setPage={setpage} />
+              <div className="mapButtonWrapper">
+                <button
+                  className="mapButton "
+                  onClick={() => setToggleMapAds(!toggleMapAds)}
+                >
+                  {t("displayMap")}
+                  <img
+                    src={MapIcon}
+                    className="img1"
+                    style={{ width: "16px" }}
+                  />
+                </button>
+              </div>
+            </div>
+          </Container>
+
+          <Box
+            className="LoginBottomBox"
+            sx={{ display: { xs: "flex !important", md: "none !important" } }}
+          >
+            <Button className="button1" onClick={handleOpenModal}>
+              <img className="img1" src={LoginSvgGray} />
+              <p className="p1">تسجيل الدخول</p>
+            </Button>
+            <Button className="button1">
+              <Link to="dashboard/home">
+                <FavoriteIcon
+                  sx={{ color: " rgb(176, 176, 176) !important" }}
+                />
+                {/* <img className="img1" src={LoginSvgGray} /> */}
+                <p className="p1"> المفضلة</p>
+              </Link>
+            </Button>
+            <Button className="button1">
+              <StarIcon sx={{ color: " rgb(176, 176, 176) !important" }} />
+              <p className="p1"> إعلانات مميزة</p>
+            </Button>
+            <Button className="button1">
+              {/* <img className="img1" src={LoginSvgGray} /> */}
+              <PhoneIcon
+                sx={{
+                  color: " rgb(176, 176, 176) !important",
+                  marginTop: "-2px",
+                }}
+              />
+              <p className="p1"> اتصل بنا</p>
+            </Button>
+          </Box>
+          <Footer />
+        </div>
+      ) : (
+        <div>
+          <FilterSection
+            refetch={refetch}
+            setFilter={setFilter}
+            toggleMapAds={toggleMapAds}
+            setToggleMapAds={setToggleMapAds}
+          />
+          <Map officesData={data?.data} />
+        </div>
+      )}
+      <Box
         sx={{
-          maxWidth: "1400px !important",
-          padding: { xs: "0px", sm: "24px" },
-          position: "relative",
+          display: { xs: "block  !important", md: "none !important" },
+          position: "fixed",
+          bottom: "0px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: "2",
+          width: "100%",
         }}
       >
-        {/* filters section */}
-        <FilterSection refetch={refetch} setFilter={setFilter} />
-        {/* this ads section */}
-        <div className="cards_container">
-          {/* button map */}
-          <Box
-            sx={{
-              display: { xs: "block  !important", md: "none !important" },
-              position: "fixed",
-              bottom: "70px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: "2",
-            }}
-          >
-            {/* button map */}
-            {isMapPage ? (
-              <Link to="/" className="mapButton">
-                القائمة
-                <ListIcon sx={{ color: "white", marginX: "5px" }} />
-                {/* <img src={MapIcon} style={{ width: "16px" }} /> */}
-              </Link>
-            ) : (
-              <Link to="/map" className="mapButton">
-                الخريطة
-                <img src={MapIcon} className="img1" style={{ width: "16px" }} />
-              </Link>
-            )}
-          </Box>
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              justifyContent: "center",
-              width: "100%",
-              margin: { xs: "auto" },
-            }}
-          >
-            {isLoading ? (
-              Array.from({ length: 8 }, (_, index) => (
-                <Grid
-                  item
-                  xs={10}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  key={index}
-                  sx={{
-                    paddingLeft: {
-                      xs: "0px !important",
-                      sm: "16px !important",
-                    },
-                  }}
-                >
-                  <CardSkeleton key={index} />
-                </Grid>
-              ))
-            ) : data?.data.length > 0 ? (
-              data?.data.map((ele, index) => (
-                <Grid
-                  item
-                  xs={10}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  key={index}
-                  sx={{
-                    paddingLeft: {
-                      xs: "0px !important",
-                      sm: "16px !important",
-                    },
-                  }}
-                >
-                  <AdCard officeData={ele} />
-                </Grid>
-              ))
-            ) : (
-              <NoData />
-            )}
-          </Grid>
-          <Pagination data={paginationData} setPage={setpage} />
-        </div>
-      </Container>
-
-      <Box
-        className="LoginBottomBox"
-        sx={{ display: { xs: "flex !important", md: "none !important" } }}
-      >
-        <Button className="button1" onClick={handleOpenModal}>
-          <img className="img1" src={LoginSvgGray} />
-          <p className="p1">تسجيل الدخول</p>
-        </Button>
-        <Button className="button1">
-          <Link to="dashboard/home">
-            <FavoriteIcon sx={{ color: " rgb(176, 176, 176) !important" }} />
-            {/* <img className="img1" src={LoginSvgGray} /> */}
-            <p className="p1"> المفضلة</p>
-          </Link>
-        </Button>
-        <Button className="button1">
-          <StarIcon sx={{ color: " rgb(176, 176, 176) !important" }} />
-          <p className="p1"> إعلانات مميزة</p>
-        </Button>
-        <Button className="button1">
-          {/* <img className="img1" src={LoginSvgGray} /> */}
-          <PhoneIcon
-            sx={{ color: " rgb(176, 176, 176) !important", marginTop: "-2px" }}
-          />
-          <p className="p1"> اتصل بنا</p>
-        </Button>
+        {/* button map */}
+        {toggleMapAds && (
+          <div className="numberAdsInMapContainer" onClick={handleToggleMapAds}>
+            75 مكتبا
+          </div>
+        )}
       </Box>
       <LogInModal open={openModal} onClose={handleCloseModal} />
     </>

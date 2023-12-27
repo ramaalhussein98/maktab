@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
     <div>
       <TopNav setIsUserSelected={setIsUserSelected} />
       <main>{children}</main>
-      {!isMapPage && !isMediumScreen ? <Footer /> : ""}
+      {!isMapPage && !HomePage && !isMediumScreen ? <Footer /> : ""}
       {isUserSelected && <ChatDialog setIsUserSelected={setIsUserSelected} />}
     </div>
   );

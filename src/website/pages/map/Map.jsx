@@ -5,7 +5,7 @@ import MapCreate from "./components/MapCreate";
 import { useQueryHook } from "../../../hooks/useQueryHook";
 import { useOfficeHook } from "../../../hooks/useOfficeHook";
 
-const Map = () => {
+const Map = ({ officesData }) => {
   const [isBoxVisible, setBoxVisible] = useState(false);
   const [selectedAd, setSelectedAd] = useState();
   const [page, setpage] = useState(1);
@@ -19,16 +19,7 @@ const Map = () => {
     // "in[ads_rooms.number][2]": "",
     // "in[ads_rooms.id][2]": "",
   });
-  const {
-    isLoading,
-    isError,
-    data = { data: [], totalPages: 0 },
-    refetch,
-    isRefetching,
-  } = useOfficeHook({
-    page: page,
-    filter: filter,
-  });
+
   return (
     <>
       <Container
@@ -37,11 +28,11 @@ const Map = () => {
           paddingX: { xs: "0px", sm: "24px" },
         }}
       >
-        <FilterSection />
+        {/* <FilterSection /> */}
       </Container>
       <div style={{ height: "100vh" }}>
         <MapCreate
-          data={data}
+          officesData={officesData}
           isBoxVisible={isBoxVisible}
           setBoxVisible={setBoxVisible}
           setSelectedAd={setSelectedAd}

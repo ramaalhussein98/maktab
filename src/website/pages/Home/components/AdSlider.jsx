@@ -27,7 +27,7 @@ import {
 } from "../../../../assets/images";
 import { useLocation, useNavigate } from "react-router-dom";
 // SwiperCore.use([Pagination]);
-const AdSlider = ({ officeData, handleAdClick }) => {
+const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
   // const homeImages = ad.gallery;
   const location = useLocation().pathname;
   const [swiper, setSwiper] = useState(null);
@@ -39,7 +39,7 @@ const AdSlider = ({ officeData, handleAdClick }) => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const isAdMapCardComponent = location.split("/").includes("map");
+  // const isAdMapCardComponent = location.split("/").includes("map");
 
   console.log(isAdMapCardComponent);
 

@@ -133,25 +133,23 @@ const DetailsXsTabs = () =>
               }}
             >
               <Tab
-                label={t(
-                  "details_page.details_tabs.specifications_and_features"
-                )}
-                sx={{ fontSize: { xs: "12px", md: "17px" }, fontWeight: "700" }}
+                label={t("details_page.details_tabs.features")}
+                sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
               />
               <Tab
-                label={t("details_page.details_tabs.location_and_map")}
-                sx={{ fontSize: { xs: "12px", md: "17px" }, fontWeight: "700" }}
+                label={t("details_page.details_tabs.location")}
+                sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
               />
               <Tab
                 id="tab2"
-                label={t("details_page.details_tabs.guest_reviews")}
+                label={t("details_page.details_tabs.reviews")}
                 onClick={() => {
                   if (activeTab !== 2 && !userToken) {
                     setShowLoginModal(true);
                   }
                   setActiveTab(2);
                 }}
-                sx={{ fontSize: { xs: "12px", md: "17px" }, fontWeight: "700" }}
+                sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
               />
             </Tabs>
             <Box>

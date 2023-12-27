@@ -64,6 +64,7 @@ const MapCreate = (props) => {
     googleMapsApiKey: "AIzaSyCUSxdxRLpvkegxpk9-82sUjCylgekfGUk",
     // libraries: ['geometry', 'drawing'],
   });
+
   const locations = [
     { id: 1, lat: 24.7136, lng: 46.6753, price: "100" },
     { id: 2, lat: 26.3174, lng: 43.7759, price: "20000" },
@@ -73,13 +74,13 @@ const MapCreate = (props) => {
   ];
 
   const {
-    data,
     state,
     setLngZoom,
     setLatZoom,
     setMapZoom,
     isBoxVisible,
     setBoxVisible,
+    officesData,
   } = props;
   const [mapLoaded, setMapLoaded] = useState(false);
   const [overlayViews, setOverlayViews] = useState([]);
@@ -92,26 +93,34 @@ const MapCreate = (props) => {
     zoom: 10,
   });
   // console.log(data.data)
+
   const handleMapLoad = (map) => {
     setMapLoaded(true);
     mapRef.current = map;
   };
-
+  // console.log("officesData", officesData);
   useEffect(() => {
     if (mapLoaded) {
       // Create an array of overlayViews for the custom markers
-      const loadedOverlayViews = locations.map((location, index) => (
+      const loadedOverlayViews = officesData?.map((location, index) => (
+        // const highestPrice = location?.adsPrices?.reduce((maxPrice, ad) => {
+        //   const adPrice = parseFloat(ad.price);
+        //   return adPrice > maxPrice ? adPrice : maxPrice;
+        // }, 0);
         <>
           <OverlayView
             key={index}
-            position={{ lat: location.lat, lng: location.lng }}
+            position={{
+              lat: location?.location?.lat,
+              lng: location?.location?.lng,
+            }}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
             <CustomMarker
-              id={location.id}
-              price={location.price}
-              isActive={activeMarkerIndex === location.id}
-              onClick={() => handleMarkerClick(location.id, location)}
+              id={location?.id}
+              price={0}
+              isActive={activeMarkerIndex === location?.id}
+              onClick={() => handleMarkerClick(location?.id, location)}
               visitedMarkers={visitedMarkers}
             />
           </OverlayView>
@@ -212,8 +221,8 @@ const MapCreate = (props) => {
           sx={{
             position: "absolute",
             top: { md: "53%" },
-            bottom: { xs: "0px !important", md: "auto" },
-            height:{xs:"125px" , md:"277px"} ,
+            bottom: { xs: "15px !important", md: "auto" },
+            height: { xs: "125px", md: "277px" },
             left: { xs: "calc(50%)", md: "calc(50% + 30px)" },
             transform: "translate(-50%, -50%)",
             width: { xs: "80%", md: "20rem" },
@@ -221,7 +230,7 @@ const MapCreate = (props) => {
           }}
         >
           <AdMapCard
-            data={locations}
+            data={officesData}
             isBoxVisible={isBoxVisible}
             setBoxVisible={setBoxVisible}
             activeMarkerIndex={activeMarkerIndex}

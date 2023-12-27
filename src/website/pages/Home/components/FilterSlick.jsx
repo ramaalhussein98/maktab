@@ -5,7 +5,6 @@ import { Button } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useTranslation } from "react-i18next";
-
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
@@ -14,7 +13,6 @@ function SampleNextArrow(props) {
     </Button>
   );
 }
-
 function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
@@ -53,7 +51,6 @@ const FilterSlick = ({ refetch, setFilter }) => {
     // Toggle the active state based on the current state
     setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
-
   const settings = {
     dots: false,
     centerMode: false,
@@ -83,7 +80,6 @@ const FilterSlick = ({ refetch, setFilter }) => {
       },
     ],
   };
-
   return (
     <div className="slick_container">
       <Slider {...settings}>

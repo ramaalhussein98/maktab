@@ -491,8 +491,11 @@
     "xs_less": "أقل",
     "details_tabs": {
       "specifications_and_features": "المواصفات والميزات",
+      "features": "المواصفات",
       "location_and_map": "الموقع والخريطة",
+      "location": "الموقع ",
       "guest_reviews": "تقييمات المعلن",
+      "reviews":"تقييمات",
       "specifications_and_features_tab": {
         "bedrooms": "غرف النوم",
         "living_rooms": "غرف الجلوس",
