@@ -20,6 +20,7 @@ const FilterSection = ({
   const isLoading = false;
   const location = useLocation().pathname;
   const isMapPage = location.split("/").includes("map");
+
   const handleFilerModalOpen = () => {
     setOpenFilterModal(true);
   };

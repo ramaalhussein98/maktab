@@ -11,85 +11,54 @@ import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 import "lightgallery/css/lg-video.css";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import {
-  Home1,
-  Home2,
-  Home3,
-  Home4,
-  Home5,
-  Home6,
-} from "../../../../../assets/images";
 
 SwiperCore.use([Pagination]);
 
-const DetailsImagesXs = () =>
-  // { adInfo }
-  {
-    // const images = adInfo.gallery;
-    const images = [
-      {
-        src: Home1,
-      },
-      {
-        src: Home2,
-      },
-      {
-        src: Home3,
-      },
-      {
-        src: Home4,
-      },
-      {
-        src: Home5,
-      },
-      {
-        src: Home6,
-      },
-    ];
-    const galleryRef = useRef(null);
-    useEffect(() => {
-      const mySwiper = new Swiper(".swiper-container", {
-        slidesPerView: 1,
-        spaceBetween: 0,
+const DetailsImagesXs = ({ adInfo }) => {
+  const images = adInfo?.ads_files;
 
-        pagination: {
-          el: ".swiper-pagination",
-          clickable: true,
-          bulletClass: styles.details_pagination_bullet,
-          bulletActiveClass: styles.details_pagination_bullet_active,
-        },
-      });
+  const galleryRef = useRef(null);
+  useEffect(() => {
+    const mySwiper = new Swiper(".swiper-container", {
+      slidesPerView: 1,
+      spaceBetween: 0,
 
-      // Initialize LightGallery
-      const gallery = lightGallery(galleryRef.current, {
-        mode: "lg-fade",
-        video: true,
-      });
-      return () => {
-        gallery.destroy();
-      };
-    }, []);
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        bulletClass: styles.details_pagination_bullet,
+        bulletActiveClass: styles.details_pagination_bullet_active,
+      },
+    });
 
-    return (
-      <Box>
-        <Box className={`swiper-container ${styles.details_container}`}>
-          <Box className="swiper-wrapper" ref={galleryRef}>
-            {images.map((image, index) => (
-              <a
-                key={index}
-                // data-src={` https://www.dashboard.aqartik.com/assets/images/deal/image/${image.name}`}
-                data-src={image.src}
-                className={`swiper-slide ${styles.centeredSlide}`}
-                // style={{ margin: "auto !important" }}
-              >
-                <img
-                  // src={` https://www.dashboard.aqartik.com/assets/images/deal/image/${image.name}`}
-                  src={image.src}
-                  className={styles.imgSlider}
-                />
-              </a>
-            ))}
-            {/* {adInfo.video ? (
+    // Initialize LightGallery
+    const gallery = lightGallery(galleryRef.current, {
+      mode: "lg-fade",
+      video: true,
+    });
+    return () => {
+      gallery.destroy();
+    };
+  }, []);
+
+  return (
+    <Box>
+      <Box className={`swiper-container ${styles.details_container}`}>
+        <Box className="swiper-wrapper" ref={galleryRef}>
+          {images?.map((image, index) => (
+            <a
+              key={index}
+              data-src={`https://dashboard.maktab.sa/${image?.path}`}
+              className={`swiper-slide ${styles.centeredSlide}`}
+              // style={{ margin: "auto !important" }}
+            >
+              <img
+                src={`https://dashboard.maktab.sa/${image?.path}`}
+                className={styles.imgSlider}
+              />
+            </a>
+          ))}
+          {/* {adInfo.video ? (
               <a
                 data-src={`https://www.dashboard.aqartik.com/assets/images/deal/video/${adInfo.video.name}`}
                 className="swiper-slide"
@@ -112,25 +81,23 @@ const DetailsImagesXs = () =>
             ) : (
               ""
             )} */}
-          </Box>
-          <Box
-            className={`swiper-pagination ${styles.details_pagination}`}
-          ></Box>
         </Box>
-        <div id="lightgallery" style={{ display: "none" }}></div>
-        <Link to="/">
-          <ChevronRightIcon
-            sx={{
-              position: "absolute",
-              top: "6rem",
-              right:"5px",
-              color: "white",
-              zIndex: "1",
-            }}
-          />
-        </Link>
+        <Box className={`swiper-pagination ${styles.details_pagination}`}></Box>
       </Box>
-    );
-  };
+      <div id="lightgallery" style={{ display: "none" }}></div>
+      <Link to="/">
+        <ChevronRightIcon
+          sx={{
+            position: "absolute",
+            top: "6rem",
+            right: "5px",
+            color: "white",
+            zIndex: "1",
+          }}
+        />
+      </Link>
+    </Box>
+  );
+};
 
 export default DetailsImagesXs;

@@ -71,14 +71,25 @@ const CustomSlider = styled(Slider)(({ theme }) => ({
 }));
 
 function PriceSlider({ range, setRange }) {
-  const prices = [1000, 500000];
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
+  const searchDataMinPrice = JSON.parse(
+    localStorage.getItem("searchData")
+  ).min_price;
+  const searchDataMaxPrice = JSON.parse(
+    localStorage.getItem("searchData")
+  ).max_price;
+
+  const prices = [searchDataMinPrice, searchDataMaxPrice];
   const minPrice = prices ? Number(prices[0]) : 0;
   const maxPrice = prices ? Number(prices[1]) : 0;
-
   const [shouldRunDebounce, setShouldRunDebounce] = useState(false);
-
+  // console.log(
+  //   "searchDataMinPrice",
+  //   searchDataMinPrice,
+  //   "searchDataMaxPrice",
+  //   searchDataMaxPrice
+  // );
   const handleChange = (event, newValue) => {
     setRange(newValue);
     setShouldRunDebounce(true);

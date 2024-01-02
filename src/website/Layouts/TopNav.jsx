@@ -35,6 +35,7 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import { ChatsHeader } from "../chat/ChatsHeader";
 import { myAxios } from "../../api/myAxios";
 import useDataFetcher from "../../api/useDataFetcher ";
+import { useOfficeHook } from "../../hooks/useOfficeHook";
 
 const TopNav = ({ setIsUserSelected }) => {
   const isLoggedIn = localStorage.getItem("user_token") ? true : false;
@@ -44,7 +45,7 @@ const TopNav = ({ setIsUserSelected }) => {
   const lang = i18n.language;
   const nav = useNavigate();
   const [openFilterModal, setOpenFilterModal] = useState(false);
-  const { data, isLoading, error, get, post } = useDataFetcher();
+
   const location = useLocation();
   const isPaymentPage = location.pathname.includes("payment");
   const { setIsChatOpen, showMessages, setShowMessages } =
@@ -52,6 +53,28 @@ const TopNav = ({ setIsUserSelected }) => {
   const { messagesCounter } = useContext(ChatContext);
   const { userNameContext } = useContext(UserContext);
   const [menuItems, setMenuItems] = useState([]);
+  const [filter, setFilter] = useState({
+    // "exact[category_aqar.id]": null,
+    // "contains[title]": "",
+    // "in[ads_rooms.number][0]": "",
+    // "in[ads_rooms.id][0]": "",
+    // "in[ads_rooms.number][1]": "",
+    // "in[ads_rooms.id][1]": "",
+    // "in[ads_rooms.number][2]": "",
+    // "in[ads_rooms.id][2]": "",
+    //     in[comforts.id][0]
+    // in[comforts.id][1]
+  });
+  const {
+    isLoading,
+    isError,
+    data = { data: [], totalPages: 0 },
+    refetch,
+    isRefetching,
+  } = useOfficeHook({
+    // page: page,
+    filter: filter,
+  });
 
   const handleFilerModalOpen = () => {
     setOpenFilterModal(true);
@@ -106,7 +129,7 @@ const TopNav = ({ setIsUserSelected }) => {
                 </Box>
                 <ul className="navLinks">
                   {menuItems?.links?.map((item, index) => (
-                    <NavLink key={index} to={item.link} exact>
+                    <NavLink key={index} to={`/${item.link}`}>
                       <span>
                         {lang === "ar" ? item.title_ar : item.title_en}
                       </span>
@@ -229,6 +252,8 @@ const TopNav = ({ setIsUserSelected }) => {
             <FilterModal
               openFilterModal={openFilterModal}
               setOpenFilterModal={setOpenFilterModal}
+              setFilter={setFilter}
+              refetch={refetch}
             />
           </Box>
         )}

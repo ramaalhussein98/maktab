@@ -254,6 +254,8 @@
   background: #f7f7f7;
   border-bottom: 1px solid #ddd;
   margin-top: 2rem;
+  position: relative;
+  z-index: 3;
 }
 .FooterBox1 {
   display: grid;

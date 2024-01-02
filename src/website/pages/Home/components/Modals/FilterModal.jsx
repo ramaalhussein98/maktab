@@ -13,11 +13,11 @@ import { useTranslation } from "react-i18next";
 const FilterModal = ({
   openFilterModal,
   setOpenFilterModal,
-
   refetch,
   setFilter,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const [range, setRange] = useState([0, 0]);
   const [officeTypeId, setOfficeTypeId] = useState();
   const [selectedItemoffice, setSelectedItemOffice] = useState({});
@@ -38,6 +38,8 @@ const FilterModal = ({
   const OfficesFeatures = searchData?.featurea_ads;
   const CatgoryData = searchData?.category_aqar;
   const ConfirtData = searchData?.comfort;
+  const officesRooms = searchData?.room_details;
+
   // console.log("selectedFeatures", selectedFeatures);
   // const OfficesFeatures = [
   //   { id: 1, label: "واي فاي" },
@@ -70,7 +72,7 @@ const FilterModal = ({
   const handleFilerModalClose = () => {
     setOpenFilterModal(false);
   };
-  console.log("con", selectedConfortFeatures);
+  // console.log("con", selectedConfortFeatures);
   const handleShowFilterRes = () => {
     setFilter((prevState) => {
       const filterParams = {
@@ -107,6 +109,10 @@ const FilterModal = ({
           acc[`in[featurea_ads.id][${index}]`] = featureId;
           return acc;
         }, {}),
+        ...selectedConfortFeatures.reduce((acc, featureId, index) => {
+          acc[`in[comforts.id.id][${index}]`] = featureId;
+          return acc;
+        }, {}),
         // ...selectedConfortFeatures.reduce((acc, featureId, index) => {
         //   acc[`in[featurea_ads.id][${index}]`] = featureId;
         //   return acc;
@@ -121,6 +127,8 @@ const FilterModal = ({
 
       return filterParams;
     });
+    refetch();
+    console.log("hi");
   };
   const handleDeleteFilterRes = () => setFilter({});
   return (
@@ -162,17 +170,17 @@ const FilterModal = ({
             </Typography>
             <PriceSlider range={range} setRange={setRange} />
           </Box>
-          <Box className="price_div">
+          {/* <Box className="price_div">
             <Typography className="filter_title">
               {" "}
               {t("home.FilterModal.rooms")}{" "}
             </Typography>
-            {OfficeRooms.map((ele, index) => (
+            {officesRooms?.map((ele, index) => (
               <RoomsOfficeNumbers
                 key={index}
                 id={ele.id}
-                title={ele.title}
-                items={ele.items}
+                title={lang === "ar" ? ele.ar_name : ele.en_name}
+                items={ele.ads_rooms}
                 setFilter={setFilter}
                 selectedItemoffice={selectedItemoffice}
                 selectedItemMeeting={selectedItemMeeting}
@@ -182,7 +190,7 @@ const FilterModal = ({
                 setSelectedItemBathroom={setSelectedItemBathroom}
               />
             ))}
-          </Box>
+          </Box> */}
           <Box className="price_div">
             <Typography className="filter_title">
               {" "}
@@ -217,7 +225,6 @@ const FilterModal = ({
                     selectedFeatures={selectedFeatures}
                     setSelectedFeatures={setSelectedFeatures}
                     setFilter={setFilter}
-                    refetch={refetch}
                   />
                 );
               })}
@@ -243,7 +250,6 @@ const FilterModal = ({
                     selectedFeatures={selectedConfortFeatures}
                     setSelectedFeatures={setSelectedConfortFeatures}
                     setFilter={setFilter}
-                    refetch={refetch}
                   />
                 );
               })}

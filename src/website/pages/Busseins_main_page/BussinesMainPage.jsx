@@ -100,7 +100,6 @@ const BussinesMainPage = () => {
       {/* last Section */}
       <div className={styles.imgContainerAbor}>
         <div className={styles.divImgContent}>
-          {/* <img src={Home3} className={styles.imgStyle} /> */}
           <p className={styles.headingStyle}>{t("about_us.tryhostig")}</p>
           <p className={styles.maktabParagraph}>{t("about_us.maktab")}</p>
           <p className={styles.addoffice}>{t("about_us.addoffice")}</p>

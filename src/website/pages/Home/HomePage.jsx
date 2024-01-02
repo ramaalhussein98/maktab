@@ -42,6 +42,8 @@ const HomePage = () => {
     // "in[ads_rooms.id][1]": "",
     // "in[ads_rooms.number][2]": "",
     // "in[ads_rooms.id][2]": "",
+    //     in[comforts.id][0]
+    // in[comforts.id][1]
   });
   const {
     isLoading,
@@ -80,12 +82,11 @@ const HomePage = () => {
     if (element) {
       element.classList.toggle("slideUp");
     }
-
     setTimeout(() => {
       setToggleMapAds(!toggleMapAds);
     }, 500);
   };
-
+  console.log("data pi", data);
   return (
     <>
       {!toggleMapAds ? (
@@ -160,7 +161,15 @@ const HomePage = () => {
                   <NoData />
                 )}
               </Grid>
-              <Pagination data={paginationData} setPage={setpage} />
+              {data?.data?.length > 20 ? (
+                <Link to="all_deals" className="showMoreAds">
+                  {" "}
+                  المزيد من المكاتب
+                </Link>
+              ) : (
+                ""
+              )}
+              {/* <Pagination data={paginationData} setPage={setpage} /> */}
               <div className="mapButtonWrapper">
                 <button
                   className="mapButton "
@@ -176,7 +185,6 @@ const HomePage = () => {
               </div>
             </div>
           </Container>
-
           <Box
             className="LoginBottomBox"
             sx={{ display: { xs: "flex !important", md: "none !important" } }}

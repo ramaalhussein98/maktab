@@ -8,14 +8,6 @@ import "../../../../../assets/css/detailsimages.css";
 import { Button, useMediaQuery, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import screenfull from "screenfull";
-import {
-  Home1,
-  Home2,
-  Home3,
-  Home4,
-  Home5,
-  Home6,
-} from "../../../../../assets/images";
 
 export default function DetailsImages({ data }) {
   // { adInfo }
@@ -36,26 +28,7 @@ export default function DetailsImages({ data }) {
     };
   }, []);
 
-  const images = [
-    {
-      src: Home1,
-    },
-    {
-      src: Home2,
-    },
-    {
-      src: Home3,
-    },
-    {
-      src: Home4,
-    },
-    {
-      src: Home5,
-    },
-    {
-      src: Home6,
-    },
-  ];
+  const images = data?.ads_files;
   // const images = adInfo.gallery;
   const gridTemplate = {
     1: "1fr",
@@ -67,11 +40,11 @@ export default function DetailsImages({ data }) {
   const isXsScreen = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const displayImages = isXsScreen
-    ? images.slice(0, 1)
+    ? images?.slice(0, 1)
     : showMore
     ? images
-    : images.slice(0, 5);
-  const totalImages = displayImages.length;
+    : images?.slice(0, 5);
+  const totalImages = displayImages?.length;
 
   const handleShowMore = () => {
     setShowMore((prevShowMore) => !prevShowMore);
@@ -82,7 +55,7 @@ export default function DetailsImages({ data }) {
       // Add your lightgallery configurations here, if needed
       lg.style.display = "block"; // Show the lightgallery container
       lg.innerHTML = ""; // Clear previous content if any
-      const items = images.map((image) => ({
+      const items = images?.map((image) => ({
         src: image.src,
         thumb: image.src,
       }));
@@ -139,13 +112,12 @@ export default function DetailsImages({ data }) {
           direction: "rtl !important",
         }}
       >
-        {images.map((image, index) => (
+        {images?.map((image, index) => (
           <a
             key={index}
             // data-lg-size="1406-1390"
             className="gallery-item"
-            // data-src={` https://www.dashboard.aqartik.com/assets/images/deal/image/${image.name}`}
-            data-src={image.src}
+            data-src={`https://dashboard.maktab.sa/${image?.path}`}
             style={{
               height:
                 totalImages === 1
@@ -168,7 +140,7 @@ export default function DetailsImages({ data }) {
           >
             <img
               // src={` https://www.dashboard.aqartik.com/assets/images/deal/image/${image.name}`}
-              src={image.src}
+              src={`https://dashboard.maktab.sa/${image?.path}`}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </a>

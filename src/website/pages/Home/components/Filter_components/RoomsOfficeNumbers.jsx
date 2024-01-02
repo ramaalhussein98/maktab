@@ -17,19 +17,19 @@ const RoomsOfficeNumbers = ({
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const handleItemClick = (title, itemId, itemNum) => {
-    if (title === t("dashboard.Offices.offices")) {
+    if (itemId === 1) {
       setSelectedItemOffice((prevSelectedItem) =>
         prevSelectedItem && prevSelectedItem.num === itemNum
           ? ""
           : { itemId, num: itemNum }
       );
-    } else if (title === t("home.FilterModal.Meetings")) {
+    } else if (itemId === 2) {
       setSelectedItemMeeting((prevSelectedItem) =>
         prevSelectedItem && prevSelectedItem.num === itemNum
           ? ""
           : { itemId, num: itemNum }
       );
-    } else if (title === t("home.FilterModal.Bathrooms")) {
+    } else if (itemId === 3) {
       setSelectedItemBathroom((prevSelectedItem) =>
         prevSelectedItem && prevSelectedItem.num === itemNum
           ? ""
@@ -46,71 +46,71 @@ const RoomsOfficeNumbers = ({
           <Button
             key={index}
             variant="contained"
-            onClick={() => handleItemClick(title, id, item.num)}
+            onClick={() => handleItemClick(title, id, item.number)}
             sx={{
               backgroundColor:
-                title === t("dashboard.Offices.offices") &&
+                id === 1 &&
                 selectedItemoffice &&
-                selectedItemoffice.num === item.num
+                selectedItemoffice.num === item.number
                   ? "black"
-                  : title === t("home.FilterModal.Meetings") &&
+                  : id === 2 &&
                     selectedItemMeeting &&
-                    selectedItemMeeting.num === item.num
+                    selectedItemMeeting.num === item.number
                   ? "black"
-                  : title === t("home.FilterModal.Bathrooms") &&
+                  : id === 3 &&
                     selectedItemBathroom &&
-                    selectedItemBathroom.num === item.num
+                    selectedItemBathroom.num === item.number
                   ? "black"
                   : "transparent",
               color:
-                title === t("dashboard.Offices.offices") &&
+                id === 1 &&
                 selectedItemoffice &&
-                selectedItemoffice.num === item.num
+                selectedItemoffice.num === item.number
                   ? "white"
-                  : title === t("home.FilterModal.Meetings") &&
+                  : id === 2 &&
                     selectedItemMeeting &&
-                    selectedItemMeeting.num === item.num
+                    selectedItemMeeting.num === item.number
                   ? "white"
-                  : title === t("home.FilterModal.Bathrooms") &&
+                  : id === 3 &&
                     selectedItemBathroom &&
-                    selectedItemBathroom.num === item.num
+                    selectedItemBathroom.num === item.number
                   ? "white"
                   : "inherit",
               marginRight: "8px",
               borderRadius: "24px !important",
               "&:hover": {
                 backgroundColor:
-                  title === t("dashboard.Offices.offices") &&
+                  id === 1 &&
                   selectedItemoffice &&
-                  selectedItemoffice.num === item.num
+                  selectedItemoffice.num === item.number
                     ? "black !important"
-                    : title === t("home.FilterModal.Meetings") &&
+                    : id === 2 &&
                       selectedItemMeeting &&
-                      selectedItemMeeting.num === item.num
+                      selectedItemMeeting.num === item.number
                     ? "black !important"
-                    : title === t("home.FilterModal.Bathrooms") &&
+                    : id === 3 &&
                       selectedItemBathroom &&
-                      selectedItemBathroom.num === item.num
+                      selectedItemBathroom.num === item.number
                     ? "black !important"
                     : "white !important",
                 color:
-                  title === t("dashboard.Offices.offices") &&
+                  id === 1 &&
                   selectedItemoffice &&
-                  selectedItemoffice.num === item.num
+                  selectedItemoffice.num === item.number
                     ? "white !important"
-                    : title === t("home.FilterModal.Meetings") &&
+                    : id === 2 &&
                       selectedItemMeeting &&
-                      selectedItemMeeting.num === item.num
+                      selectedItemMeeting.num === item.number
                     ? "white !important"
-                    : title === t("home.FilterModal.Bathrooms") &&
+                    : id === 3 &&
                       selectedItemBathroom &&
-                      selectedItemBathroom.num === item.num
+                      selectedItemBathroom.num === item.number
                     ? "white !important"
                     : "inherit !important",
               },
             }}
           >
-            {item.num}
+            {item.number}
           </Button>
         ))}
       </Box>

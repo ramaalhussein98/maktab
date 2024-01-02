@@ -13,7 +13,7 @@ const typeResIdTextMapping = {
 };
 const AdCard = ({ officeData }) => {
   const { t } = useTranslation();
-  console.log("officeData", officeData);
+  // console.log("officeData", officeData);
   const { i18n } = useTranslation();
   const lang = i18n.language;
   const location = useLocation().pathname;

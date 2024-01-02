@@ -12,9 +12,10 @@ import AdCard from "../../Home/components/AdCard";
 import AdMapCard from "./AdMapCard";
 import { Box } from "@mui/material";
 
-const CustomMarker = ({ id, price, isActive, onClick, visitedMarkers }) => {
+const CustomMarker = ({ id, prices, isActive, onClick, visitedMarkers }) => {
   const { t } = useTranslation();
   const isVisited = visitedMarkers.includes(id);
+  const highestPrice = Math.max(...prices.map((price) => parseFloat(price)));
   return (
     <div
       onClick={onClick}
@@ -51,7 +52,7 @@ const CustomMarker = ({ id, price, isActive, onClick, visitedMarkers }) => {
       }}
     >
       <span>
-        {price} {t("currency")}
+        {highestPrice} {t("currency")}
       </span>
     </div>
   );
@@ -99,6 +100,7 @@ const MapCreate = (props) => {
     mapRef.current = map;
   };
   // console.log("officesData", officesData);
+
   useEffect(() => {
     if (mapLoaded) {
       // Create an array of overlayViews for the custom markers
@@ -118,7 +120,7 @@ const MapCreate = (props) => {
           >
             <CustomMarker
               id={location?.id}
-              price={0}
+              prices={location?.ads_prices.map((price) => price.price)}
               isActive={activeMarkerIndex === location?.id}
               onClick={() => handleMarkerClick(location?.id, location)}
               visitedMarkers={visitedMarkers}

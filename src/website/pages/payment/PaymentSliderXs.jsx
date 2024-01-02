@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import "swiper/swiper-bundle.min.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Home1, Home2, Home3, Home4 } from "../../../assets/images";
+import { Home1 } from "../../../assets/images";
 import styles from "../../../assets/css/details.module.css";
 import { Box } from "@mui/material";
 import "../../../assets/css/paymentXs.css";
 
 const PaymentSliderXs = () => {
-  const images = [Home1, Home2, Home3, Home4];
+  const images = [Home1];
 
   const swiperRef = useRef(null);
 

@@ -240,14 +240,25 @@
   cursor: pointer;
 }
 .mapButtonWrapper {
-  position: absolute;
-  bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
+  bottom: 75px;
+
   z-index: 2;
   width: 100%;
   justify-content: center;
   display: none;
+}
+
+.showMoreAds {
+  background-color: black;
+  color: white;
+  /* font-weight: 600; */
+  padding: 10px 20px;
+  min-width: max-content;
+  border-radius: 25px;
+  text-align: center;
+  margin: auto;
+  display: block;
 }
 /* .mapButtonStyle {
   position: fixed;
@@ -262,7 +273,7 @@
     justify-content: initial;
     /* display: none !important; */
   }
-  .mapButtonWrapper{
+  .mapButtonWrapper {
     display: flex !important;
   }
   /* .mapButton{

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSpring, animated } from "react-spring";
 import { useTranslation } from "react-i18next";
+import { Box } from "@mui/material";
 
 const CounterNumbers = () => {
   const { t } = useTranslation();

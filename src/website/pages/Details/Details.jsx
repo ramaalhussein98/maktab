@@ -17,11 +17,13 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { useParams } from "react-router";
 import { useQueryHook } from "../../../hooks/useQueryHook";
 import myAxios from "../../../api/myAxios";
+import { useOfficeHook } from "../../../hooks/useOfficeHook";
 
 const Details = () => {
   const { t } = useTranslation();
   const [isListOpen, setListOpen] = useState(false);
   const [isNewHome, setIsNewHome] = useState(false);
+  const [ads, setAds] = useState([]);
   const socialMediaLinksRef = useRef();
   const id = useParams().id;
 
@@ -34,6 +36,22 @@ const Details = () => {
     "officeDetails",
     getOfficeData
   );
+  const {
+    isLoading: isLoadingOffice,
+    isError: isErrorOffice,
+    data: officeData = { data: [], totalPages: 0 },
+    refetch: refetchOffice,
+    isRefetching: isRefetchingOffice,
+  } = useOfficeHook({
+    // page: page,
+    // filter: filter,
+  });
+  const filteredAds = officeData?.data?.filter(
+    (ad) =>
+      ad.category_aqar.id === Number(data?.category_aqar.id) &&
+      ad.id !== Number(id)
+  );
+
   const timestamp = data?.created_at;
   const date = new Date(timestamp);
   const formattedDate = date.toLocaleDateString();
@@ -54,8 +72,18 @@ const Details = () => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
-  console.log(data);
-  const filteredAds = [1, 2, 3, 4];
+
+  const TimechangeTheNewAds = 48;
+
+  const TimeNew = new Date();
+  TimeNew.setHours(TimeNew.getHours() - TimechangeTheNewAds);
+
+  useEffect(() => {
+    if (data) {
+      const adCreatedAt = new Date(data?.created_at).getTime();
+      setIsNewHome(adCreatedAt > TimeNew.getTime());
+    }
+  }, [data]);
   return (
     <>
       {/* this section for md and above screens  */}
@@ -223,42 +251,42 @@ const Details = () => {
               <Typography sx={{ fontSize: { xs: "15px", md: "18px" } }}>
                 {data?.description}
               </Typography>
-
-              <Box
-                className="d_flex_space_between"
-                sx={{
-                  padding: "23px 40px",
-                  backgroundColor: "#eee",
-                  borderRadius: "20px",
-                  marginY: "2rem",
-                }}
-              >
-                <Box>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      color: "red",
-                      fontWeight: "bold",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    {t("new")}
-                  </Typography>
-                  <Typography sx={{ fontSize: "18px" }}>
-                    {t("Newly_added_office")}
-                  </Typography>
+              {isNewHome && (
+                <Box
+                  className="d_flex_space_between"
+                  sx={{
+                    padding: "23px 40px",
+                    backgroundColor: "#eee",
+                    borderRadius: "20px",
+                    marginY: "2rem",
+                  }}
+                >
+                  <Box>
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        color: "red",
+                        fontWeight: "bold",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      {t("new")}
+                    </Typography>
+                    <Typography sx={{ fontSize: "18px" }}>
+                      {t("Newly_added_office")}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ alignItems: "center", display: "flex" }}>
+                    <StarIcon
+                      sx={{ color: "#009fff", width: "3rem", height: "3rem" }}
+                    />
+                  </Box>
                 </Box>
-                <Box sx={{ alignItems: "center", display: "flex" }}>
-                  <StarIcon
-                    sx={{ color: "#009fff", width: "3rem", height: "3rem" }}
-                  />
-                </Box>
-              </Box>
-
-              <DetailsTabs adInfo={data} />
+              )}
+              <DetailsTabs data={data} />
             </Grid>
             <Grid item xs={12} md={4}>
-              <DetailsCard />
+              <DetailsCard adInfo={data} />
               <button className="chat_button">
                 <ChatIcon className="icon_style" />
                 تواصل مع المكتب
@@ -266,46 +294,50 @@ const Details = () => {
             </Grid>
           </Grid>
           {/* similar ads */}
-
-          <Box>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                marginTop: "2rem",
-                fontSize: { xs: "1.5rem", md: "2rem" },
-                marginBottom: "1rem",
-              }}
-            >
-              {t("details_page.similer_sec_title")}
-            </Typography>
+          {filteredAds.length > 0 ? (
             <Box>
-              <Grid
-                container
-                spacing={2}
-                sx={{ justifyContent: "center", width: "100%" }}
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  marginTop: "2rem",
+                  fontSize: { xs: "1.5rem", md: "2rem" },
+                  marginBottom: "1rem",
+                }}
               >
-                {filteredAds?.map((ad, i) => (
-                  <Grid
-                    item
-                    xs={10}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    key={i}
-                    sx={{
-                      paddingLeft: {
-                        xs: "0px !important",
-                        sm: "16px !important",
-                      },
-                    }}
-                  >
-                    <AdCard key={ad.id} />
-                  </Grid>
-                ))}
-              </Grid>
+                {t("details_page.similer_sec_title")}
+              </Typography>
+
+              <Box>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ justifyContent: "center", width: "100%" }}
+                >
+                  {filteredAds?.map((ad, i) => (
+                    <Grid
+                      item
+                      xs={10}
+                      sm={6}
+                      md={4}
+                      lg={3}
+                      key={i}
+                      sx={{
+                        paddingLeft: {
+                          xs: "0px !important",
+                          sm: "16px !important",
+                        },
+                      }}
+                    >
+                      <AdCard key={ad.id} officeData={ad} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             </Box>
-          </Box>
+          ) : (
+            ""
+          )}
         </Container>
       </Box>
 

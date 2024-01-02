@@ -4,11 +4,15 @@ import "../../../../assets/css/details_card.css";
 import DateRange from "./DateRange";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import MultiSelectFeatures from "./MultiSelectFeatures";
+import AdditionalServices from "../AdditionalServices";
+import OptionalSercices from "./OptionalSercices";
 
-const DetailsCard = () => {
+const DetailsCard = ({ adInfo }) => {
   const [toggleTask, setToggleTask] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
   const dateRangeRef = useRef(null);
   const excludedBoxRef = useRef(null);
   const [dateRange, setDateRange] = useState({
@@ -21,6 +25,11 @@ const DetailsCard = () => {
   const [departureTime, setDepartureTime] = useState("12:00"); // Initialize departure time
   const arrivalTimeOptions = ["15:00", "16:00"]; // i will replace it from back
   const departureTimeOptions = ["12:00", "21:00"]; // i will replace it from back
+  const [selectedComfortOptions, setSelectedComfortOptions] = useState([]);
+
+  const handleComfortSelectChange = (selectedValues) => {
+    setSelectedComfortOptions(selectedValues);
+  };
 
   const handleArrivalTimeChange = (event) => {
     setArrivalTime(event.target.value);
@@ -199,6 +208,21 @@ const DetailsCard = () => {
           </Box>
         </Box>
       )}
+      <Box className="box_divder"></Box>
+      <Box className="box_padding">
+        {/* <p className="comfort_title">اختر اضافات للراحة في مكتبك</p> */}
+        {/* <MultiSelectFeatures
+          adInfo={adInfo}
+          selectedComfortOptions={selectedComfortOptions}
+          setSelectedComfortOptions={setSelectedComfortOptions}
+          handleComfortSelectChange={handleComfortSelectChange}
+        /> */}
+        <AdditionalServices />
+        <OptionalSercices
+          selectedServices={selectedServices}
+          setSelectedServices={setSelectedServices}
+        />
+      </Box>
       <Box className="box_divder"></Box>
       <Box className="box_padding">
         <Link to="/payment" className="btn_choose">

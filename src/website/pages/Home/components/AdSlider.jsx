@@ -17,14 +17,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FavoriteBtn from "../../../../ui/FavoriteBtn";
-import {
-  DefaultImage,
-  Home1,
-  Home2,
-  Home3,
-  Home5,
-  Home6,
-} from "../../../../assets/images";
+
 import { useLocation, useNavigate } from "react-router-dom";
 // SwiperCore.use([Pagination]);
 const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
@@ -41,7 +34,7 @@ const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
   const [isHovered, setIsHovered] = useState(false);
   // const isAdMapCardComponent = location.split("/").includes("map");
 
-  console.log(isAdMapCardComponent);
+  // console.log(isAdMapCardComponent);
 
   const CustomNextArrow = (props) => {
     const { onClick } = props;

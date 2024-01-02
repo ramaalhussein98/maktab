@@ -8,13 +8,13 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FavoriteBtn from "../../../../ui/FavoriteBtn";
-import { DefaultImage, Home1, Home2, Home3 } from "../../../../assets/images";
+import { DefaultImage, Home1 } from "../../../../assets/images";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const AdSlider = () => {
   // const homeImages = ad.gallery;
   const location = useLocation().pathname;
-  const homeImages = [{ src: Home1 }, { src: Home2 }, { src: Home3 }];
+  const homeImages = [{ src: Home1 }];
   const [currentSlide, setCurrentSlide] = useState();
   const [isHovered, setIsHovered] = useState(false);
   const isAdMapCardComponent = location.split("/").includes("map");

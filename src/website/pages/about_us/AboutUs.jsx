@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../../assets/css/home.module.css";
 import { Typography, Container } from "@mui/material";
-import { Home1, Home3, BG } from "../../../assets/images";
+import { Home1, BG } from "../../../assets/images";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -37,7 +37,6 @@ const AboutUs = () => {
       </Container>
       <div className={styles.imgContainerAbor}>
         <div className={styles.divImgContent}>
-          {/* <img src={Home3} className={styles.imgStyle} /> */}
           <Typography className={styles.headingStyle}>
             {t("about_us.tryhostig")}
           </Typography>

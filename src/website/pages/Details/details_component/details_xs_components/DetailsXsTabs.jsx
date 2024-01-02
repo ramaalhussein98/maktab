@@ -54,366 +54,355 @@ const theme = createTheme({
   },
 });
 
-const DetailsXsTabs = () =>
-  // { adInfo }
-  {
-    const { t, i18n } = useTranslation();
-    const lang = i18n.language;
+const DetailsXsTabs = ({ adInfo }) => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
 
-    const [activeTab, setActiveTab] = useState(0);
-    const [showMore, setShowMore] = useState(false);
-    const [showLoginModal, setShowLoginModal] = useState(false);
-    const modalRef = useRef(null);
-    const userToken = localStorage.getItem("user_token");
+  const [activeTab, setActiveTab] = useState(0);
+  const [showMore, setShowMore] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const modalRef = useRef(null);
+  const userToken = localStorage.getItem("user_token");
 
-    const handleTabChange = (event, newValue) => {
-      setActiveTab(newValue);
-    };
-    const toggleShowMore = () => {
-      setShowMore(!showMore);
-    };
-    const closeModal = () => {
-      setShowLoginModal(false);
-    };
-    useEffect(() => {
-      if (activeTab === 2) {
-        if (!userToken) {
-          setShowLoginModal(true);
-        } else {
-        }
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  };
+  const closeModal = () => {
+    setShowLoginModal(false);
+  };
+  useEffect(() => {
+    if (activeTab === 2) {
+      if (!userToken) {
+        setShowLoginModal(true);
       } else {
-        setShowLoginModal(false);
       }
-    }, [activeTab, userToken]);
-    // useEffect(() => {
-    //   const handleClickOutsideModal = (event) => {
-    //     // Check if the click occurred outside of the modal
-    //     if (modalRef.current && !modalRef.current.contains(event.target)) {
-    //       // Check if the click didn't occur on Tab 2
-    //       const tab2Button = document.getElementById("tab2");
+    } else {
+      setShowLoginModal(false);
+    }
+  }, [activeTab, userToken]);
+  // useEffect(() => {
+  //   const handleClickOutsideModal = (event) => {
+  //     // Check if the click occurred outside of the modal
+  //     if (modalRef.current && !modalRef.current.contains(event.target)) {
+  //       // Check if the click didn't occur on Tab 2
+  //       const tab2Button = document.getElementById("tab2");
 
-    //       if (tab2Button && !tab2Button.contains(event.target)) {
-    //         closeModal();
-    //       }
-    //     }
-    //   };
+  //       if (tab2Button && !tab2Button.contains(event.target)) {
+  //         closeModal();
+  //       }
+  //     }
+  //   };
 
-    //   window.addEventListener("click", handleClickOutsideModal);
+  //   window.addEventListener("click", handleClickOutsideModal);
 
-    //   return () => {
-    //     window.removeEventListener("click", handleClickOutsideModal);
-    //   };
-    // }, []);
-    return (
-      <>
-        <ThemeProvider theme={theme}>
-          <Box
+  //   return () => {
+  //     window.removeEventListener("click", handleClickOutsideModal);
+  //   };
+  // }, []);
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <Box
+          sx={{
+            paddingTop: "20px",
+            borderTopLeftRadius: "25px",
+            borderTopRightRadius: "25px",
+            transform: "translateY(-20px)",
+            backgroundColor: "rgb(255, 255, 255)",
+            position: "relative",
+            zIndex: "1",
+            paddingLeft: "22px",
+            paddingRight: "22px",
+            color: "black",
+          }}
+        >
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
             sx={{
-              paddingTop: "20px",
-              borderTopLeftRadius: "25px",
-              borderTopRightRadius: "25px",
-              transform: "translateY(-20px)",
-              backgroundColor: "rgb(255, 255, 255)",
-              position: "relative",
-              zIndex: "1",
-              paddingLeft: "22px",
-              paddingRight: "22px",
-              color: "black",
+              "& .MuiTabs-flexContainer": {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
             }}
           >
-            <Tabs
-              value={activeTab}
-              onChange={handleTabChange}
-              sx={{
-                "& .MuiTabs-flexContainer": {
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                },
+            <Tab
+              label={t("details_page.details_tabs.features")}
+              sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
+            />
+            <Tab
+              label={t("details_page.details_tabs.location")}
+              sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
+            />
+            <Tab
+              id="tab2"
+              label={t("details_page.details_tabs.reviews")}
+              onClick={() => {
+                if (activeTab !== 2 && !userToken) {
+                  setShowLoginModal(true);
+                }
+                setActiveTab(2);
               }}
-            >
-              <Tab
-                label={t("details_page.details_tabs.features")}
-                sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
-              />
-              <Tab
-                label={t("details_page.details_tabs.location")}
-                sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
-              />
-              <Tab
-                id="tab2"
-                label={t("details_page.details_tabs.reviews")}
-                onClick={() => {
-                  if (activeTab !== 2 && !userToken) {
-                    setShowLoginModal(true);
-                  }
-                  setActiveTab(2);
-                }}
-                sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
-              />
-            </Tabs>
-            <Box>
-              {activeTab === 0 && (
-                <Box sx={{ marginY: "2rem" }}>
-                  {/* Content for the first tab (المواصفات والميزات) */}
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Typography sx={{ fontSize: "17px", fontWeight: "700" }}>
-                      مكتب في الرياض
-                      {/* {adInfo?.title} */}
-                    </Typography>
-                    <Typography
+              sx={{ fontSize: { xs: "16px", md: "17px" }, fontWeight: "700" }}
+            />
+          </Tabs>
+          <Box>
+            {activeTab === 0 && (
+              <Box sx={{ marginY: "2rem" }}>
+                {/* Content for the first tab (المواصفات والميزات) */}
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography sx={{ fontSize: "17px", fontWeight: "700" }}>
+                    {adInfo?.title}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "black",
+                      fontSize: "14px",
+                      marginX: "5px",
+                    }}
+                  >
+                    {" "}
+                    ( {adInfo?.ref_number})
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      marginY: "5px",
+                    }}
+                  >
+                    <StarIcon
                       sx={{
-                        color: "black",
-                        fontSize: "14px",
-                        marginX: "5px",
+                        // marginLeft: "5px",
+                        // marginRight: "-3px",
+                        marginLeft: lang === "ar" ? "0px" : "9px",
+                        color: "var(--main-color)",
+                        fontSize: "1rem",
                       }}
-                    >
-                      {" "}
-                      11111
-                      {/* ( {adInfo?.ref_number}) */}
+                    ></StarIcon>
+                    <Typography sx={{ color: "black" }}>
+                      {/* {adInfo?.user_rate} {lang === "ar" ? "تقييم" : "rate"} */}
+                      5.0
                     </Typography>
                   </Box>
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "space-between",
-                      flexDirection: "column",
+                      alignItems: "center",
+                      marginY: "5px",
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexDirection: "row",
-                        marginY: "5px",
+                    <img
+                      src={Location}
+                      alt="location"
+                      style={{
+                        marginLeft: lang === "ar" ? "9px" : "0px",
+                        marginRight: lang === "en" ? "9px" : "0px",
+                        width: "11px",
                       }}
-                    >
-                      <StarIcon
-                        sx={{
-                          // marginLeft: "5px",
-                          // marginRight: "-3px",
-                          marginLeft: lang === "ar" ? "0px" : "9px",
-                          color: "var(--main-color)",
-                          fontSize: "1rem",
-                        }}
-                      ></StarIcon>
-                      <Typography sx={{ color: "black" }}>
-                        {/* {adInfo?.user_rate} {lang === "ar" ? "تقييم" : "rate"} */}
-                        5.0
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginY: "5px",
-                      }}
-                    >
-                      <img
-                        src={Location}
-                        alt="location"
-                        style={{
-                          marginLeft: lang === "ar" ? "9px" : "0px",
-                          marginRight: lang === "en" ? "9px" : "0px",
-                          width: "11px",
-                        }}
-                      />
-                      <Typography sx={{ color: "black", fontSize: "15px" }}>
-                        الرياض - قصور أل مقبل
-                        {/* {adInfo.city} , {adInfo.neighborhood} , {adInfo.road} */}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginY: "5px",
-                      }}
-                    >
-                      <img
-                        src={HomeSvg}
-                        alt="HomeSvg"
-                        style={{
-                          marginLeft: lang === "ar" ? "9px" : "0px",
-                          marginRight: lang === "en" ? "9px" : "0px",
-                          width: "13px",
-                        }}
-                      />
-                      <Typography sx={{ color: "black", fontSize: "15px" }}>
-                        200 م
-                        {/* {lang === "ar"
-                          ? "مساحة" + " " + adInfo?.space + " م"
-                          : "unit area " + adInfo?.space + " M"} */}
-                      </Typography>
-                    </Box>
+                    />
+                    <Typography sx={{ color: "black", fontSize: "15px" }}>
+                      {adInfo?.location?.city} ,{adInfo?.location?.neighborhood}{" "}
+                      , {adInfo?.location?.street}
+                    </Typography>
                   </Box>
-                  <Typography
+                  <Box
                     sx={{
-                      fontWeight: "700",
-                      fontSize: "17px",
-                      marginTop: "25px",
+                      display: "flex",
+                      alignItems: "center",
+                      marginY: "5px",
                     }}
                   >
-                    {t("details_page.details_title")}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      color: "black",
-                      fontSize: "15px",
-                      whiteSpace: "pre-wrap",
-                      // maxHeight: showMore ? "none" : "50px",
-                      overflow: "hidden",
-                      marginTop: "9px",
-                    }}
-                  >
-                    مكتب شرقي الرياض راقي,مؤثث بالكامل مكون من اربع مكاتب وغرف
-                    اجتماعات{/* {adInfo?.description} */}
-                    {/* {showMore ? "قريبه من جميع الخدمات" : " ..."}
+                    <img
+                      src={HomeSvg}
+                      alt="HomeSvg"
+                      style={{
+                        marginLeft: lang === "ar" ? "9px" : "0px",
+                        marginRight: lang === "en" ? "9px" : "0px",
+                        width: "13px",
+                      }}
+                    />
+                    <Typography sx={{ color: "black", fontSize: "15px" }}>
+                      {lang === "ar"
+                        ? "مساحة" + " " + adInfo?.space + " م"
+                        : "unit area " + adInfo?.space + " M"}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    fontSize: "17px",
+                    marginTop: "25px",
+                  }}
+                >
+                  {t("details_page.details_title")}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "black",
+                    fontSize: "15px",
+                    whiteSpace: "pre-wrap",
+                    // maxHeight: showMore ? "none" : "50px",
+                    overflow: "hidden",
+                    marginTop: "9px",
+                  }}
+                >
+                  {adInfo?.description}
+                  {/* {showMore ? "قريبه من جميع الخدمات" : " ..."}
                   <Button onClick={toggleShowMore} sx={{ color: "black" }}>
                     {showMore
                       ? t("details_page.xs_less")
                       : t("details_page.xs_more")}
                   </Button> */}
-                  </Typography>
-                  <Box
-                    sx={{
-                      width: "100%",
+                </Typography>
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "1px",
+                    marginBottom: "30px",
+                    marginTop: "30px",
+                    display: "flex",
+
+                    justifyContent: "center",
+                    "&::after": {
+                      content: "''",
+                      display: "block",
+                      width: "285px",
                       height: "1px",
-                      marginBottom: "30px",
-                      marginTop: "30px",
-                      display: "flex",
+                      backgroundColor: "rgba(132, 132, 132, 0.16)",
+                    },
+                  }}
+                ></Box>
+                <Typography
+                  sx={{
+                    fontSize: "17px",
+                    fontWeight: "700",
+                    marginBottom: "15px",
+                  }}
+                >
+                  {t("details_page.details_tabs.specifications_and_features")}
+                </Typography>
+                <DetailsFeaturesBox data={adInfo} />
+                {/* this Box for calender  */}
+                <DetailsAppoiment adInfo={adInfo} />
 
-                      justifyContent: "center",
-                      "&::after": {
-                        content: "''",
-                        display: "block",
-                        width: "285px",
-                        height: "1px",
-                        backgroundColor: "rgba(132, 132, 132, 0.16)",
-                      },
-                    }}
-                  ></Box>
-                  <Typography
-                    sx={{
-                      fontSize: "17px",
-                      fontWeight: "700",
-                      marginBottom: "15px",
-                    }}
-                  >
-                    {t("details_page.details_tabs.specifications_and_features")}
+                {/* this details card */}
+                <Typography
+                  sx={{ color: "var(--main-color)", marginTop: "1rem" }}
+                >
+                  {lang === "ar" ? "معلومات المعلن" : "advertiser info"}
+                </Typography>
+                <Box sx={{ display: "flex" }}>
+                  <Typography sx={{ marginLeft: "8px", fontWeight: "700" }}>
+                    {/* {t("details_page.details_card.advertiser_name")}: */}
+                    اسم المعاين:
                   </Typography>
-                  <DetailsFeaturesBox
-                  //  adInfo={adInfo}
-                  />
-                  {/* this Box for calender  */}
-                  <DetailsAppoiment />
-
-                  {/* this details card */}
-                  <Typography
-                    sx={{ color: "var(--main-color)", marginTop: "1rem" }}
-                  >
-                    {lang === "ar" ? "معلومات المعلن" : "advertiser info"}
+                  <Typography>{adInfo?.viewer_name}</Typography>
+                </Box>
+                <Box sx={{ display: "flex" }}>
+                  <Typography sx={{ marginLeft: "8px", fontWeight: "700" }}>
+                    رقم جوال المعاين:
+                    {/* {t("details_page.details_card.advertiser_broker")}: */}
                   </Typography>
-                  <Box sx={{ display: "flex" }}>
-                    <Typography sx={{ marginLeft: "8px", fontWeight: "700" }}>
-                      {t("details_page.details_card.advertiser_name")}:
-                    </Typography>
-                    <Typography>
-                      rama
-                      {/* {adInfo.user?.username} */}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: "flex" }}>
-                    <Typography sx={{ marginLeft: "8px", fontWeight: "700" }}>
-                      {t("details_page.details_card.advertiser_broker")}:
-                    </Typography>
-                    <Typography>
-                      {" "}
-                      {/* {t(`dashboard.order_details`)}مالك */}
-                      {/* {t(
+                  <Typography>
+                    {adInfo?.viewer_phone}
+                    {/* {t(`dashboard.order_details`)}مالك */}
+                    {/* {t(
                         `dashboard.order_details.${adInfo?.advertiser_relationship}`
                       )} */}
-                    </Typography>
-                    {/* <Typography sx={{ marginLeft: "8px", marginY: "5px" }}>
+                  </Typography>
+                  {/* <Typography sx={{ marginLeft: "8px", marginY: "5px" }}>
                     {t("details_page.details_card.advertiser_broker") +
                       ": " +
                       t(
                         `dashboard.order_details.${adInfo?.advertiser_relationship}`
                       )}
                   </Typography> */}
-                  </Box>
                 </Box>
-              )}
-              {activeTab === 1 && (
-                <Box>
-                  <Typography sx={{ marginTop: "2rem" }}>
-                    الرياض - قصور أل مقبل
-                    {/* {adInfo?.city} , {adInfo?.neighborhood} , {adInfo?.road} */}
-                  </Typography>
-                  {/* <Button
+              </Box>
+            )}
+            {activeTab === 1 && (
+              <Box>
+                <Typography sx={{ marginTop: "2rem" }}>
+                  -{adInfo?.location?.city} ,{adInfo?.location?.neighborhood} ,{" "}
+                  {adInfo?.location?.street}
+                </Typography>
+                {/* <Button
                   sx={{ marginTop: "1rem", color: "black", fontWeight: "500" }}
                   // onClick={handleModalOpen}
                 >
                   اضغط هنا لمعرفة الموقع التقريبي
                 </Button> */}
-                  {/* <Button sx={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "16px" }}>
+                {/* <Button sx={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "16px" }}>
                   {t("details_page.details_tabs.location_and_map_tab.desc")}
                 </Button> */}
-                  <Box sx={{ marginTop: "1rem" }}>
-                    <Link
-                      // href={`https://www.google.com/maps/dir/My+Location/${adInfo.lat},${adInfo.lng}/@${adInfo.lat},${adInfo.lng},12z/data=!3m1!4b1?entry=ttu`}
-                      target="_blank"
-                    >
-                      <img
-                        src={Map}
-                        alt="map"
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          borderRadius: "20px",
-                        }}
-                      />
-                    </Link>
-                  </Box>
-                </Box>
-              )}
-              {activeTab === 2 && (
-                <>
-                  {userToken && (
-                    <Box
-                      sx={{
-                        border: "1px solid #d2cdcd",
-                        padding: "1rem",
-                        width: "15rem",
-                        borderRadius: "1rem",
-                        marginTop: "3rem",
+                <Box sx={{ marginTop: "1rem" }}>
+                  <Link
+                    href={`https://www.google.com/maps/dir/My+Location/${adInfo?.location?.lat},${adInfo?.location?.lng}/@${adInfo?.location?.lat},${adInfo?.location?.lng},12z/data=!3m1!4b1?entry=ttu`}
+                    target="_blank"
+                  >
+                    <img
+                      src={Map}
+                      alt="map"
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "20px",
                       }}
-                    >
-                      <Typography sx={{ fontWeight: "bold", color: "gray" }}>
-                        {t(
-                          "details_page.details_tabs.guest_reviews_tab.review_title"
-                        )}
-                        ..
-                      </Typography>
+                    />
+                  </Link>
+                </Box>
+              </Box>
+            )}
+            {activeTab === 2 && (
+              <>
+                {userToken && (
+                  <Box
+                    sx={{
+                      border: "1px solid #d2cdcd",
+                      padding: "1rem",
+                      width: "15rem",
+                      borderRadius: "1rem",
+                      marginTop: "3rem",
+                    }}
+                  >
+                    <Typography sx={{ fontWeight: "bold", color: "gray" }}>
+                      {t(
+                        "details_page.details_tabs.guest_reviews_tab.review_title"
+                      )}
+                      ..
+                    </Typography>
 
-                      <FiveStars
-                      // adInfo={adInfo}
-                      />
-                    </Box>
-                  )}
+                    <FiveStars adInfo={adInfo} />
+                  </Box>
+                )}
 
-                  {/* <LogInModal
+                {/* <LogInModal
                   open={showLoginModal}
                   onClose={() => setShowLoginModal(false)}
                 /> */}
-                </>
-              )}
-            </Box>
+              </>
+            )}
           </Box>
-        </ThemeProvider>
+        </Box>
+      </ThemeProvider>
 
-        {/* this Modal for Location */}
-        {/* <Modal
+      {/* this Modal for Location */}
+      {/* <Modal
         open={openModal}
         onClose={handleModalClose}
         aria-labelledby="modal-title"
@@ -505,8 +494,8 @@ const DetailsXsTabs = () =>
           </Box>
         </Box>
       </Modal> */}
-      </>
-    );
-  };
+    </>
+  );
+};
 
 export default DetailsXsTabs;

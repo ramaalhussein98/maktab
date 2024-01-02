@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "../../../../assets/css/filter_slick.css";
 import { Button } from "@mui/material";
@@ -21,14 +21,17 @@ function SamplePrevArrow(props) {
     </Button>
   );
 }
-const searchData = JSON.parse(localStorage.getItem("searchData"));
-const FilterData = searchData?.category_aqar;
-// console.log("FilterData", FilterData);
+
 const FilterSlick = ({ refetch, setFilter }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [activeButton, setActiveButton] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
+
+  const filterData = JSON.parse(
+    localStorage.getItem("searchData")
+  )?.category_aqar;
+
   const handleDivClick = (index, label, id) => {
     // Toggle the active state based on the current state
     setActiveButton((prevId) => (prevId === id ? null : id));
@@ -80,12 +83,13 @@ const FilterSlick = ({ refetch, setFilter }) => {
       },
     ],
   };
+
   return (
     <div className="slick_container">
       <Slider {...settings}>
-        {FilterData?.map((data, index) => (
+        {filterData?.map((data, index) => (
           <div
-            id={data.id}
+            id={data?.id}
             key={index}
             className={`filter_div ${
               activeButton === data.id ? "activeButton" : ""
