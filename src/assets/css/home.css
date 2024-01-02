@@ -1,6 +1,5 @@
 .filters_container {
   padding-block-start: 20px;
-  /* position: sticky; */
   top: calc(80px -20px, 0px);
   width: 100%;
   z-index: 9;
@@ -9,12 +8,9 @@
   contain: size style layout;
   display: flex;
   background-color: white;
+  justify-content: center;
 }
-@media only screen and (max-width: 900px) {
-  .filters_container {
-    height: 82px;
-  }
-}
+
 .addvistor {
   width: 100%;
 }
@@ -141,6 +137,7 @@
 }
 .cards_container {
   margin-top: 10px;
+  position: relative !important;
   /* display: grid;
   grid-auto-flow: row dense;
   grid-auto-rows: minmax(min-content, max-content);
@@ -196,4 +193,90 @@
       font-size: 0.625rem;
     }
   }
+}
+.numberAdsInMapContainer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background-color: white;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+  transform: translateY(0);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.18);
+  visibility: visible;
+  height: 75px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  left: 0;
+  transition: height 0.4s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.slideUp {
+  /* transform: translateY(-100%); */
+  height: 100vh;
+}
+
+.numberAdsInMapContainer::before {
+  content: "";
+  background-color: rgba(32, 32, 32, 0.2);
+  right: 50%;
+  border-radius: 4px;
+  transform: translateX(20px);
+  position: absolute;
+  height: 4px;
+  display: block;
+  width: 40px;
+  top: 8px;
+  cursor: pointer;
+}
+.mapButtonWrapper {
+  position: fixed;
+  bottom: 75px;
+
+  z-index: 2;
+  width: 100%;
+  justify-content: center;
+  display: none;
+}
+
+.showMoreAds {
+  background-color: black;
+  color: white;
+  /* font-weight: 600; */
+  padding: 10px 20px;
+  min-width: max-content;
+  border-radius: 25px;
+  text-align: center;
+  margin: auto;
+  display: block;
+}
+/* .mapButtonStyle {
+  position: fixed;
+  bottom: 0px;
+  bottom: 80px;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+} */
+@media only screen and (max-width: 900px) {
+  .filters_container {
+    height: 82px;
+    justify-content: initial;
+    /* display: none !important; */
+  }
+  .mapButtonWrapper {
+    display: flex !important;
+  }
+  /* .mapButton{
+    display: none !important;
+  } */
 }

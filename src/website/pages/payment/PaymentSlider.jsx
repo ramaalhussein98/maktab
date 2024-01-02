@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import { Box, Typography } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Home1, Home2, Home3 } from "../../../assets/images";
+import { Home1  } from "../../../assets/images";
 import styles from "../../../assets/css/CarsouelHomeFilter.module.css";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -28,7 +28,7 @@ const CustomNextArrow = (props) => {
 };
 
 const PaymentSlider = () => {
-  const homeImages = [{ src: Home1 }, { src: Home2 }, { src: Home3 }];
+  const homeImages = [{ src: Home1 }];
   const [currentSlide, setCurrentSlide] = useState(0);
   const settings = {
     dots: true,

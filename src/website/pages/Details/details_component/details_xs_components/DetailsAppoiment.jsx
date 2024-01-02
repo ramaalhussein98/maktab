@@ -11,7 +11,7 @@ import { Pen, Warning } from "../../../../../assets/icons";
 import DateRange from "../DateRange";
 import { useTranslation } from "react-i18next";
 
-const DetailsAppoiment = () => {
+const DetailsAppoiment = ({adInfo}) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const dateRangeRef = useRef();
   const [selectedDates, setSelectedDates] = useState([]);

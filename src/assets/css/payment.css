@@ -226,10 +226,15 @@
   width: 385px !important;
   height: 60px !important;
   margin: auto !important;
-  display: block !important;
-  background-color: rgba(0, 0, 0, 0.12) !important;
+
+  background-color: var(--green-color) !important;
+  color: white !important;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  align-items: center;
+  text-align: center;
+  display: flex !important;
+  justify-content: center;
   &.disabled {
     background-color: rgba(0, 0, 0, 0.12) !important;
   }

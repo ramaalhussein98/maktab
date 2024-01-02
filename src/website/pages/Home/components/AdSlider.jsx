@@ -17,29 +17,24 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FavoriteBtn from "../../../../ui/FavoriteBtn";
-import {
-  DefaultImage,
-  Home1,
-  Home2,
-  Home3,
-  Home5,
-  Home6,
-} from "../../../../assets/images";
+
 import { useLocation, useNavigate } from "react-router-dom";
 // SwiperCore.use([Pagination]);
-const AdSlider = ({ officeData }) => {
+const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
   // const homeImages = ad.gallery;
   const location = useLocation().pathname;
   const [swiper, setSwiper] = useState(null);
   const ImagePath = { path: officeData?.main_image };
-  const homeImages = [ImagePath, ...(officeData?.ads_files?.length > 0 ? officeData.ads_files : [])];
-
+  const homeImages = [
+    ImagePath,
+    ...(officeData?.ads_files?.length > 0 ? officeData.ads_files : []),
+  ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const isAdMapCardComponent = location.split("/").includes("map");
+  // const isAdMapCardComponent = location.split("/").includes("map");
 
-  console.log(isAdMapCardComponent);
+  // console.log(isAdMapCardComponent);
 
   const CustomNextArrow = (props) => {
     const { onClick } = props;
@@ -129,6 +124,7 @@ const AdSlider = ({ officeData }) => {
                   ? styles.customSlideMap
                   : styles.customSlide
               }
+              onClick={() => handleAdClick(officeData)}
             >
               <img
                 src={`https://dashboard.maktab.sa/${image.path}`}

@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import "../../../../../assets/css/filtermodal.css";
 import { useTranslation } from "react-i18next";
 
-const searchData = JSON.parse(localStorage.getItem("searchData"));
-const FilterData = searchData?.category_aqar;
 
-const OfficeType = ({ officeTypeId, setOfficeTypeId }) => {
+
+
+const OfficeType = ({ officeTypeId, setOfficeTypeId, CatgoryData }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -14,15 +14,21 @@ const OfficeType = ({ officeTypeId, setOfficeTypeId }) => {
 
   const handleButtonClick = (id) => {
     // Set the active button ID
-    setActiveButton(id);
-    setOfficeTypeId(id);
+    setActiveButton((prevActiveButton) =>
+      prevActiveButton === id ? null : id
+    );
+    if (activeButton === id) {
+      setOfficeTypeId(null);
+    } else {
+      setOfficeTypeId(id);
+    }
     // console.log("office type id", id);
     // setSearchQuery(`exact[category_aqar.id]=${id}`);
   };
 
   return (
     <div className="officeTypeContainer">
-      {FilterData?.map((data, index) => (
+      {CatgoryData?.map((data, index) => (
         <Button
           id={data.id}
           key={index}
@@ -35,7 +41,7 @@ const OfficeType = ({ officeTypeId, setOfficeTypeId }) => {
             src={`https://dashboard.maktab.sa/${data?.icon}`}
             className="img1"
           />
-          <span className="span1">
+          <span className="span2">
             {" "}
             {lang === "ar" ? data.ar_name : data.en_name}
           </span>

@@ -42,7 +42,13 @@ import SearchGray2 from "./search_gray.svg";
 import StcPay from "./stcpay.svg";
 import KSA from "./KSA.svg";
 import US from "./america.png";
-import BackWhite from "./block-bg.svg"
+import BackWhite from "./block-bg.svg";
+import Home from "./home.svg";
+import Location2 from "./locations.svg";
+import Gust from "./gusts.svg";
+import Users from "./users.svg";
+import GooglePlayWhite from "./googleplaywhite.svg";
+import AppStoreWhite from "./appstorewhite.svg";
 export {
   HomeSvg,
   Famiy,
@@ -88,5 +94,11 @@ export {
   StcPay,
   KSA,
   US,
-  BackWhite
+  BackWhite,
+  Home,
+  Location2,
+  Gust,
+  Users,
+  GooglePlayWhite,
+  AppStoreWhite
 };

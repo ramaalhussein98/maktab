@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import OrderInputs from "../../../new_order_folder/new_order_components/OrderInputs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // import Loader from "../../../../common/Loading/Loader";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { LogoAds } from "../../../../../assets/images";
 
 const EditOrder = () => {

@@ -166,9 +166,7 @@ const Payment = () => {
               <PaymentCard />
             </Box>
           </Box>
-          <Button className="paymentBtn" disabled>
-            {t("paymentpage.Paynow")}
-          </Button>
+          <Link to="/payment_done" className="paymentBtn">{t("paymentpage.Paynow")}</Link>
         </Container>
       </Box>
       {/* this payment page for sm screens */}

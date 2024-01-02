@@ -7,31 +7,9 @@ import { Box, Button, useMediaQuery, Skeleton } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import SwiperCore from "swiper";
 import { AnimatePresence, motion } from "framer-motion";
-import { Home1, Home4, Home5 } from "../../../../assets/images";
+
 import myAxios from "../../../../api/myAxios";
 
-const fakeBannersData = [
-  {
-    ar_title: "عنوان البنر 1",
-    en_title: "Banner Title 1",
-    ar_description: "وصف البنر 1",
-    en_description: "Banner Description 1",
-    button_url: "https://example.com",
-    button_text_ar: "زر البنر 1",
-    button_text_en: "Banner Button 1",
-    image: { name: Home1 },
-  },
-  {
-    ar_title: "عنوان البنر 2",
-    en_title: "Banner Title 2",
-    ar_description: "وصف البنر 2",
-    en_description: "Banner Description 2",
-    button_url: "https://example.com",
-    button_text_ar: "زر البنر 2",
-    button_text_en: "Banner Button 2",
-    image: { name: Home4 },
-  },
-];
 SwiperCore.use([Pagination]);
 const AUTOPLAY_DELAY = 8000;
 const SPRING_DURATION = 0.1;
@@ -95,7 +73,7 @@ const Banner = () => {
   //   swiperRef.current.swiper.slideTo(0);
   // }, [i18n]);
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: "relative", display: { xs: "none", md: "block" } }}>
       {isLoading ? ( // Show Skeleton when loading
         <Skeleton
           sx={{

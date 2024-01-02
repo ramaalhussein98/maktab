@@ -18,7 +18,7 @@ import FiveStars from "./FiveStars";
 import { useTranslation } from "react-i18next";
 // import LogInModal from "../../../../authentication/loginFolder/LogInModal";
 
-const DetailsTabs = ({ adInfo }) =>
+const DetailsTabs = ({ data }) =>
   //
   {
     const { t, i18n } = useTranslation();
@@ -147,7 +147,7 @@ const DetailsTabs = ({ adInfo }) =>
           <DetailsTabContent
             title={t("details_page.details_tabs.specifications_and_features")}
           />
-          <DetailsFeaturesBox adInfo={adInfo} />
+          <DetailsFeaturesBox data={data} />
         </Box>
         <Box hidden={selectedTab !== 1}>
           <DetailsTabContent
@@ -163,7 +163,7 @@ const DetailsTabs = ({ adInfo }) =>
             }}
           >
             <Link
-              href={`https://www.google.com/maps/dir/My+Location/${adInfo?.location.lat},${adInfo?.location.lng}/@${adInfo?.location.lat},${adInfo?.location.lng},12z/data=!3m1!4b1?entry=ttu`}
+              href={`https://www.google.com/maps/dir/My+Location/${data?.location?.lat},${data?.location?.lng}/@${data?.location?.lat},${data?.location?.lng},12z/data=!3m1!4b1?entry=ttu`}
               target="_blank"
             >
               <img
@@ -179,24 +179,20 @@ const DetailsTabs = ({ adInfo }) =>
             title={t("details_page.details_tabs.guest_reviews")}
           />
 
-          {showCommentForm && (
-            <Box
-              sx={{
-                border: "1px solid #d2cdcd",
-                padding: "1rem",
-                width: "15rem",
-                borderRadius: "1rem",
-              }}
-            >
-              <Typography sx={{ fontWeight: "bold", color: "gray" }}>
-                {t("details_page.details_tabs.guest_reviews_tab.review_title")}
-                ..
-              </Typography>
-              <FiveStars
-              adInfo={adInfo}
-              />
-            </Box>
-          )}
+          <Box
+            sx={{
+              border: "1px solid #d2cdcd",
+              padding: "1rem",
+              width: "15rem",
+              borderRadius: "1rem",
+            }}
+          >
+            <Typography sx={{ fontWeight: "bold", color: "gray" }}>
+              {t("details_page.details_tabs.guest_reviews_tab.review_title")}
+              ..
+            </Typography>
+            <FiveStars adInfo={data} />
+          </Box>
 
           {/* <LogInModal
             open={showLoginModal}

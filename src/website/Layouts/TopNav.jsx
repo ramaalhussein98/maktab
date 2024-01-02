@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../assets/css/layout.css";
 import { Box, Button, Container, Paper } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 
 import {
   LogoBig,
@@ -35,14 +35,17 @@ import ChatRoundedIcon from "@mui/icons-material/ChatRounded";
 import { ChatsHeader } from "../chat/ChatsHeader";
 import { myAxios } from "../../api/myAxios";
 import useDataFetcher from "../../api/useDataFetcher ";
+import { useOfficeHook } from "../../hooks/useOfficeHook";
 
 const TopNav = ({ setIsUserSelected }) => {
   const isLoggedIn = localStorage.getItem("user_token") ? true : false;
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const nav = useNavigate();
   const [openFilterModal, setOpenFilterModal] = useState(false);
-  const { data, isLoading, error, get, post } = useDataFetcher();
+
   const location = useLocation();
   const isPaymentPage = location.pathname.includes("payment");
   const { setIsChatOpen, showMessages, setShowMessages } =
@@ -50,6 +53,28 @@ const TopNav = ({ setIsUserSelected }) => {
   const { messagesCounter } = useContext(ChatContext);
   const { userNameContext } = useContext(UserContext);
   const [menuItems, setMenuItems] = useState([]);
+  const [filter, setFilter] = useState({
+    // "exact[category_aqar.id]": null,
+    // "contains[title]": "",
+    // "in[ads_rooms.number][0]": "",
+    // "in[ads_rooms.id][0]": "",
+    // "in[ads_rooms.number][1]": "",
+    // "in[ads_rooms.id][1]": "",
+    // "in[ads_rooms.number][2]": "",
+    // "in[ads_rooms.id][2]": "",
+    //     in[comforts.id][0]
+    // in[comforts.id][1]
+  });
+  const {
+    isLoading,
+    isError,
+    data = { data: [], totalPages: 0 },
+    refetch,
+    isRefetching,
+  } = useOfficeHook({
+    // page: page,
+    filter: filter,
+  });
 
   const handleFilerModalOpen = () => {
     setOpenFilterModal(true);
@@ -104,12 +129,14 @@ const TopNav = ({ setIsUserSelected }) => {
                 </Box>
                 <ul className="navLinks">
                   {menuItems?.links?.map((item, index) => (
-                    <Link key={item.id} to={item.link}>
+                    <NavLink key={index} to={`/${item.link}`}>
                       <span>
-                        {" "}
                         {lang === "ar" ? item.title_ar : item.title_en}
                       </span>
-                    </Link>
+                    </NavLink>
+                    //    <Link  to={item.link} replace>
+
+                    //  </Link>
                   ))}
                 </ul>
               </Box>
@@ -147,7 +174,7 @@ const TopNav = ({ setIsUserSelected }) => {
                         )}
                       </div>
                     </Header> */}
-                    {isLoggedIn && (
+                    {isLoggedIn && user_type_bussines && (
                       <Link to="/addoffice">
                         <span
                           className="displayOfficespan"
@@ -167,21 +194,24 @@ const TopNav = ({ setIsUserSelected }) => {
                         </span>{" "}
                       </Link>
                     )}
-                    <Link to="/business">
-                      <span
-                        className="displayOfficespan"
-                        style={{
-                          background: "linear-gradient(25deg,#700707,#ff4646)",
-                          color: "white",
-                          padding: "9px 15px",
-                          borderRadius: "20px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        مكتب أعمال
-                      </span>
-                    </Link>
+                    {!user_type_bussines && (
+                      <Link to="/business">
+                        <span
+                          className="displayOfficespan"
+                          style={{
+                            background:
+                              "linear-gradient(25deg,#700707,#ff4646)",
+                            color: "white",
+                            padding: "9px 15px",
+                            borderRadius: "20px",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          مكتب أعمال
+                        </span>
+                      </Link>
+                    )}
                   </Box>
                   <LoginButton isLoggedIn={isLoggedIn} />
 
@@ -195,23 +225,22 @@ const TopNav = ({ setIsUserSelected }) => {
         {!isPaymentPage && (
           <Box className="topSmallNavContainer">
             <Box className="smallBoxBorder" sx={{ minHeight: "47px" }}>
-              <div className="searchBoxBorder">
-                <span className="span1">
-                  <div className="addvistor">
-                    <input
-                      type="text"
-                      className="input1"
-                      style={{ outline: "none" }}
-                    />
-                    <Box
-                      className="searchIcon"
-                      sx={{ position: "absolute", left: "0px" }}
-                    >
-                      <img src={Search} />
-                    </Box>
-                  </div>
-                </span>
-              </div>
+              <span className="span1">
+                <div className="addvistor">
+                  <input
+                    type="text"
+                    className="input1"
+                    placeholder="أي مكان"
+                    style={{ outline: "none", backgroundColor: "transparent" }}
+                  />
+                  <Box
+                    className="searchIcon"
+                    sx={{ position: "absolute", left: "0px" }}
+                  >
+                    <img src={Search} />
+                  </Box>
+                </div>
+              </span>
             </Box>
             <Button
               className="FilterBtnSmall"
@@ -223,6 +252,8 @@ const TopNav = ({ setIsUserSelected }) => {
             <FilterModal
               openFilterModal={openFilterModal}
               setOpenFilterModal={setOpenFilterModal}
+              setFilter={setFilter}
+              refetch={refetch}
             />
           </Box>
         )}

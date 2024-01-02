@@ -1,52 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { House, SH } from "../../../../assets/images";
-
-const mainCategories = [
-  {
-    en_name: "Furnished Office",
-    ar_name: "مكتب مؤثث",
-    id: "1",
-    src: House,
-  },
-  {
-    en_name: "Unfurnished Office",
-    ar_name: "مكتب غير مؤثث",
-    id: "2",
-    src: SH,
-  },
-  {
-    en_name: "Work Table",
-    ar_name: "طاولة عمل",
-    id: "3",
-    src: SH, // You can add the source here if available
-  },
-  {
-    en_name: "Mobile Office",
-    ar_name: "مكتب متحرك",
-    id: "4",
-    src: SH, // Add the source here
-  },
-  {
-    en_name: "Virtual Office",
-    ar_name: "مكتب افتراضي",
-    id: "5",
-    src: SH, // Add the source here
-  },
-  {
-    en_name: "Meeting Hall",
-    ar_name: "قاعة اجتماعات",
-    id: "6",
-    src: SH, // Add the source here
-  },
-  {
-    en_name: "Office for Sale",
-    ar_name: "مكتب للتقبيل",
-    id: "7",
-    src: SH, // Add the source here
-  },
-];
 
 const UnitCategory = ({ categories, dispatch, state }) => {
   const { t, i18n } = useTranslation();

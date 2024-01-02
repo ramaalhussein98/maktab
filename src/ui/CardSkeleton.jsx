@@ -6,15 +6,16 @@ const CardSkeleton = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: { xs: "89%", md: "100%" },
-        margin: "auto",
+        width: "100%",
+        margin: "auto !important",
+        justifyContent: "center",
       }}
     >
       <Skeleton
         variant="rectangular"
         height={290}
         sx={{
-          width: { xs: "350px", md: "320px" },
+          width: { xs: "100%", md: "320px" },
           borderRadius: "12px",
           marginX: "auto",
         }}

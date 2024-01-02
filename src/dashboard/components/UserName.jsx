@@ -3,14 +3,14 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useStateContext } from "../../context/userContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const UserName = () => {
   const { user, setToken, setUser } = useStateContext();
   const userName = user?.username;
-  const nav= useNavigate()
+  const nav = useNavigate();
 
   const userNameContext = "rama";
   const { t, i18n } = useTranslation();
@@ -98,10 +98,19 @@ const UserName = () => {
             }}
           >
             <li
+              style={{
+                borderBottom: "1px solid #eee",
+
+                padding: "0.3rem 1rem 0.5rem 0rem",
+              }}
+            >
+              <Link to="/term-of-service-agreement">اتفاقية الاستخدام</Link>
+            </li>
+            <li
               onClick={handleSignOut}
               style={{
                 borderBottom: "none",
-                padding: "0.3rem 1rem 0rem 0rem",
+                padding: "0.5rem 1rem 0rem 0rem",
               }}
             >
               {t("dashboard.top_nav.title2")}

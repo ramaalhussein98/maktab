@@ -34,7 +34,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import useDataFetcher from "../../../../api/useDataFetcher ";
 
 // import Loader from "../../../../common/Loading/Loader";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 // import PaginationAds from "../../../../common/Pagination/PaginationAds";
 import axios from "axios";
 import Swal from "sweetalert2";

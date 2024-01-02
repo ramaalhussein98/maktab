@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 
 const HomeRooms = ({ iconRoom, numRoom, titleRoom, checkIcon }) => {
-
   return (
     <Box
       sx={{
@@ -14,7 +13,7 @@ const HomeRooms = ({ iconRoom, numRoom, titleRoom, checkIcon }) => {
         alignItems: "center",
       }}
     >
-      <Box
+      {/* <Box
         sx={{
           marginX: "0.5rem",
           alignItems: "center",
@@ -25,6 +24,9 @@ const HomeRooms = ({ iconRoom, numRoom, titleRoom, checkIcon }) => {
         }}
       >
         {iconRoom}
+      </Box> */}
+      <Box sx={{ marginX: "0.5rem" }}>
+        <img src={`https://dashboard.maktab.sa/${iconRoom}`} />
       </Box>
       <Typography
         sx={{

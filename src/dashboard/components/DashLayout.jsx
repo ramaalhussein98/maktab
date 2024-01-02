@@ -6,7 +6,7 @@ import SideBar from "./SideBar";
 import MenuIcon from "@mui/icons-material/Menu";
 import LanguageBtn from "../../ui/LanguageBtn";
 import { Box } from "@mui/material";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import UserName from "./UserName";

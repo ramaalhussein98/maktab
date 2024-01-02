@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 // import useDataFetcher from "../../../../../api/useDataFetcher ";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { useNavigate } from "react-router";

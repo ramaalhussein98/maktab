@@ -13,33 +13,40 @@ import { useTranslation } from "react-i18next";
 const FilterModal = ({
   openFilterModal,
   setOpenFilterModal,
-  setSearchQuery,
-  SearchParams,
   refetch,
   setFilter,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const [range, setRange] = useState([0, 0]);
   const [officeTypeId, setOfficeTypeId] = useState();
   const [selectedItemoffice, setSelectedItemOffice] = useState({});
   const [selectedItemMeeting, setSelectedItemMeeting] = useState({});
   const [selectedItemBathroom, setSelectedItemBathroom] = useState({});
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const [selectedConfortFeatures, setSelectedConfortFeatures] = useState([]);
 
-  console.log(
-    "office",
-    selectedItemoffice,
-    "met",
-    selectedItemMeeting,
-    "bath",
-    selectedItemBathroom
-  );
+  // console.log(
+  //   "office",
+  //   selectedItemoffice,
+  //   "met",
+  //   selectedItemMeeting,
+  //   "bath",
+  //   selectedItemBathroom
+  // );
+  const searchData = JSON.parse(localStorage.getItem("searchData"));
+  const OfficesFeatures = searchData?.featurea_ads;
+  const CatgoryData = searchData?.category_aqar;
+  const ConfirtData = searchData?.comfort;
+  const officesRooms = searchData?.room_details;
 
-  const OfficesFeatures = [
-    { id: 1, label: "واي فاي" },
-    { id: 2, label: "مطبخ " },
-    { id: 3, label: "غسّالة " },
-    { id: 4, label: "نشّافة " },
-  ];
+  // console.log("selectedFeatures", selectedFeatures);
+  // const OfficesFeatures = [
+  //   { id: 1, label: "واي فاي" },
+  //   { id: 2, label: "مطبخ " },
+  //   { id: 3, label: "غسّالة " },
+  //   { id: 4, label: "نشّافة " },
+  // ];
   const LocationFeatures = [
     { id: 1, label: "مواقف سيارات " },
     { id: 2, label: " موقف سيارات عام" },
@@ -47,45 +54,81 @@ const FilterModal = ({
   ];
   const OfficeRooms = [
     {
+      id: 0,
       title: t("dashboard.Offices.offices"),
-      items: [
-        { id: 0, num: "بدون تحديد" },
-        { id: 1, num: "1" },
-        { id: 2, num: "2" },
-      ],
+      items: [{ num: "بدون تحديد" }, { num: "1" }, { num: "2" }],
     },
     {
+      id: 1,
       title: t("home.FilterModal.Meetings"),
-      items: [
-        { id: 0, num: "بدون تحديد" },
-        { id: 1, num: "1" },
-        { id: 2, num: "2" },
-      ],
+      items: [{ num: "بدون تحديد" }, { num: "1" }, { num: "2" }],
     },
     {
+      id: 2,
       title: t("home.FilterModal.Bathrooms"),
-      items: [
-        { id: 0, num: "بدون تحديد" },
-        { id: 1, num: "1" },
-        { id: 2, num: "2" },
-      ],
+      items: [{ num: "بدون تحديد" }, { num: "1" }, { num: "2" }],
     },
   ];
   const handleFilerModalClose = () => {
     setOpenFilterModal(false);
   };
+  // console.log("con", selectedConfortFeatures);
   const handleShowFilterRes = () => {
-    setFilter((prevState) => ({
-      ...prevState,
-      "min[ads_prices.price]": encodeURIComponent(range[0]),
-      "max[ads_prices.price]": encodeURIComponent(range[1]),
-      "exact[category_aqar.id]": officeTypeId,
-      "exact[units.room_details.ar_name]":selectedItemoffice.title,
-      "exact[units.room_details.number]":selectedItemoffice.num,
-      "exact[units.room_details.ar_name]":selectedItemMeeting.title,
-      "exact[units.room_details.number]":selectedItemMeeting.num,
-     
-    }));
+    setFilter((prevState) => {
+      const filterParams = {
+        ...prevState,
+        "min[ads_prices.price]":
+          range[0] !== null ? encodeURIComponent(range[0]) : undefined,
+        "max[ads_prices.price]":
+          range[1] !== null ? encodeURIComponent(range[1]) : undefined,
+        "exact[category_aqar.id]":
+          officeTypeId !== null ? officeTypeId : undefined,
+        "in[ads_rooms.number][0]":
+          selectedItemoffice?.num !== null ? selectedItemoffice.num : undefined,
+        "in[ads_rooms.id][0]":
+          selectedItemoffice?.itemId !== null
+            ? selectedItemoffice.itemId
+            : undefined,
+        "in[ads_rooms.number][1]":
+          selectedItemMeeting?.num !== null
+            ? selectedItemMeeting.num
+            : undefined,
+        "in[ads_rooms.id][1]":
+          selectedItemMeeting?.itemId !== null
+            ? selectedItemMeeting.itemId
+            : undefined,
+        "in[ads_rooms.number][2]":
+          selectedItemBathroom?.num !== null
+            ? selectedItemBathroom.num
+            : undefined,
+        "in[ads_rooms.id][2]":
+          selectedItemBathroom?.itemId !== null
+            ? selectedItemBathroom.itemId
+            : undefined,
+        ...selectedFeatures.reduce((acc, featureId, index) => {
+          acc[`in[featurea_ads.id][${index}]`] = featureId;
+          return acc;
+        }, {}),
+        ...selectedConfortFeatures.reduce((acc, featureId, index) => {
+          acc[`in[comforts.id.id][${index}]`] = featureId;
+          return acc;
+        }, {}),
+        // ...selectedConfortFeatures.reduce((acc, featureId, index) => {
+        //   acc[`in[featurea_ads.id][${index}]`] = featureId;
+        //   return acc;
+        // }, {}),
+      };
+
+      Object.keys(filterParams).forEach(
+        (key) =>
+          (filterParams[key] === undefined || filterParams[key] === "") &&
+          delete filterParams[key]
+      );
+
+      return filterParams;
+    });
+    refetch();
+    console.log("hi");
   };
   const handleDeleteFilterRes = () => setFilter({});
   return (
@@ -127,16 +170,18 @@ const FilterModal = ({
             </Typography>
             <PriceSlider range={range} setRange={setRange} />
           </Box>
-          <Box className="price_div">
+          {/* <Box className="price_div">
             <Typography className="filter_title">
               {" "}
               {t("home.FilterModal.rooms")}{" "}
             </Typography>
-            {OfficeRooms.map((ele, index) => (
+            {officesRooms?.map((ele, index) => (
               <RoomsOfficeNumbers
                 key={index}
-                title={ele.title}
-                items={ele.items}
+                id={ele.id}
+                title={lang === "ar" ? ele.ar_name : ele.en_name}
+                items={ele.ads_rooms}
+                setFilter={setFilter}
                 selectedItemoffice={selectedItemoffice}
                 selectedItemMeeting={selectedItemMeeting}
                 selectedItemBathroom={selectedItemBathroom}
@@ -145,7 +190,7 @@ const FilterModal = ({
                 setSelectedItemBathroom={setSelectedItemBathroom}
               />
             ))}
-          </Box>
+          </Box> */}
           <Box className="price_div">
             <Typography className="filter_title">
               {" "}
@@ -153,6 +198,7 @@ const FilterModal = ({
             </Typography>
             <Box sx={{ display: "flex", width: "100%" }}>
               <OfficeType
+                CatgoryData={CatgoryData}
                 officeTypeId={officeTypeId}
                 setOfficeTypeId={setOfficeTypeId}
               />
@@ -171,15 +217,14 @@ const FilterModal = ({
                 marginY: "10px",
               }}
             >
-              {OfficesFeatures.map((feature, index) => {
+              {OfficesFeatures?.map((feature, index) => {
                 return (
                   <Features
                     key={index}
-                    id={feature.id}
-                    label={feature.label}
-                    setSearchQuery={setSearchQuery}
-                    SearchParams={SearchParams}
-                    refetch={refetch}
+                    feature={feature}
+                    selectedFeatures={selectedFeatures}
+                    setSelectedFeatures={setSelectedFeatures}
+                    setFilter={setFilter}
                   />
                 );
               })}
@@ -187,7 +232,7 @@ const FilterModal = ({
           </Box>
           <Box className="price_div">
             <Typography className="filter_title">
-              {t("home.FilterModal.Accessibility_Features")}
+              {t("home.FilterModal.meansofcomfort")}
             </Typography>
             <Box
               sx={{
@@ -197,15 +242,14 @@ const FilterModal = ({
                 marginY: "10px",
               }}
             >
-              {LocationFeatures.map((feature, index) => {
+              {ConfirtData?.map((feature, index) => {
                 return (
                   <Features
                     key={index}
-                    id={feature.id}
-                    label={feature.label}
-                    setSearchQuery={setSearchQuery}
-                    SearchParams={SearchParams}
-                    refetch={refetch}
+                    feature={feature}
+                    selectedFeatures={selectedConfortFeatures}
+                    setSelectedFeatures={setSelectedConfortFeatures}
+                    setFilter={setFilter}
                   />
                 );
               })}

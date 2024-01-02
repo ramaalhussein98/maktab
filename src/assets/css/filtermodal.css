@@ -34,8 +34,9 @@
   &:hover {
     border: 1px solid black !important;
   }
-  .span1 {
-    color: #222222 !important;
+  .span2 {
+    color: #6e6b6b !important;
+    font-size: 18px;
   }
   .img1 {
     width: 32px;
@@ -44,6 +45,7 @@
 .btn_type_office.activeButton {
   border: 1px solid black !important;
 }
+
 .boxBtnDeleteShow {
   border-top: 1px solid #ebebeb;
   padding-top: 16px;
@@ -61,5 +63,10 @@
     border-radius: 12px !important;
     color: white !important;
     padding: 10px 30px !important;
+  }
+}
+@media screen and (min-width: 300px) and (max-width: 768px) {
+  .btn_type_office {
+    width: 44%;
   }
 }

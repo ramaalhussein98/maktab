@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "../../../../assets/css/filter_slick.css";
 import { Button } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useTranslation } from "react-i18next";
-
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
@@ -14,7 +13,6 @@ function SampleNextArrow(props) {
     </Button>
   );
 }
-
 function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
@@ -23,32 +21,39 @@ function SamplePrevArrow(props) {
     </Button>
   );
 }
-const searchData = JSON.parse(localStorage.getItem("searchData"));
-const FilterData = searchData?.category_aqar;
-// console.log("FilterData", FilterData);
-const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
+
+const FilterSlick = ({ refetch, setFilter }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [activeButton, setActiveButton] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  const handleDivClick = (index, label, id) => {
-    setActiveButton(id);
-    // setSearchQuery((prev) => prev + `exact[category_aqar.id]=${id}`);
-    setFilter((prevState) => ({
-      ...prevState,
-      "exact[category_aqar.id]": id,
-    }));
 
-    // SearchParams.append("exact[category_aqar.id]", id);
+  const filterData = JSON.parse(
+    localStorage.getItem("searchData")
+  )?.category_aqar;
+
+  const handleDivClick = (index, label, id) => {
+    // Toggle the active state based on the current state
+    setActiveButton((prevId) => (prevId === id ? null : id));
+
+    // Toggle the filter state based on the current state
+    setFilter((prevState) => {
+      const newFilter = { ...prevState };
+      if (newFilter["exact[category_aqar.id]"] === id) {
+        // If the category is already selected, remove it
+        delete newFilter["exact[category_aqar.id]"];
+      } else {
+        // If the category is not selected, add it
+        newFilter["exact[category_aqar.id]"] = id;
+      }
+      return newFilter;
+    });
+
     refetch();
 
-    if (index === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(index);
-    }
+    // Toggle the active state based on the current state
+    setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
-
   const settings = {
     dots: false,
     centerMode: false,
@@ -82,9 +87,9 @@ const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
   return (
     <div className="slick_container">
       <Slider {...settings}>
-        {FilterData?.map((data, index) => (
+        {filterData?.map((data, index) => (
           <div
-            id={data.id}
+            id={data?.id}
             key={index}
             className={`filter_div ${
               activeButton === data.id ? "activeButton" : ""
@@ -97,7 +102,7 @@ const FilterSlick = ({ setSearchQuery, SearchParams, refetch, setFilter }) => {
               style={{ width: "24px", margin: "auto" }}
             />
             <span className="span1">
-              {lang === "ar" ? data.ar_name : data.en_name}
+              {lang === "ar" ? data?.ar_name : data?.en_name}
             </span>
           </div>
         ))}

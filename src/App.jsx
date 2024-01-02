@@ -42,19 +42,23 @@ import myAxios from "./api/myAxios";
 import BussinesMainPage from "./website/pages/Busseins_main_page/BussinesMainPage";
 import Unit from "./dashboard/pages/unit/Unit";
 import Coupons from "./dashboard/pages/coupons/Coupons";
+import TermOfService from "./website/pages/term-of-service/TermOfService";
+import AllDeals from "./website/pages/all_deals/AllDeals";
+import PaymentDone from "./website/pages/done_payment/PaymentDone";
 
 function App() {
   const { i18n } = useTranslation();
   const language = i18n.language;
   const thereisToken = localStorage.getItem("user_token");
   const settingData = JSON.parse(localStorage.getItem("settingData"));
+
   useEffect(() => {
     const searchData = localStorage.getItem("searchData");
     const getData = async () => {
       const res = await myAxios.get("api/v1/user/settings/search_data");
       console.log(res);
-      if (res.data.status === true) {
-        localStorage.setItem("searchData", JSON.stringify(res.data.data));
+      if (res?.data?.status === true) {
+        localStorage.setItem("searchData", JSON.stringify(res?.data?.data));
       }
     };
     if (!searchData) {
@@ -64,8 +68,8 @@ function App() {
     const getSettingData = async () => {
       const res2 = await myAxios.get("api/v1/user/settings/general");
       console.log(res2);
-      if (res2.data.status === true) {
-        localStorage.setItem("settingData", JSON.stringify(res2.data.data));
+      if (res2?.data?.status === true) {
+        localStorage.setItem("settingData", JSON.stringify(res2?.data?.data));
       }
     };
     if (!settingData) {
@@ -153,10 +157,26 @@ function App() {
           }
         />
         <Route
+          path="/all_deals"
+          element={
+            <Layout>
+              <AllDeals />
+            </Layout>
+          }
+        />
+        <Route
           path="payment"
           element={
             <Layout>
               <Payment />
+            </Layout>
+          }
+        />
+        <Route
+          path="/payment_done"
+          element={
+            <Layout>
+              <PaymentDone />
             </Layout>
           }
         />
@@ -169,7 +189,7 @@ function App() {
           }
         />
         <Route
-          path="contact-us"
+          path="/contact-us"
           element={
             <Layout>
               <ContactUs />
@@ -177,7 +197,7 @@ function App() {
           }
         />
         <Route
-          path="about-us"
+          path="/about-us"
           element={
             <Layout>
               <AboutUs />
@@ -189,6 +209,15 @@ function App() {
           element={
             <Layout>
               <BussinesMainPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="term-of-service-agreement"
+          element={
+            <Layout>
+              <TermOfService />
             </Layout>
           }
         />

@@ -5,7 +5,7 @@ import { ListItemDiv } from "../../mainComponents/MainPageStyles";
 
 import VerifiedIcon from "@mui/icons-material/Verified";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { Navigate, useNavigate } from "react-router";
 import { CircularProgress } from "@mui/material";
 import UserContext from "../../context/userContext";

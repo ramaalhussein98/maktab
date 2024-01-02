@@ -107,6 +107,7 @@
   border-radius: 100px;
   font-size: 1rem;
   height: 48px;
+  width: max-content;
 }
 .pExplain {
   line-height: 30px;
@@ -137,5 +138,9 @@
   }
   .headingStyle {
     font-size: 1.5rem !important;
+  }
+  .registerofficeBtn {
+    font-size: 12px;
+    margin: auto;
   }
 }

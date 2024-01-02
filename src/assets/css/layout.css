@@ -50,6 +50,7 @@
       .input1 {
         width: 100%;
         outline: none !important;
+        background-color: transparent;
       }
       input:focus {
         outline: none;
@@ -129,11 +130,11 @@
   }
 }
 .searchIcon {
-  margin: 7px 0 7px 7px;
+  margin: 7px 0 7px 0px;
   border-radius: 50%;
   padding: 10px;
-  height: 32px;
-  width: 32px;
+  height: 35px;
+  width: 35px;
   background-color: var(--main-color);
 }
 .profileSection {
@@ -183,9 +184,13 @@
   min-width: calc(100% - 50px);
   display: flex;
   min-height: 56px;
+  width: 100%;
   margin-bottom: 10px;
   align-items: center;
   padding: 0px 20px;
+  .span1 {
+    width: 90%;
+  }
 }
 .btnSelectSmall {
   moz-box-align: center !important;
@@ -249,6 +254,8 @@
   background: #f7f7f7;
   border-bottom: 1px solid #ddd;
   margin-top: 2rem;
+  position: relative;
+  z-index: 3;
 }
 .FooterBox1 {
   display: grid;
@@ -297,6 +304,9 @@
 @media screen and (min-width: 300px) and (max-width: 768px) {
   .topNavContainer {
     display: none;
+  }
+  .searchIcon {
+    margin: 7px 0 7px 6px;
   }
   .topSmallNavContainer {
     display: flex !important;

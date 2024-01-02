@@ -492,8 +492,11 @@
     "xs_less": "show less",
     "details_tabs": {
       "specifications_and_features": " features",
+      "features": " features",
       "location_and_map": "location and map",
+      "location": "location",
       "guest_reviews": "Advertiser reviews",
+      "reviews": "reviews",
       "specifications_and_features_tab": {
         "bedrooms": "bedrooms",
         "living_rooms": "living rooms",
@@ -562,6 +565,7 @@
       "office_type": "Office Type",
       "Features": "Features",
       "Accessibility_Features": "Accessibility Features",
+      "meansofcomfort": "means of comfort",
       "delete_all": " Delete All",
       "show_all": " Show All",
       "Bathrooms": "Bathrooms",
