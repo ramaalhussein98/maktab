@@ -48,35 +48,14 @@ const mainCategories = [
   },
 ];
 
-const CatgouryAds = ({ categories, dispatch, state }) => {
+const UnitCategory = ({ categories, dispatch, state }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const [nameError, setNameError] = useState();
-
-  const handleNameChange = (event) => {
-    const inputValue = event.target.value;
-    // Check if the input value contains only Arabic and English letters
-    const pattern = /^[\u0600-\u06FF\sA-Za-z]+$/;
-    const isValidInput = pattern.test(inputValue);
-
-    // Check if the input value is empty or contains invalid characters
-    if (inputValue.trim() !== "" && isValidInput) {
-      setNameError(false);
-    } else {
-      setNameError(true);
-    }
-    dispatch({ type: "title", title: inputValue });
-  };
 
   const handleCategoryChange = (selectedCategory) => {
     dispatch({ type: "categoryId", categoryId: selectedCategory });
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    dispatch({ type: name, value });
-  };
-
+  console.log(categories);
   return (
     <Box>
       <Typography
@@ -90,41 +69,12 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
       >
         {t("dashboard.new_order.order_info.main_title")}
       </Typography>
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <label
-          htmlFor="my-text-field"
-          style={{ fontWeight: "500", marginBottom: "4px" }}
-        >
-          {t("dashboard.new_order.order_info.label1")}
-        </label>
-        <TextField
-          id="my-text-field"
-          type="text"
-          value={state.title || ""}
-          onChange={handleNameChange}
-          size="small"
-          error={nameError}
-          helperText={nameError ? "الرجاء ادخال اسم عقار صحيح" : ""}
-          placeholder={t("dashboard.new_order.order_info.placeholder1")}
-          sx={{
-            width: "100%",
-            borderRadius: "12px",
-            marginBottom: "6px",
-            textAlign: lang === "ar" ? "right" : "left",
-            "&[readonly]": {
-              backgroundColor: "lightgray",
-              color: "darkgray",
-            },
-          }}
-        />
-
-        <Typography sx={{ fontWeight: "500", marginTop: "18px" }}>
-          {t("dashboard.new_order.order_info.title")}
-        </Typography>
-        <Typography sx={{ color: "gray", marginTop: "4px" }}>
-          {t("dashboard.new_order.order_info.desc")}
-        </Typography>
-      </Box>
+      <Typography sx={{ fontWeight: "500", marginTop: "18px" }}>
+        {t("dashboard.new_order.order_info.title")}
+      </Typography>
+      <Typography sx={{ color: "gray", marginTop: "4px" }}>
+        {t("dashboard.new_order.order_info.desc")}
+      </Typography>
       <Box
         sx={{
           marginBlockStart: "1rem",
@@ -187,4 +137,4 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
   );
 };
 
-export default CatgouryAds;
+export default UnitCategory;

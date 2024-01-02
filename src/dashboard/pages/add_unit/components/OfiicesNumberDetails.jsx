@@ -43,7 +43,7 @@ const OfiicesNumberDetails = ({ unit, dispatch, roomDetails }) => {
   const lang = i18n.language;
 
   useEffect(() => {
-    if (unit.unit_rooms.length === 0) {
+    if (unit?.unit_rooms.length === 0) {
       dispatch({ type: "unit_rooms", sub_type: "add", arr: roomDetails });
     }
   }, []);

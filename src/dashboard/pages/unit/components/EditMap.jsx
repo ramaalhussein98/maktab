@@ -9,7 +9,7 @@ import {
 } from "@react-google-maps/api";
 import GpsFixedIcon from "@mui/icons-material/GpsFixed";
 import { useTranslation } from "react-i18next";
-import mapMarkerIcon from "../../../../../assets/icons/mapMarker2.svg";
+import mapMarkerIcon from "/src/assets/icons/mapMarker2.svg";
 import { toast } from "react-toastify";
 const googleMapsApiKey = "AIzaSyCUSxdxRLpvkegxpk9-82sUjCylgekfGUk";
 
@@ -119,7 +119,6 @@ const EditMap = ({ location, onCancel, editMapLocationMutation, id }) => {
           lng: centeredMap.lng,
           zoom: centeredMap.zoom,
           city,
-          address: city + ", " + neighborhood + ", " + street,
           neighborhood,
           street,
         },

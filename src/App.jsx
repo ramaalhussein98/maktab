@@ -38,9 +38,10 @@ import ElectronicInvoices from "./dashboard/pages/Electronic_invoices/Electronic
 import CreateTypeContract from "./dashboard/pages/create_type_contract/CreateTypeContract";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import EditAds from "./dashboard/pages/editAds/EditAds";
 import myAxios from "./api/myAxios";
 import BussinesMainPage from "./website/pages/Busseins_main_page/BussinesMainPage";
+import Unit from "./dashboard/pages/unit/Unit";
+import Coupons from "./dashboard/pages/coupons/Coupons";
 
 function App() {
   const { i18n } = useTranslation();
@@ -89,48 +90,6 @@ function App() {
     if (!searchData) {
       getData();
     }
-    setTimeout(() => {
-      const unitsFacilities = localStorage.getItem("unitsFacilities");
-      const getData2 = async () => {
-        const res = await myAxios.get("api/v1/user/units/facilities");
-        console.log(res);
-        if (res.data.status === true) {
-          localStorage.setItem(
-            "unitsFacilities",
-            JSON.stringify(res.data.data)
-          );
-        }
-      };
-      if (!unitsFacilities) {
-        getData2();
-      }
-    }, 750);
-    setTimeout(() => {
-      const roomDetails = localStorage.getItem("roomDetails");
-      const getData4 = async () => {
-        const res = await myAxios.get("api/v1/user/units/room_details");
-        console.log(res);
-        if (res.data.status === true) {
-          localStorage.setItem("roomDetails", JSON.stringify(res.data.data));
-        }
-      };
-      if (!roomDetails) {
-        getData4();
-      }
-    }, 1250);
-    setTimeout(() => {
-      const unitsFeatures = localStorage.getItem("unitsFeatures");
-      const getData3 = async () => {
-        const res = await myAxios.get("api/v1/user/units/features");
-        console.log(res);
-        if (res.data.status === true) {
-          localStorage.setItem("unitsFeatures", JSON.stringify(res.data.data));
-        }
-      };
-      if (!unitsFeatures) {
-        getData3();
-      }
-    }, 1750);
   }, []);
 
   useEffect(() => {
@@ -243,6 +202,7 @@ function App() {
           <Route path="calendar" element={<Calender />} />
           <Route path="reservations" element={<Reservations />} />
           <Route path="properties" element={<RealEstates />} />
+          <Route path="properties/:id" element={<Unit />} />
           <Route path="transactions" element={<FinancialTransactions />} />
           <Route path="billing_statements" element={<BillingStatements />} />
           <Route path="statements" element={<AccountStatements />} />
@@ -264,13 +224,13 @@ function App() {
           <Route path="prices">
             <Route path="main" element={<MainPrices />} />
             <Route path="offers" element={<Offers />} />
+            <Route path="coupons" element={<Coupons />} />
             <Route path="down-prices" element={<DownPrice />} />
           </Route>
         </Route>
 
         <Route path="addoffice" element={<Addads />} />
         <Route path="addunit" element={<AddUnit />} />
-        <Route path="editOffice" element={<EditAds />} />
       </Routes>
     </>
   );

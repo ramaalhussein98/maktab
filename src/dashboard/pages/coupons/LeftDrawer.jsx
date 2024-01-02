@@ -43,8 +43,9 @@ function getStyles(name, selectedUnits, theme) {
 
 const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
   const { t, i18n } = useTranslation();
-
+  const lang = i18n.language;
   const [selectedPriceValue, setSelectedPriceValue] = useState("نسبة");
+  const pricesType = JSON.parse(localStorage.getItem("searchData"))?.type_res;
 
   const [selectedDays, setSelectedDays] = useState([]);
 
@@ -59,16 +60,20 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
     key: "selection",
     color: "var(--main-color)",
   });
-  const singleDate = false;
 
+  const singleDate = false;
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  console.log(selectedDays);
   const handleDayClick = (day) => {
-    if (day === "الكل") {
-      setSelectedDays(["الكل"]);
+    console.log(day);
+    if (day == 0) {
+      setSelectedDays([0]);
     } else {
-      if (selectedDays.includes(day)) {
-        setSelectedDays(selectedDays.filter((d) => d !== day && d !== "الكل"));
+      if (selectedDays.find((ele) => ele == day)) {
+        setSelectedDays(selectedDays.filter((d) => d != day));
       } else {
-        if (selectedDays.includes("الكل")) {
+        if (selectedDays == 0) {
           setSelectedDays([day]);
         } else {
           setSelectedDays([...selectedDays, day]);
@@ -105,12 +110,14 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
   useEffect(() => {
     const startDateText = dateRange.startDate.toLocaleDateString();
     const endDateText = dateRange.endDate.toLocaleDateString();
+    setStartDate(dateRange.startDate.toLocaleDateString());
+    setEndDate(dateRange.endDate.toLocaleDateString());
     const newText = ` من ${startDateText} إلى ${endDateText}`;
     const element = document.getElementById("dateBtnText");
     if (element) {
       element.innerHTML = newText;
     }
-  }, [dateRange.startDate]);
+  }, [dateRange]);
 
   const theme = useTheme();
 
@@ -128,7 +135,7 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-
+  const [numberCount, setNumberCount] = useState();
   return (
     <>
       <div>
@@ -140,7 +147,9 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
             className="DrawerWidth"
           >
             <div className="DrawerTitleDiv">
-              <span>{t("dashboard.prices.addneoffer")}</span>
+              <span>
+                {lang === "ar" ? "اضافة كوبون جديد" : "add new coupon"}
+              </span>
               <button onClick={toggleDrawer(false)}>
                 <CloseIcon />
               </button>
@@ -150,20 +159,34 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
 
           {/* this for offer name  */}
           <div style={{ padding: "24px 24px 0px" }}>
-            <p className="font_18_700">{t("dashboard.prices.offername")} </p>
-            <p className="p_gray_18">{t("dashboard.prices.notbevisible")}</p>
+            <p className="font_18_700">{lang === "ar" ? "الكود" : "code"} </p>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t("dashboard.prices.writeoffername")}
+              placeholder={lang === "ar" ? "كود الكوبون" : "coupon code"}
+              className="input_style"
+            />
+            <Divider />
+          </div>
+          <div style={{ padding: "24px 24px 0px" }}>
+            <p className="font_18_700">{lang === "ar" ? "الكود" : "code"} </p>
+            <input
+              type="number"
+              value={numberCount}
+              onChange={(e) => setNumberCount(e.target.value)}
+              placeholder={lang === "ar" ? "كود الكوبون" : "coupon code"}
               className="input_style"
             />
             <Divider />
           </div>
           {/* this for select unit */}
           <div style={{ padding: "24px 24px 0px" }}>
-            <p className="font_18_700">{t("dashboard.prices.unitoffer")}</p>
+            <p className="font_18_700">
+              {lang === "ar"
+                ? " الوحدات التي تريد أن يطبق عليها الكوبون"
+                : "unit that the coupon should apply "}
+            </p>
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
@@ -290,54 +313,27 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
               <div className="div_btns_days">
                 <button
                   className={
-                    selectedDays.includes("الكل")
+                    selectedDays.some((e) => e === 0)
                       ? "selectedDay button1"
                       : "button1"
                   }
-                  onClick={() => handleDayClick("الكل")}
+                  onClick={() => handleDayClick(0)}
                 >
                   {t("dashboard.prices.all")}
                 </button>
-                <button
-                  className={
-                    selectedDays.includes("ساعة")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("ساعة")}
-                >
-                  {t("dashboard.prices.hour")}
-                </button>
-                <button
-                  className={
-                    selectedDays.includes("يومي")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("يومي")}
-                >
-                  {t("dashboard.prices.daily")}
-                </button>
-                <button
-                  className={
-                    selectedDays.includes("شهري")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("شهري")}
-                >
-                  {t("dashboard.prices.Monthly")}
-                </button>
-                <button
-                  className={
-                    selectedDays.includes("سنوي")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("سنوي")}
-                >
-                  {t("dashboard.prices.annual")}
-                </button>
+                {pricesType.map((ele) => (
+                  <button
+                    key={ele.id}
+                    className={
+                      selectedDays.some((e) => e === ele.id)
+                        ? "selectedDay button1"
+                        : "button1"
+                    }
+                    onClick={() => handleDayClick(ele.id)}
+                  >
+                    {lang === "ar" ? ele.ar_name : ele.en_name}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

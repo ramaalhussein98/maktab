@@ -11,13 +11,12 @@ const CropeerImage = ({
   type,
   width,
   height,
-  maxImages,
-  noBackground,
   setImages,
+  setThumbnail,
+  thumbnail,
   selectedImage,
   setSelectedImage,
-  state,
-  dispatch,
+  noBackground,
 }) => {
   const { t } = useTranslation();
   const [isImageSelected, setIsImageSelected] = useState();
@@ -99,15 +98,11 @@ const CropeerImage = ({
         );
 
         if (type === 1) {
-          dispatch({
-            type: "thumbnail",
-            value: { show: croppedImageUrl, file: file },
-          });
+          setThumbnail({ show: croppedImageUrl, file: file });
         }
         if (type === 2) {
-          setImages((prev) => [...prev, croppedImageUrl]);
+          setImages((prev) => [...prev, { show: croppedImageUrl, file: file }]);
           // setSelectedImages((prevImages) => [...prevImages, file]);
-          dispatch({ type: "images", sub_type: "add", value: file });
         }
       }
     }
@@ -134,6 +129,7 @@ const CropeerImage = ({
           height: height || "200px",
           backgroundColor: "transparent",
           marginBottom: "1rem",
+
           "&:hover": {
             backgroundColor: "rgba(90, 64, 155, 0.04)",
           },
@@ -141,23 +137,15 @@ const CropeerImage = ({
         style={{
           backgroundImage:
             type === 1
-              ? !noBackground && state?.thumbnail.show
-                ? `url(${state?.thumbnail.show})`
-                : `url(https://dashboard.maktab.sa/${state?.thumbnail})`
+              ? noBackground && thumbnail?.show
+                ? `url(${thumbnail?.show})`
+                : `url(https://dashboard.maktab.sa/${thumbnail})`
               : "none",
         }}
         onClick={handleChooseImage}
       >
-        {!noBackground && state?.thumbnail ? (
+        {noBackground && thumbnail ? (
           <>
-            {/* <img
-              src={
-                `https://www.dashboard.aqartik.com/assets/images/deal/image/${state?.thumbnail?.name}` ||
-                state?.thumbnail?.show
-              }
-              alt="Selected Image"
-              style={{ display: "none" }}
-            /> */}
             <Box
               sx={{
                 borderRadius: "12px",

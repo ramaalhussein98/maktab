@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import OfficeBoxNumbers from "./OfficeBoxNumbers";
+import UnitNumberBox from "./UnitNumberBox";
 import "../../../../assets/css/office_details.css";
-import { Switch, Typography } from "@mui/material";
+import { Box, Switch, Typography } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 
@@ -18,14 +18,13 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const OfficeDetailsNumbers = ({ dispatch, state }) => {
+const UnitDetailsNumber = ({ dispatch, unit }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [showFloors, setShowFloors] = useState(true);
   const [showAge, setShowAge] = useState(true);
   const [showOffices, setShowOffices] = useState(true);
   const [showMeetingRooms, setShowMeetingRooms] = useState(true);
-
   // Toggle functions to control the switches
   const handleOfficesToggle = (en_name) => {
     if (showOffices) {
@@ -70,23 +69,18 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
       >
         {lang === "ar" ? " تفاصيل المكتب" : "Office Details"}
       </Typography>
-      <OfficeBoxNumbers
+      <UnitNumberBox
         title={lang === "ar" ? "الدور" : "Floors"}
         dispatch={dispatch}
-        state={state}
+        state={unit}
         status={showFloors}
         ar_name="الدور"
         en_name="floors"
-        numbers={[
-          t("dashboard.contract.groundfloor"),
-          t("dashboard.contract.Peaks"),
-          3,
-          4,
-        ]}
+        numbers={[0, 1, 3, 4]}
       />
-      <OfficeBoxNumbers
+      <UnitNumberBox
         dispatch={dispatch}
-        state={state}
+        state={unit}
         ar_name="عمر العقار"
         status={showAge}
         en_name="office Age"
@@ -111,12 +105,12 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
       </div>
 
       {showOffices && (
-        <OfficeBoxNumbers
+        <UnitNumberBox
           dispatch={dispatch}
           ar_name="عدد المكاتب"
           status={showOffices}
           en_name="offices numbers"
-          state={state}
+          state={unit}
           title={""}
           numbers={[1, 2, 3, 4]}
         />
@@ -138,9 +132,9 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
         />
       </div>
       {showMeetingRooms && (
-        <OfficeBoxNumbers
+        <UnitNumberBox
           dispatch={dispatch}
-          state={state}
+          state={unit}
           status={showMeetingRooms}
           ar_name="غرف اجتماعات"
           en_name="Meeting Rooms"
@@ -152,4 +146,4 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
   );
 };
 
-export default OfficeDetailsNumbers;
+export default UnitDetailsNumber;

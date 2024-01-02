@@ -99,6 +99,7 @@ const EditLocation = ({ interfaceId, id, editInterfaceMutation, onCancel }) => {
             >
               {interfaces.map((interface_item) => (
                 <MenuItem
+                  key={interface_item.id}
                   value={interface_item.id}
                   className={
                     selectedInterface === interface_item.en_name

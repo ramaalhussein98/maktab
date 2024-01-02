@@ -12,41 +12,38 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import styles from "../../../../../assets/css/confirmLocation.module.css";
+import styles from "../../../../assets/css/confirmLocation.module.css";
 import { toast } from "react-toastify";
 // import useDataFetcher from "../../../../api/useDataFetcher ";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 const EditInformation = ({
   title,
   onCancel,
-  editTitleMutation,
+  editInfoMutation,
   id,
-  categoryId,
+  unitSpace,
 }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [_title, setTitle] = useState(title);
-  const categories = JSON.parse(
-    localStorage.getItem("searchData")
-  ).category_aqar;
-  const [selectedCategory, setSelectedCategory] = useState(categoryId);
   const handleTitleChange = (e) => {
     const value = e.target.value;
     setTitle(value);
   };
-  console.log(selectedCategory);
-
-  const handleInterfaceChange = (event) => {
-    setSelectedCategory(event.target.value);
+  const [space, setSpace] = useState(unitSpace);
+  const handleSpaceChange = (e) => {
+    const value = e.target.value;
+    setSpace(value);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("storing...");
     try {
-      const res = await editTitleMutation.mutateAsync({
+      const res = await editInfoMutation.mutateAsync({
         _title,
         id,
-        selectedCategory,
+        space,
       });
 
       toast.update(toastId, {
@@ -72,7 +69,7 @@ const EditInformation = ({
   };
   return (
     <Box>
-      <form>
+      <form className="flex flex-col gap-4">
         <Box
           sx={{
             display: "flex",
@@ -106,71 +103,40 @@ const EditInformation = ({
             }}
           ></TextField>
         </Box>
-        <Box sx={{ marginY: "16px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              position: "relative",
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Typography>{lang === "ar" ? "المساحة" : "space"}</Typography>
+          <TextField
+            type="text"
+            name="title"
+            value={space}
+            onChange={handleSpaceChange}
+            sx={{
+              maxWidth: "340px",
+              width: { xs: "80%", md: "90%" },
+              borderRadius: "12px !important",
+              boxShadow: "1",
+              "& .css-1iy5sao-MuiInputBase-root-MuiOutlinedInput-root": {
+                borderRadius: "12px",
+              },
             }}
-          >
-            <Typography>
-              {lang === "ar" ? "نوع المكتب" : "office type"}
-            </Typography>
-
-            {/* <InputLabel
-              sx={{
-                color: "black",
-                minWidth: { xs: "3rem", sm: "6rem" },
-              }}
-            >
-              {lang === "ar" ? "الاتجاه" : "interface"}
-            </InputLabel> */}
-            <Select
-              value={selectedCategory}
-              onChange={handleInterfaceChange}
-              label=""
-              required
-              IconComponent={ArrowDropDownIcon}
-              className={`${styles.select} select`}
-              classes={lang === "ar" && { icon: styles.selectIcon }}
-              sx={{
-                maxWidth: "340px",
-                width: { xs: "80%", md: "90%" },
-                borderRadius: "12px !important",
-                boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 3px",
-                border: "1px solid rgba(0, 0, 0, 0.06) !important",
-                paddingBlock: "5px",
-                height: "48px",
-                marginBlock: "4px 12px",
-              }}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    borderRadius: "1rem",
-                  },
+            InputProps={{
+              sx: {
+                "& input": {
+                  borderRadius: "12px !important",
+                  padding: "13px 0.8rem",
                 },
-              }}
-            >
-              {categories.map((category_item) => (
-                <MenuItem
-                  key={category_item.id}
-                  value={category_item.id}
-                  className={
-                    selectedCategory === category_item.en_name
-                      ? styles.selectedMenuItem
-                      : ""
-                  }
-                >
-                  {lang === "ar"
-                    ? category_item.ar_name
-                    : category_item.en_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
+              },
+            }}
+          ></TextField>
         </Box>
+
         <Box
           sx={{
             borderWidth: "0px 0px thin",

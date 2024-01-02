@@ -1,54 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
-  Typography,
-  TextField,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Button,
-  MenuItem,
   Select,
+  MenuItem,
   InputLabel,
+  Button,
+  TextField,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import styles from "../../../../../assets/css/confirmLocation.module.css";
-import { toast } from "react-toastify";
-// import useDataFetcher from "../../../../api/useDataFetcher ";
+import styles from "/src/assets/css/confirmLocation.module.css";
+import ClearIcon from "@mui/icons-material/Clear";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-const EditInformation = ({
-  title,
-  onCancel,
-  editTitleMutation,
-  id,
-  categoryId,
-}) => {
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+const EditLocation = ({ interfaceId, id, editInterfaceMutation, onCancel }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const [_title, setTitle] = useState(title);
-  const categories = JSON.parse(
+  const interfaces = JSON.parse(
     localStorage.getItem("searchData")
-  ).category_aqar;
-  const [selectedCategory, setSelectedCategory] = useState(categoryId);
-  const handleTitleChange = (e) => {
-    const value = e.target.value;
-    setTitle(value);
-  };
-  console.log(selectedCategory);
+  ).interface_aqars;
+  const [selectedInterface, setSelectedInterface] = useState(interfaceId);
 
   const handleInterfaceChange = (event) => {
-    setSelectedCategory(event.target.value);
+    setSelectedInterface(event.target.value);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("storing...");
     try {
-      const res = await editTitleMutation.mutateAsync({
-        _title,
+      const res = await editInterfaceMutation.mutateAsync({
+        interface_id: selectedInterface,
         id,
-        selectedCategory,
       });
-
       toast.update(toastId, {
         type: "success",
         render: res.data.message,
@@ -73,62 +56,24 @@ const EditInformation = ({
   return (
     <Box>
       <form>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <Typography>{t("dashboard.incoming_orders.card1.label1")}</Typography>
-          <TextField
-            type="text"
-            name="title"
-            value={_title}
-            onChange={handleTitleChange}
-            sx={{
-              maxWidth: "340px",
-              width: { xs: "80%", md: "90%" },
-              borderRadius: "12px !important",
-              boxShadow: "1",
-              "& .css-1iy5sao-MuiInputBase-root-MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
-            }}
-            InputProps={{
-              sx: {
-                "& input": {
-                  borderRadius: "12px !important",
-                  padding: "13px 0.8rem",
-                },
-              },
-            }}
-          ></TextField>
-        </Box>
         <Box sx={{ marginY: "16px" }}>
           <div
             style={{
               display: "flex",
               alignItems: "baseline",
-              justifyContent: "space-between",
               position: "relative",
             }}
           >
-            <Typography>
-              {lang === "ar" ? "نوع المكتب" : "office type"}
-            </Typography>
-
-            {/* <InputLabel
+            <InputLabel
               sx={{
                 color: "black",
                 minWidth: { xs: "3rem", sm: "6rem" },
               }}
             >
               {lang === "ar" ? "الاتجاه" : "interface"}
-            </InputLabel> */}
+            </InputLabel>
             <Select
-              value={selectedCategory}
+              value={selectedInterface}
               onChange={handleInterfaceChange}
               label=""
               required
@@ -136,13 +81,12 @@ const EditInformation = ({
               className={`${styles.select} select`}
               classes={lang === "ar" && { icon: styles.selectIcon }}
               sx={{
-                maxWidth: "340px",
-                width: { xs: "80%", md: "90%" },
                 borderRadius: "12px !important",
                 boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 3px",
                 border: "1px solid rgba(0, 0, 0, 0.06) !important",
                 paddingBlock: "5px",
                 height: "48px",
+                width: "100%",
                 marginBlock: "4px 12px",
               }}
               MenuProps={{
@@ -153,19 +97,18 @@ const EditInformation = ({
                 },
               }}
             >
-              {categories.map((category_item) => (
+              {interfaces.map((interface_item) => (
                 <MenuItem
-                  key={category_item.id}
-                  value={category_item.id}
+                  value={interface_item.id}
                   className={
-                    selectedCategory === category_item.en_name
+                    selectedInterface === interface_item.en_name
                       ? styles.selectedMenuItem
                       : ""
                   }
                 >
                   {lang === "ar"
-                    ? category_item.ar_name
-                    : category_item.en_name}
+                    ? interface_item.ar_name
+                    : interface_item.en_name}
                 </MenuItem>
               ))}
             </Select>
@@ -213,7 +156,6 @@ const EditInformation = ({
             sx={{
               fontWeight: "600",
               borderRadius: "8px",
-
               border: "1px solid var(--main-color)",
               minWidth: "186px",
               padding: "0.75rem 2.5rem",
@@ -234,4 +176,4 @@ const EditInformation = ({
   );
 };
 
-export default EditInformation;
+export default EditLocation;

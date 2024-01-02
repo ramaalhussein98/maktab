@@ -38,7 +38,7 @@ const getData = async () => {
   return res?.data?.data;
 };
 
-const Offers = () => {
+const Coupons = () => {
   const { data: offers, isLoading } = useQueryHook(["down"], () => getData());
 
   console.log(offers);
@@ -48,7 +48,8 @@ const Offers = () => {
   const [switchState, setSwitchState] = useState(true);
 
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
 
   const toggleDrawer = (isOpen) => (event) => {
     if (
@@ -93,7 +94,10 @@ const Offers = () => {
   return (
     <>
       <Box sx={{ padding: { xs: "0px", md: "20px" } }}>
-        <span className="title_price"> {t("dashboard.pricesNav.link2")} </span>
+        <span className="title_price">
+          {" "}
+          {lang === "ar" ? "الكوبونات" : "coupons"}{" "}
+        </span>
         <Box
           className="d_flex_wrap"
           sx={{ marginY: "1rem", alignItems: "center" }}
@@ -128,94 +132,95 @@ const Offers = () => {
             </Select>
           </FormControl>
         </Box>
-        <Paper className="paper_style">
-          <Box className="d_flex_space_between">
-            <Typography className="title_price">
-              {selectedOffice.title}
-            </Typography>
-            <button className="edit_btn" onClick={toggleDrawer(true)}>
-              {t("dashboard.prices.add_new_offer")}
-            </button>
-          </Box>
+        {selectedOffice && (
           <Paper className="paper_style">
             <Box className="d_flex_space_between">
-              <Typography className="font_bold">Stars Tech</Typography>
-              <Box className="box_switch">
-                <div className="div1">
-                  <span> {t("dashboard.prices.activation_status")}</span>
-                  <FormControlLabel
-                    control={
-                      <GreenSwitch
-                        dir="rtl"
-                        checked={switchState}
-                        onChange={handleSwitchChange}
-                      />
-                    }
-                    sx={{
-                      transform: "rotate(180deg) !important",
-                      // "& .MuiSwitch-thumb": {
-                      //   backgroundColor: "#4caf50",
-                      // },
-                    }}
-                  />
-                  {switchState ? (
-                    <span style={{ color: "green" }}>
-                      {t("dashboard.prices.active")}
-                    </span>
-                  ) : (
-                    <span style={{ color: "gray" }}>
-                      {" "}
-                      {t("dashboard.prices.not_enabled")}
-                    </span>
-                  )}
-                </div>
-              </Box>
-            </Box>
-            <p className="font_gray">
-              من الاثنين, 16 أكتوبر 2023 الى الأربعاء, 18 أكتوبر 2023
-            </p>
-            <Box className="d_flex_wrap_details_offer">
-              <Box className="div1">
-                <p className="p1">
-                  {" "}
-                  {t("dashboard.prices.discount_percentage")}
-                </p>
-                <div className="div11">10%</div>
-              </Box>
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ marginX: "1rem" }}
-              />
-              <Box className="div1">
-                <p className="p1"> {t("dashboard.prices.applied_to")} </p>
-                <div className="div11">rama</div>
-              </Box>
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ marginX: "1rem" }}
-              />
-              <Box className="div1">
-                <p className="p1"> {t("dashboard.prices.offer_days")} </p>
-                <div className="div11">
-                  لكل أيام الإسبوع ما عدا (الثلاثاء و الاربعاء و الخميس و
-                  الجمعة)
-                </div>
-              </Box>
-            </Box>
-            <Divider />
-
-            <div className="div_edit_delete">
-              <button className="edit" onClick={toggleDrawer(true)}>
-                {t("dashboard.outgoing_requests.edit_btn")}
+              <Typography className="title_price">
+                {selectedOffice.title}
+              </Typography>
+              <button className="edit_btn" onClick={toggleDrawer(true)}>
+                {lang === "ar" ? "اضافة كوبون جديد" : "add new coupon"}
               </button>
-              <button className="delete" onClick={handleDeleteOffer}>
-                {t("dashboard.users_manage.delete_btn")}
-              </button>
-            </div>
+            </Box>
+            <Paper className="paper_style">
+              <Box className="d_flex_space_between">
+                <Typography className="font_bold">Stars Tech</Typography>
+                <Box className="box_switch">
+                  <div className="div1">
+                    <span> {t("dashboard.prices.activation_status")}</span>
+                    <FormControlLabel
+                      control={
+                        <GreenSwitch
+                          dir="rtl"
+                          checked={switchState}
+                          onChange={handleSwitchChange}
+                        />
+                      }
+                      sx={{
+                        transform: "rotate(180deg) !important",
+                        // "& .MuiSwitch-thumb": {
+                        //   backgroundColor: "#4caf50",
+                        // },
+                      }}
+                    />
+                    {switchState ? (
+                      <span style={{ color: "green" }}>
+                        {t("dashboard.prices.active")}
+                      </span>
+                    ) : (
+                      <span style={{ color: "gray" }}>
+                        {" "}
+                        {t("dashboard.prices.not_enabled")}
+                      </span>
+                    )}
+                  </div>
+                </Box>
+              </Box>
+              <p className="font_gray">
+                من الاثنين, 16 أكتوبر 2023 الى الأربعاء, 18 أكتوبر 2023
+              </p>
+              <Box className="d_flex_wrap_details_offer">
+                <Box className="div1">
+                  <p className="p1">
+                    {" "}
+                    {t("dashboard.prices.discount_percentage")}
+                  </p>
+                  <div className="div11">10%</div>
+                </Box>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ marginX: "1rem" }}
+                />
+                <Box className="div1">
+                  <p className="p1"> {t("dashboard.prices.applied_to")} </p>
+                  <div className="div11">rama</div>
+                </Box>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ marginX: "1rem" }}
+                />
+                <Box className="div1">
+                  <p className="p1"> {t("dashboard.prices.offer_days")} </p>
+                  <div className="div11">
+                    لكل أيام الإسبوع ما عدا (الثلاثاء و الاربعاء و الخميس و
+                    الجمعة)
+                  </div>
+                </Box>
+              </Box>
+              <Divider />
+              <div className="div_edit_delete">
+                <button className="edit" onClick={toggleDrawer(true)}>
+                  {t("dashboard.outgoing_requests.edit_btn")}
+                </button>
+                <button className="delete" onClick={handleDeleteOffer}>
+                  {t("dashboard.users_manage.delete_btn")}
+                </button>
+              </div>
+            </Paper>
           </Paper>
-        </Paper>
+        )}
       </Box>
       <LeftDrawer
         selectedOffice={selectedOffice}
@@ -226,4 +231,4 @@ const Offers = () => {
   );
 };
 
-export default Offers;
+export default Coupons;
