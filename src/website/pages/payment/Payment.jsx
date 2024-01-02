@@ -11,7 +11,7 @@ import {
 import React from "react";
 import "../../../assets/css/payment.css";
 import { BackIcon } from "../../../assets/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {
   LocationTwo,
@@ -39,10 +39,16 @@ const officDetails = [
   { icon: Area, description: "مساحة الوحدة 320 م" },
   { icon: LocationTwo, description: "مخصص لعوائل فقط" },
 ];
-
 const Payment = () => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
+  const officeData = useLocation().state;
+  const id = officeData?.adInfo?.id;
+  const navigate = useNavigate();
+  const handleAdClick = (officeData) => {
+    navigate(`/details/${id}`, { state: { officeData } });
+  };
+  console.log(officeData);
   return (
     <>
       {/* this payment page for lg screens */}
@@ -51,14 +57,14 @@ const Payment = () => {
           <Box className="payment_container">
             <Box className="payment_descrption">
               <Box className="paymenttitle">
-                <Link to="/details">
+                <button onClick={() => handleAdClick(officeData)}>
                   <ChevronRightIcon
                     sx={{
                       transform:
                         lang === "en" ? "rotate(180deg)" : "rotate(0deg)",
                     }}
                   />
-                </Link>
+                </button>
                 <span>{t("paymentpage.Reviewandpayment")}</span>
               </Box>
               <Box className="paymendescriptionbox">
@@ -166,12 +172,14 @@ const Payment = () => {
               <PaymentCard />
             </Box>
           </Box>
-          <Link to="/payment_done" className="paymentBtn">{t("paymentpage.Paynow")}</Link>
+          <Link to="/payment_done" className="paymentBtn">
+            {t("paymentpage.Paynow")}
+          </Link>
         </Container>
       </Box>
       {/* this payment page for sm screens */}
       <Box sx={{ display: { xs: "block", md: "none" } }}>
-        <PaymentXs />
+        <PaymentXs officeData={officeData} />
       </Box>
     </>
   );

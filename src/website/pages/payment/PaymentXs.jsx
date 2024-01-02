@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../../../assets/css/paymentXs.css";
 import { Box, Button, Container, Typography } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PaymentSliderXs from "./PaymentSliderXs";
 import { Location, Star } from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
@@ -12,17 +12,21 @@ import ReservaitonBox from "./reservaitonBox";
 import VisaCard from "./VisaCard";
 import { CSSTransition } from "react-transition-group";
 import CreditCard from "./CreditCard";
-const PaymentXs = () => {
+const PaymentXs = ({ officeData }) => {
   const { t, i18n } = useTranslation();
   const [showReservaitonBox, setShowReservaitonBox] = useState(false);
   const [showCashBox, setCashBox] = useState(false);
+  const navigate = useNavigate();
+  const handleAdClick = (officeData) => {
+    navigate(`/details/${officeData?.adInfo?.id}`, { state: { officeData } });
+  };
   return (
     <>
       <Box className="backContainer">
         {t("paymentpage.Reviewreservation")}
-        <Link to="/details">
+        <button onClick={() => handleAdClick(officeData)}>
           <ChevronRightIcon className="iconBack" />
-        </Link>
+        </button>
       </Box>
       <PaymentSliderXs />
       {/* title */}

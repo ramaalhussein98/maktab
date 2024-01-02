@@ -3,12 +3,16 @@ import { Box, Button, Typography, Select, MenuItem } from "@mui/material";
 import "../../../../assets/css/details_card.css";
 import DateRange from "./DateRange";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MultiSelectFeatures from "./MultiSelectFeatures";
 import AdditionalServices from "../AdditionalServices";
 import OptionalSercices from "./OptionalSercices";
 
 const DetailsCard = ({ adInfo }) => {
+  const navigate = useNavigate();
+  const handleAdClick = (adInfo) => {
+    navigate(`/payment`, { state: { adInfo } });
+  };
   const [toggleTask, setToggleTask] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -225,9 +229,9 @@ const DetailsCard = ({ adInfo }) => {
       </Box>
       <Box className="box_divder"></Box>
       <Box className="box_padding">
-        <Link to="/payment" className="btn_choose">
+        <button onClick={() => handleAdClick(adInfo)} className="btn_choose">
           {t("details_page.details_tabs.calender_card.choose")}
-        </Link>
+        </button>
         <Box
           sx={{ textAlign: "center", marginTop: "10px", marginBottom: "20px" }}
         >
