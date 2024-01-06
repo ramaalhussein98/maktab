@@ -102,6 +102,7 @@ const HomePage = () => {
             {/* filters section */}
             <FilterSection
               refetch={refetch}
+              filter={filter}
               setFilter={setFilter}
               toggleMapAds={toggleMapAds}
               setToggleMapAds={setToggleMapAds}

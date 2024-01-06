@@ -14,6 +14,13 @@
   "to": "to",
   "save": "Save",
   "Newly_added_office": "Newly added office",
+  "report": {
+    "title": "Submit a complaint",
+    "label": "Reason for complaint",
+    "placeholder": "Enter the complaint",
+    "btn": "Submission",
+    "bt2": "cancel"
+  },
   "dashboard": {
     "navLinks": {
       "link1": "home",

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-// import Cards from "react-credit-cards";
-// import "react-credit-cards/es/styles-compiled.css";
+import Cards from "react-credit-cards";
+import "react-credit-cards/es/styles-compiled.css";
 import { Box, TextField } from "@mui/material";
 import { Input } from "postcss";
 import { useTranslation } from "react-i18next";
@@ -43,13 +43,13 @@ const CreditCard = () => {
 
   return (
     <Box sx={{ marginY: "2rem" }}>
-      {/* <Cards
+      <Cards
         number={cardNumber}
         name={name}
         expiry={expiry}
         cvc={cvc}
         focused={focus}
-      /> */}
+      />
       <form style={{ marginTop: "1rem" }}>
         <Box className="flex_space_wrap">
           <Box

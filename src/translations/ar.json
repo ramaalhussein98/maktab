@@ -12,8 +12,14 @@
   "from": "من",
   "to": "إلى",
   "save": "حفظ",
-
   "Newly_added_office": "مكتب مضاف حديثاً",
+  "report": {
+    "title": "تقديم شكوى",
+    "label": "سبب الشكوى",
+    "placeholder": "ادخل الشكوى",
+    "btn": "تقديم",
+    "bt2": "الغاء"
+  },
   "dashboard": {
     "navLinks": {
       "link1": "الرئيسية",
@@ -495,7 +501,7 @@
       "location_and_map": "الموقع والخريطة",
       "location": "الموقع ",
       "guest_reviews": "تقييمات المعلن",
-      "reviews":"تقييمات",
+      "reviews": "تقييمات",
       "specifications_and_features_tab": {
         "bedrooms": "غرف النوم",
         "living_rooms": "غرف الجلوس",
@@ -563,7 +569,7 @@
       "office_type": "نوع المكتب",
       "Features": "الميزات",
       "Accessibility_Features": "ميزات سهولة الوصول",
-      "meansofcomfort":"وسائل الراحة",
+      "meansofcomfort": "وسائل الراحة",
       "delete_all": "مسح الكل",
       "show_all": "عرض الكل",
       "Bathrooms": "الحمامات",

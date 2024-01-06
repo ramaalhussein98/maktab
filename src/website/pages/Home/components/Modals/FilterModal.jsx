@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { Box } from "@mui/material";
@@ -9,12 +9,14 @@ import Features from "../Filter_components/Features";
 import PriceSlider from "../Filter_components/PriceSlider";
 import RoomsOfficeNumbers from "../Filter_components/RoomsOfficeNumbers";
 import { useTranslation } from "react-i18next";
+import { filter } from "lodash";
 
 const FilterModal = ({
   openFilterModal,
   setOpenFilterModal,
   refetch,
   setFilter,
+  filter,
 }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
@@ -26,14 +28,12 @@ const FilterModal = ({
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [selectedConfortFeatures, setSelectedConfortFeatures] = useState([]);
 
-  // console.log(
-  //   "office",
-  //   selectedItemoffice,
-  //   "met",
-  //   selectedItemMeeting,
-  //   "bath",
-  //   selectedItemBathroom
-  // );
+  console.log(
+    "selectedFeatures",
+    selectedFeatures,
+    "selectedConfortFeatures",
+    selectedConfortFeatures
+  );
   const searchData = JSON.parse(localStorage.getItem("searchData"));
   const OfficesFeatures = searchData?.featurea_ads;
   const CatgoryData = searchData?.category_aqar;
@@ -74,6 +74,9 @@ const FilterModal = ({
   };
   // console.log("con", selectedConfortFeatures);
   const handleShowFilterRes = () => {
+    console.log("selectedFeatures 2", filter);
+    console.log("selectedFeatures", selectedFeatures);
+
     setFilter((prevState) => {
       const filterParams = {
         ...prevState,
@@ -105,18 +108,22 @@ const FilterModal = ({
           selectedItemBathroom?.itemId !== null
             ? selectedItemBathroom.itemId
             : undefined,
+        ...OfficesFeatures.reduce((acc, featureId, index) => {
+          acc[`in[facilities.facility_id][${index}]`] = "";
+          return acc;
+        }, {}),
+        ...ConfirtData.reduce((acc, featureId, index) => {
+          acc[`in[comforts.comfort_id][${index}]`] = "";
+          return acc;
+        }, {}),
         ...selectedFeatures.reduce((acc, featureId, index) => {
-          acc[`in[featurea_ads.id][${index}]`] = featureId;
+          acc[`in[facilities.facility_id][${index}]`] = featureId;
           return acc;
         }, {}),
         ...selectedConfortFeatures.reduce((acc, featureId, index) => {
-          acc[`in[comforts.id.id][${index}]`] = featureId;
+          acc[`in[comforts.comfort_id][${index}]`] = featureId;
           return acc;
         }, {}),
-        // ...selectedConfortFeatures.reduce((acc, featureId, index) => {
-        //   acc[`in[featurea_ads.id][${index}]`] = featureId;
-        //   return acc;
-        // }, {}),
       };
 
       Object.keys(filterParams).forEach(
@@ -127,9 +134,9 @@ const FilterModal = ({
 
       return filterParams;
     });
-    refetch();
-    console.log("hi");
+    // refetch();
   };
+
   const handleDeleteFilterRes = () => setFilter({});
   return (
     <Modal

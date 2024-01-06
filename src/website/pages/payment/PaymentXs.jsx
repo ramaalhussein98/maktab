@@ -16,15 +16,16 @@ const PaymentXs = ({ officeData }) => {
   const { t, i18n } = useTranslation();
   const [showReservaitonBox, setShowReservaitonBox] = useState(false);
   const [showCashBox, setCashBox] = useState(false);
+  console.log("officeData", officeData);
   const navigate = useNavigate();
-  const handleAdClick = (officeData) => {
-    navigate(`/details/${officeData?.adInfo?.id}`, { state: { officeData } });
+  const handleAdClick = () => {
+    navigate(`/details/${officeData?.adInfo?.id}`);
   };
   return (
     <>
       <Box className="backContainer">
         {t("paymentpage.Reviewreservation")}
-        <button onClick={() => handleAdClick(officeData)}>
+        <button onClick={() => handleAdClick()}>
           <ChevronRightIcon className="iconBack" />
         </button>
       </Box>

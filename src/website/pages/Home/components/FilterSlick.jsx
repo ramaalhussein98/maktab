@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "../../../../assets/css/filter_slick.css";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,7 @@ function SamplePrevArrow(props) {
   );
 }
 
-const FilterSlick = ({ refetch, setFilter }) => {
+const FilterSlick = ({ refetch, setFilter, isAllDealsPage }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [activeButton, setActiveButton] = useState(null);
@@ -61,7 +61,7 @@ const FilterSlick = ({ refetch, setFilter }) => {
     initialSlide: 4,
     speed: 500,
     rtl: true,
-    slidesToShow: 5,
+    slidesToShow: isAllDealsPage ? 6 : 5,
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -85,7 +85,10 @@ const FilterSlick = ({ refetch, setFilter }) => {
   };
 
   return (
-    <div className="slick_container">
+    <Box
+      className="slick_container"
+      sx={{ width: { xs: "100%", md: isAllDealsPage ? "70%" : "50%" } }}
+    >
       <Slider {...settings}>
         {filterData?.map((data, index) => (
           <div
@@ -107,7 +110,7 @@ const FilterSlick = ({ refetch, setFilter }) => {
           </div>
         ))}
       </Slider>
-    </div>
+    </Box>
   );
 };
 

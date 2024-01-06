@@ -302,11 +302,14 @@
   }
 }
 @media screen and (min-width: 300px) and (max-width: 768px) {
+  .searchBox {
+    padding: 0 10px;
+  }
   .topNavContainer {
     display: none;
   }
   .searchIcon {
-    margin: 7px 0 7px 6px;
+    margin: 4px 0 4px 0px;
   }
   .topSmallNavContainer {
     display: flex !important;

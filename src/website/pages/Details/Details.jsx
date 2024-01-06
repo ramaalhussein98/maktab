@@ -13,7 +13,7 @@ import DetailsTabs from "./details_component/details_lg_components/DetailsTabs";
 import DetailsXsScreens from "./details_component/details_xs_components/DetailsXsScreens";
 import SocailMedaiLinks from "./details_component/SocailMedaiLinks";
 import AdCard from "../Home/components/AdCard";
-import ChatIcon from "@mui/icons-material/Chat";
+
 import { useParams } from "react-router";
 import { useQueryHook } from "../../../hooks/useQueryHook";
 import myAxios from "../../../api/myAxios";
@@ -48,8 +48,8 @@ const Details = () => {
   });
   const filteredAds = officeData?.data?.filter(
     (ad) =>
-      ad.category_aqar.id === Number(data?.category_aqar.id) &&
-      ad.id !== Number(id)
+      ad?.category_aqar?.id === Number(data?.category_aqar?.id) &&
+      ad?.id !== Number(id)
   );
 
   const timestamp = data?.created_at;
@@ -287,10 +287,6 @@ const Details = () => {
             </Grid>
             <Grid item xs={12} md={4}>
               <DetailsCard adInfo={data} />
-              <button className="chat_button">
-                <ChatIcon className="icon_style" />
-                تواصل مع المكتب
-              </button>
             </Grid>
           </Grid>
           {/* similar ads */}

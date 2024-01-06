@@ -31,16 +31,19 @@
   font-size: 17px;
   padding: 24px;
   font-weight: 500;
-  color: rgb(128, 128, 128);
+  color: rgb(60, 60, 60);
   align-items: center;
 }
 
 .font_Gray {
   font-size: 17px;
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.54);
+  color: rgba(0, 0, 0, 0.3);
 }
-
+.d_flex_justifu {
+  display: flex;
+  justify-content: space-between;
+}
 .font_Black_weight_700 {
   color: rgb(17, 17, 17);
   font-size: 20px;
@@ -128,4 +131,47 @@
     align-items: center;
     width: 100%;
   }
+}
+.radio-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.radio-button-container {
+  position: relative;
+}
+
+.radio-button {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.custom-radio {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  font-size: 14px;
+  min-width: 9rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: #ccc;
+  color: gray;
+}
+
+.custom-radio.active {
+  background-color: #000000d4;
+  color: #fff;
+  border-color: #000000d4;
 }

@@ -6,7 +6,7 @@ import {
   // Link,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FavoriteButton from "./FavoriteButton";
 import { Share } from "../../../../../assets/icons";
@@ -22,7 +22,10 @@ const DetailsXsScreens = ({ adInfo }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   //  adInfo = useLocation().state.ad;
-
+  const navigate = useNavigate();
+  const handleAdClick = (adInfo) => {
+    navigate(`/payment`, { state: { adInfo } });
+  };
   const [ShareListOpen, setShareListOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const handleCopyLink = () => {
@@ -69,9 +72,7 @@ const DetailsXsScreens = ({ adInfo }) => {
         <Box sx={{ paddingBottom: "60px" }}>
           {/* this for swiper slider */}
           <Box>
-            <DetailsImagesXs
-            adInfo={adInfo}
-            />
+            <DetailsImagesXs adInfo={adInfo} />
           </Box>
           <Box
             sx={{
@@ -133,9 +134,7 @@ const DetailsXsScreens = ({ adInfo }) => {
           </Box>
 
           {/* this Box for Tabs  */}
-          <DetailsXsTabs
-           adInfo={adInfo}
-          />
+          <DetailsXsTabs adInfo={adInfo} />
         </Box>
       </Box>
       <Box
@@ -166,8 +165,8 @@ const DetailsXsScreens = ({ adInfo }) => {
         </Box>
 
         <Box sx={{ display: "flex" }}>
-          <Link
-            to="/payment"
+          <button
+            onClick={() => handleAdClick(adInfo)}
             style={{
               backgroundColor: "var(--main-color)",
               color: "white",
@@ -177,7 +176,7 @@ const DetailsXsScreens = ({ adInfo }) => {
             }}
           >
             {t("details_page.reservation")}
-          </Link>
+          </button>
         </Box>
       </Box>
     </>

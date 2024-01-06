@@ -53,32 +53,6 @@ const TopNav = ({ setIsUserSelected }) => {
   const { messagesCounter } = useContext(ChatContext);
   const { userNameContext } = useContext(UserContext);
   const [menuItems, setMenuItems] = useState([]);
-  const [filter, setFilter] = useState({
-    // "exact[category_aqar.id]": null,
-    // "contains[title]": "",
-    // "in[ads_rooms.number][0]": "",
-    // "in[ads_rooms.id][0]": "",
-    // "in[ads_rooms.number][1]": "",
-    // "in[ads_rooms.id][1]": "",
-    // "in[ads_rooms.number][2]": "",
-    // "in[ads_rooms.id][2]": "",
-    //     in[comforts.id][0]
-    // in[comforts.id][1]
-  });
-  const {
-    isLoading,
-    isError,
-    data = { data: [], totalPages: 0 },
-    refetch,
-    isRefetching,
-  } = useOfficeHook({
-    // page: page,
-    filter: filter,
-  });
-
-  const handleFilerModalOpen = () => {
-    setOpenFilterModal(true);
-  };
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -222,7 +196,7 @@ const TopNav = ({ setIsUserSelected }) => {
           </Container>
         </Box>
         {/* this for small Screens */}
-        {!isPaymentPage && (
+        {/* {!isPaymentPage && (
           <Box className="topSmallNavContainer">
             <Box className="smallBoxBorder" sx={{ minHeight: "47px" }}>
               <span className="span1">
@@ -256,7 +230,7 @@ const TopNav = ({ setIsUserSelected }) => {
               refetch={refetch}
             />
           </Box>
-        )}
+        )} */}
       </Box>
     </>
   );
