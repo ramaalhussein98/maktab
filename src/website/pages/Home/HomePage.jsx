@@ -31,8 +31,6 @@ const HomePage = () => {
   const [page, setpage] = useState(1);
   const { t, i18n } = useTranslation();
   const [toggleMapAds, setToggleMapAds] = useState(false);
-
-  const [toggleMapAdsClass, setToggleMapAdsClass] = useState(false);
   const [filter, setFilter] = useState({
     // "exact[category_aqar.id]": null,
     // "contains[title]": "",

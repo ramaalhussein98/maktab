@@ -303,7 +303,10 @@
 }
 @media screen and (min-width: 300px) and (max-width: 768px) {
   .searchBox {
-    padding: 0 10px;
+    padding: 0px;
+    width: 80%;
+    margin: auto;
+    min-width: initial;
   }
   .topNavContainer {
     display: none;

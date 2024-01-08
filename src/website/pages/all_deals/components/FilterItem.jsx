@@ -1,8 +1,8 @@
+import React from "react";
 import { Box, Paper } from "@mui/material";
 
 const FilterItem = ({
   title,
-  description,
   onClick,
   isOpen,
   menuItems,
@@ -17,7 +17,7 @@ const FilterItem = ({
         <span className="font_gray">
           {selectedValue !== undefined && selectedValue !== ""
             ? selectedValue
-            : description}
+            : menuItems[0]?.ar_name || menuItems[0]?.city}
         </span>
       </Box>
       {isOpen && (
@@ -29,7 +29,7 @@ const FilterItem = ({
               className="menuSelect"
               onClick={() => handleMenuItemClick(item)}
             >
-              {Array.isArray(item) ? item.join(" - ") : item.ar_name}
+              {Array.isArray(item) ? item.join(" - ") : item.ar_name || item.city}
             </p>
           ))}
         </Paper>

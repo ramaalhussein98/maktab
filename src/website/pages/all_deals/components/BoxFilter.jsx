@@ -11,19 +11,21 @@ import LanguageBtn from "../../../../ui/LanguageBtn";
 const searchData = JSON.parse(localStorage.getItem("searchData"));
 const OfficesFeatures = searchData?.featurea_ads;
 const CatgoryData = searchData?.category_aqar;
+const cityData = searchData?.cities;
 const filterItems = [
   {
     title: "المكان",
-    description: "البحث عن واجهات",
+
     menu: [
       { id: "", ar_name: "اختر المكان" },
-      { id: 1, ar_name: "رياض", en_name: "Riyadh" },
-      { id: 2, ar_name: "جدة", en_name: "Makkah" },
+      ...(cityData ? cityData : []),
+      // { id: 1, ar_name: "رياض", en_name: "Riyadh" },
+      // { id: 2, ar_name: "جدة", en_name: "Makkah" },
     ],
   },
   {
     title: "النوع",
-    description: "البحث عن واجهات",
+
     menu: [
       { id: "", ar_name: "اختر النوع" },
       ...(CatgoryData ? CatgoryData : []),
@@ -31,7 +33,7 @@ const filterItems = [
   },
   {
     title: "السعر",
-    description: "البحث عن واجهات",
+
     menu: [
       { ar_name: "اختر السعر" }, // Placeholder item
       [100, 1000],
@@ -45,7 +47,6 @@ const BoxFilter = ({ setFilter, refetch }) => {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [isScrolled, setIsScrolled] = useState(false);
   const isLoggedIn = localStorage.getItem("user_token") ? true : false;
-
   const handleFilterClick = (index) => {
     setOpenFilter((prev) => (prev === index ? null : index));
   };
@@ -55,7 +56,7 @@ const BoxFilter = ({ setFilter, refetch }) => {
     if (Array.isArray(item)) {
       selectedValue = `${item[0]} - ${item[1]}`;
     } else {
-      selectedValue = item.ar_name;
+      selectedValue = item.ar_name || item.city;
     }
 
     setSelectedFilters((prev) => ({
@@ -64,18 +65,35 @@ const BoxFilter = ({ setFilter, refetch }) => {
     }));
     setOpenFilter(null);
   };
-
   const handleShowFilterRes = () => {
+    setFilter("");
     setFilter((prevState) => {
-      const filterParams = {
-        ...prevState,
-        "exact[category_aqar.ar_name]":
-          selectedFilters[1] !== undefined ? selectedFilters[1] : undefined,
-        "exact[location.city]":
-          selectedFilters[0] !== undefined ? selectedFilters[0] : undefined,
-      };
+      const filterParams = {};
 
-      if (selectedFilters[2] !== undefined) {
+      // Handle location
+      if (
+        selectedFilters[0] !== undefined &&
+        selectedFilters[0] !== "" &&
+        selectedFilters[0] !== "اختر المكان"
+      ) {
+        filterParams["exact[location.city]"] = selectedFilters[0];
+      }
+
+      // Handle category
+      if (
+        selectedFilters[1] !== undefined &&
+        selectedFilters[1] !== "" &&
+        selectedFilters[1] !== "اختر النوع"
+      ) {
+        filterParams["exact[category_aqar.ar_name]"] = selectedFilters[1];
+      }
+
+      // Handle price
+      if (
+        selectedFilters[2] !== undefined &&
+        selectedFilters[2] !== "" &&
+        selectedFilters[2] !== "اختر السعر"
+      ) {
         filterParams["min[ads_prices.price]"] = encodeURIComponent(
           selectedFilters[2].split(" - ")[0]
         );
@@ -84,14 +102,14 @@ const BoxFilter = ({ setFilter, refetch }) => {
         );
       }
 
+      // Remove properties with undefined or empty values
       Object.keys(filterParams).forEach(
-        (key) =>
-          (filterParams[key] === undefined || filterParams[key] === "") &&
-          delete filterParams[key]
+        (key) => filterParams[key] === undefined && delete filterParams[key]
       );
 
       return filterParams;
     });
+
     refetch();
   };
 
@@ -132,7 +150,7 @@ const BoxFilter = ({ setFilter, refetch }) => {
           <FilterItem
             key={index}
             title={item.title}
-            description={item.description}
+            // description={item.description}
             onClick={() => handleFilterClick(index)}
             isOpen={openFilter === index}
             menuItems={item.menu}
