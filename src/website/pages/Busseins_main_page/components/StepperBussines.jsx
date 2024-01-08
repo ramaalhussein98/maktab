@@ -7,6 +7,12 @@ import StepLabel from "@mui/material/StepLabel";
 import SettingsIcon from "@mui/icons-material/Settings";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import VideoLabelIcon from "@mui/icons-material/VideoLabel";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import SlideshowIcon from "@mui/icons-material/Slideshow";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import EmailIcon from "@mui/icons-material/Email";
+import ContentPasteGoIcon from "@mui/icons-material/ContentPasteGo";
+import PaidIcon from "@mui/icons-material/Paid";
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
@@ -51,16 +57,16 @@ const CustomStepIcon = styled("div")(({ theme, ownerState }) => ({
   alignItems: "center",
   ...(ownerState.active && {
     backgroundImage: gradientBackground([
-      "rgb(242,113,33) 0%",
-      "rgb(233,64,87) 50%",
+      "rgb(255, 241, 233) 0%",
+      "rgb(118, 103, 105) 50%",
       "rgb(138,35,135) 100%",
     ]),
     boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
   }),
   ...(ownerState.completed && {
     backgroundImage: gradientBackground([
-      "rgb(242,113,33) 0%",
-      "rgb(233,64,87) 50%",
+      "rgb(255, 241, 233) 0%",
+      "rgb(118, 103, 105) 50%",
       "rgb(138,35,135) 100%",
     ]),
   }),
@@ -87,7 +93,15 @@ CustomStepIconComponent.propTypes = {
 };
 
 const StepperBussines = () => {
-  const steps = ["step 1", "step 2", "step 3", "step 4"];
+  const steps = [
+    " إضف بيانات الوحدة",
+    " أضف السعر والشروط",
+    " وحدتك تنعرض أكثر من 500 ألف مستأجر",
+    " تأكد أن الوحدة جاهزة لإيجار",
+    "ستصلك رسالة بكل طلب إيجار",
+    "أنشاء عقد بينك وبين المستأجر",
+    "نقوم تحويل مستحقاتك",
+  ];
 
   return (
     <Stack
@@ -96,8 +110,9 @@ const StepperBussines = () => {
     >
       <Stepper
         alternativeLabel
-        activeStep={3}
+        activeStep={6}
         connector={<CustomStepConnector />}
+        // sx={{ width: "100%", overflow: "auto" }}
       >
         {steps?.map((label, index) => (
           <Step key={label}>
@@ -117,10 +132,13 @@ const StepperBussines = () => {
 
 const getIcon = (index) => {
   const icons = {
-    1: <SettingsIcon />,
-    2: <GroupAddIcon />,
-    3: <VideoLabelIcon />,
-    4: <GroupAddIcon />,
+    1: <AddCircleOutlineIcon />,
+    2: <VideoLabelIcon />,
+    3: <SlideshowIcon />,
+    4: <CheckCircleOutlineIcon />,
+    5: <EmailIcon />,
+    6: <ContentPasteGoIcon />,
+    7: <PaidIcon />,
   };
   return icons[index];
 };

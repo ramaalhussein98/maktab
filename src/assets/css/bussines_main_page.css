@@ -1,5 +1,5 @@
 .main_box_bussines {
-  background: linear-gradient(25deg, rgb(112, 7, 7), rgb(255, 70, 70));
+  background: linear-gradient(25deg, rgb(112, 7, 7), rgb(45, 44, 44));
   padding: 6rem;
   color: white;
   .welcomeParagraph {
@@ -53,11 +53,13 @@
   overflow: hidden;
   height: 450px;
   width: 95%;
-  background: linear-gradient(
+  background: url(../images/2.png);
+  background-position: bottom;
+  /* background: linear-gradient(
     25deg,
     rgb(89, 111, 133),
     rgba(200, 236, 239, 0.88)
-  );
+  ); */
   text-align: center;
   .maktab_title {
     color: #c20000;
@@ -190,7 +192,57 @@
     cursor: pointer;
   }
 }
+.mobileContainer2 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  .appDownlaodContiner {
+    width: 50%;
+    .titleApp {
+      color: var(--main-color);
+      font-size: 25px;
+      font-weight: 600;
+    }
+  }
+}
+.barPurple {
+  height: 5px;
+  width: 100px;
+  background: var(--main-color);
+  margin: 20px 0 25px;
+  position: relative;
+  border-radius: 30px;
+  display: inline-block;
+}
+
+@keyframes MOVE-BG {
+  0% {
+    left: 0;
+  }
+
+  100% {
+    left: 100px;
+  }
+}
+
+.barPurple::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -2.7px;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: var(--main-color);
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-name: MOVE-BG;
+}
 @media screen and (min-width: 300px) and (max-width: 768px) {
+  .justify-center {
+    justify-content: center;
+  }
   .space_between {
     flex-wrap: wrap;
   }
@@ -207,11 +259,14 @@
   }
   .howadd_container {
     padding: 2rem 1rem;
+    display: none;
+
     .how_title {
       font-size: 1.5rem;
     }
   }
   .maktab_numbers_div {
+    margin-top: 2rem;
     height: 520px;
     .maktab_title {
       font-size: 2rem;
@@ -252,6 +307,12 @@
     flex-direction: column;
     .img1 {
       margin-top: 1rem;
+    }
+  }
+  .mobileContainer2 {
+    flex-direction: column;
+    .appDownlaodContiner {
+      width: 100%;
     }
   }
 }

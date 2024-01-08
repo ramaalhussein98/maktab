@@ -85,7 +85,7 @@ const DetailsImagesXs = ({ adInfo }) => {
         <Box className={`swiper-pagination ${styles.details_pagination}`}></Box>
       </Box>
       <div id="lightgallery" style={{ display: "none" }}></div>
-      <Link to="/">
+      {/* <Link to="/">
         <ChevronRightIcon
           sx={{
             position: "absolute",
@@ -95,7 +95,7 @@ const DetailsImagesXs = ({ adInfo }) => {
             zIndex: "1",
           }}
         />
-      </Link>
+      </Link> */}
     </Box>
   );
 };

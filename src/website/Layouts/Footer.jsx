@@ -9,6 +9,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import ContactsIcon from "@mui/icons-material/Contacts";
 const settingData = JSON.parse(localStorage.getItem("settingData"));
+const footerChange = true
 const UlFirst = [
   {
     url: "/",
@@ -121,7 +122,7 @@ const Footer = () => {
           <div className="div1">
             <Box className="copyRightBox">© 2023 Maktab, Inc.</Box>
             <Box className="LanguageBox">
-              <LanguageBtn />
+              <LanguageBtn footerChange={footerChange}/>
               <ul className="socialmediaUl">
                 {SocailMediaLInks.map((ele, index) => (
                   <li key={index} className="li1">

@@ -35,7 +35,7 @@ const BussinesMainPage = () => {
     });
 
     return (
-      <div key={index} style={{ flex: 1 }}>
+      <div key={index}>
         <div className="numbers_box">
           <div className="internal">
             <div className="white_circle">
@@ -86,7 +86,7 @@ const BussinesMainPage = () => {
         <div className="d-flex space_between">{AnimatedNumbers}</div>
       </div>
       {/* mobile app */}
-      <div className="mobileAppContainer">
+      {/* <div className="mobileAppContainer">
         <img src={MobileBg} alt="mobile_bg" className="mobile_bg" />
 
         <p className="titleMobile">تطبيق مكتب أعمال</p>
@@ -94,6 +94,23 @@ const BussinesMainPage = () => {
         <div className="divMobileApps">
           <img src={GooglePlayWhite} className="img1" alt="android" />
           <img src={AppStoreWhite} className="img1" alt="appstore" />
+        </div>
+      </div> */}
+      <div className="mobileContainer2">
+        <div>img</div>
+        <div className="appDownlaodContiner">
+          <p className="titleApp">حمل التطبيق الاّن</p>
+          <div className="barPurple"></div>
+          <p>
+            lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem
+            lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem
+            lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem
+            lorem lorem lorem lorem lorem lorem lorem
+          </p>
+          <div className="d-flex m-5 justify-center ">
+            <img src={GooglePlayWhite} className="img1 ml-5" alt="android" />
+            <img src={AppStoreWhite} className="img1" alt="appstore" />
+          </div>
         </div>
       </div>
 

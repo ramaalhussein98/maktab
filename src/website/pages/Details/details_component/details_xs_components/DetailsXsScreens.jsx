@@ -93,7 +93,7 @@ const DetailsXsScreens = ({ adInfo }) => {
             >
               <IconButton>
                 <Link
-                  to="/deals"
+                  to="/"
                   state={{
                     is_special: 1,
                   }}
@@ -110,7 +110,7 @@ const DetailsXsScreens = ({ adInfo }) => {
               </IconButton>
               <Box
                 sx={{
-                  position: "absolute",
+                  // position: "absolute",
                   top: "4rem",
                   left: "5px",
                   display: "flex",

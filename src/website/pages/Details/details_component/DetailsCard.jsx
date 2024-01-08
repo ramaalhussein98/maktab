@@ -12,13 +12,19 @@ import WarningIcon from "@mui/icons-material/Warning";
 import ChatIcon from "@mui/icons-material/Chat";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { toast } from "react-toastify";
 
 const DetailsCard = ({ adInfo }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const navigate = useNavigate();
+  const userToken = localStorage.getItem("user_token");
   const handleAdClick = (adInfo) => {
-    navigate(`/payment`, { state: { adInfo } });
+    if (userToken) {
+      navigate(`/payment`, { state: { adInfo } });
+    } else {
+      toast.error(" يرجى تسجيل الدخول");
+    }
   };
   const [toggleTask, setToggleTask] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -108,41 +114,44 @@ const DetailsCard = ({ adInfo }) => {
         </Box>
         <Box className="box_divder"></Box>
         <div className="radio-buttons">
-          <Box component="div" className="radio-button-container">
-            <input
-              type="radio"
-              id="singleDate"
-              value="singleDate"
-              checked={singleDate}
-              onChange={handleSingleDateChange}
-              className="radio-button"
-            />
-            <label
-              htmlFor="singleDate"
-              className={`custom-radio ${singleDate ? "active" : ""}`}
-            >
-              <AccessAlarmIcon sx={{ marginX: "4px" }} />
-              بالساعات
-            </label>
-          </Box>
-
-          <Box component="div" className="radio-button-container">
-            <input
-              type="radio"
-              id="multiDate"
-              value="multiDate"
-              checked={!singleDate}
-              onChange={handleMultiDateChange}
-              className="radio-button"
-            />
-            <label
-              htmlFor="multiDate"
-              className={`custom-radio ${!singleDate ? "active" : ""}`}
-            >
-              <CalendarMonthIcon sx={{ marginX: "4px" }} />
-              شهري | سنوي
-            </label>
-          </Box>
+          {adInfo?.type_res?.some((type) => type.id === 1) && (
+            <Box component="div" className="radio-button-container">
+              <input
+                type="radio"
+                id="singleDate"
+                value="singleDate"
+                checked={singleDate}
+                onChange={handleSingleDateChange}
+                className="radio-button"
+              />
+              <label
+                htmlFor="singleDate"
+                className={`custom-radio ${singleDate ? "active" : ""}`}
+              >
+                <AccessAlarmIcon sx={{ marginX: "4px" }} />
+                بالساعات
+              </label>
+            </Box>
+          )}
+          {adInfo?.type_res?.some((type) => [2, 3, 4].includes(type.id)) && (
+            <Box component="div" className="radio-button-container">
+              <input
+                type="radio"
+                id="multiDate"
+                value="multiDate"
+                checked={!singleDate}
+                onChange={handleMultiDateChange}
+                className="radio-button"
+              />
+              <label
+                htmlFor="multiDate"
+                className={`custom-radio ${!singleDate ? "active" : ""}`}
+              >
+                <CalendarMonthIcon sx={{ marginX: "4px" }} />
+                شهري | سنوي
+              </label>
+            </Box>
+          )}
         </div>
         <Box className="box_padding">
           <Box className="d_flex_spaceBetween">

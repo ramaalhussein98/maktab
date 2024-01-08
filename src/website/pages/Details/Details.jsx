@@ -290,7 +290,7 @@ const Details = () => {
             </Grid>
           </Grid>
           {/* similar ads */}
-          {filteredAds.length > 0 ? (
+          {filteredAds?.length > 0 ? (
             <Box>
               <Typography
                 variant="h4"
@@ -325,7 +325,7 @@ const Details = () => {
                         },
                       }}
                     >
-                      <AdCard key={ad.id} officeData={ad} />
+                      <AdCard key={ad?.id} officeData={ad} />
                     </Grid>
                   ))}
                 </Grid>
