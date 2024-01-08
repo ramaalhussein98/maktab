@@ -6,8 +6,8 @@ import {
 import myAxios from "../api/myAxios";
 import { filter } from "lodash";
 
-export const useOfficeHook = ({ page, filter }) => {
-  const { data, error, isLoading, refetch } = useQuery({
+export const useOfficeHook = ({ page = 1, filter }) => {
+  const { data, error, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ["Offices", page, filter],
     queryFn: () =>
       myAxios
@@ -32,5 +32,6 @@ export const useOfficeHook = ({ page, filter }) => {
     error,
     isLoading,
     refetch,
+    isRefetching,
   };
 };

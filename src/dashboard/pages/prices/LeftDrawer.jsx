@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import myAxios from "../../../api/myAxios";
 import { useQueryHook } from "../../../hooks/useQueryHook";
+import { el } from "date-fns/locale";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,34 +42,72 @@ function getStyles(name, selectedUnits, theme) {
   };
 }
 
-const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
+const LeftDrawer = ({
+  open,
+  toggleDrawer,
+  selectedOffice,
+  selectedOffer,
+  selectedUnit,
+  openType,
+  refetch,
+}) => {
+  const pricesType = JSON.parse(localStorage.getItem("searchData"))?.type_res;
   const { t, i18n } = useTranslation();
-
-  const [selectedPriceValue, setSelectedPriceValue] = useState("نسبة");
-
+  const lang = i18n.language;
+  const [selectedPriceValue, setSelectedPriceValue] = useState("سعر");
   const [selectedDays, setSelectedDays] = useState([]);
-
-  const dateRangeRef = useRef(null);
-  const excludedBoxRef = useRef(null);
-  const [selectedDates, setSelectedDates] = useState([]);
-  const [showCalendar, setShowCalendar] = useState(false);
-
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
     key: "selection",
     color: "var(--main-color)",
   });
-  const singleDate = false;
+  const [selectedUnits, setSelectedUnits] = useState(
+    selectedUnit ? selectedUnit : null
+  );
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
 
+  useEffect(() => {
+    if (selectedOffer) {
+      setDateRange((prev) => ({
+        ...prev,
+        startDate: new Date(selectedOffer?.offer?.start_date),
+        endDate: new Date(selectedOffer?.offer?.end_date),
+      }));
+      setSelectedPriceValue(
+        selectedOffer.offer.type_discount === "percent" ? "نسبة" : "سعر"
+      );
+      setName(selectedOffer.offer.name);
+
+      setPrice(selectedOffer.offer.discount);
+
+      setSelectedDays((prev) => {
+        const newSelectedDays = selectedOffer.offer.ads_prices.map((ele) => {
+          return ele.id;
+        });
+
+        return newSelectedDays;
+      });
+      setSelectedUnits(selectedUnit);
+    }
+  }, [selectedOffer, selectedUnit]);
+  const dateRangeRef = useRef(null);
+  const excludedBoxRef = useRef(null);
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const singleDate = false;
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const handleDayClick = (day) => {
-    if (day === "الكل") {
-      setSelectedDays(["الكل"]);
+    if (day == 0) {
+      setSelectedDays([0]);
     } else {
-      if (selectedDays.includes(day)) {
-        setSelectedDays(selectedDays.filter((d) => d !== day && d !== "الكل"));
+      if (selectedDays.find((ele) => ele == day)) {
+        setSelectedDays(selectedDays.filter((d) => d != day));
       } else {
-        if (selectedDays.includes("الكل")) {
+        if (selectedDays == 0) {
           setSelectedDays([day]);
         } else {
           setSelectedDays([...selectedDays, day]);
@@ -105,16 +144,18 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
   useEffect(() => {
     const startDateText = dateRange.startDate.toLocaleDateString();
     const endDateText = dateRange.endDate.toLocaleDateString();
+    const date1 = new Date(dateRange.startDate).toISOString();
+    const date2 = new Date(dateRange.endDate).toISOString();
+    setStartDate(date1);
+    setEndDate(date2);
     const newText = ` من ${startDateText} إلى ${endDateText}`;
     const element = document.getElementById("dateBtnText");
     if (element) {
       element.innerHTML = newText;
     }
-  }, [dateRange.startDate]);
+  }, [dateRange]);
 
   const theme = useTheme();
-
-  const [selectedUnits, setSelectedUnits] = useState([]);
 
   const handleChange = (event) => {
     const {
@@ -126,8 +167,57 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
     );
   };
 
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const handleSubmit = async () => {
+    if (openType === 1) {
+      const data = new FormData();
+
+      data.append("name", name);
+      data.append("discount", price);
+      if (selectedPriceValue === "سعر") {
+        data.append("type_discount", "rial");
+      } else {
+        data.append("type_discount", "percent");
+      }
+      data.append("start_date", startDate);
+      data.append("end_date", endDate);
+      data.append("ads_id", selectedUnits.id);
+      selectedDays.forEach((ele, i) => {
+        data.append(`ads_prices[${i}][ads_price_id]`, ele);
+      });
+
+      await myAxios.post("api/v1/user/offers/save_offices", data);
+      refetch();
+    } else if (openType === 2) {
+      const updateData = new FormData();
+
+      updateData.append("name", name);
+      updateData.append("discount", price);
+      if (selectedPriceValue === "سعر") {
+        updateData.append("type_discount", "rial");
+      } else {
+        updateData.append("type_discount", "percent");
+      }
+      updateData.append("start_date", startDate);
+      updateData.append("end_date", endDate);
+      updateData.append("ads_id", selectedUnits.id);
+      selectedDays.forEach((ele, i) => {
+        const getPivotData = selectedOffer.offer.ads_prices.find(
+          (e) => e.id === ele
+        );
+        if (getPivotData) {
+          updateData.append(`ads_prices[${i}][id]`, getPivotData.pivot.id);
+        }
+        updateData.append(`ads_prices[${i}][ads_price_id]`, ele);
+      });
+
+      await myAxios.post(
+        `api/v1/user/offers/update_offices/${selectedOffer.offer.id}`,
+        updateData
+      );
+      toggleDrawer(false);
+      refetch();
+    }
+  };
 
   return (
     <>
@@ -167,7 +257,6 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
-              multiple
               value={selectedUnits}
               className="input_style"
               sx={{
@@ -175,20 +264,18 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
               }}
               onChange={handleChange}
               input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value.id} label={value.title} />
-                  ))}
-                </Box>
-              )}
+              renderValue={(selected) => {
+                if (selected) {
+                  return selected.title;
+                }
+              }}
               MenuProps={MenuProps}
             >
               {selectedOffice?.units?.map((ele) => (
                 <MenuItem
                   key={ele.id}
                   value={ele}
-                  style={getStyles(ele, selectedUnits, theme)}
+                  style={getStyles(ele, selectedOffice?.units, theme)}
                 >
                   {ele.title}
                 </MenuItem>
@@ -290,60 +377,35 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
               <div className="div_btns_days">
                 <button
                   className={
-                    selectedDays.includes("الكل")
+                    selectedDays.some((e) => e === 0)
                       ? "selectedDay button1"
                       : "button1"
                   }
-                  onClick={() => handleDayClick("الكل")}
+                  onClick={() => handleDayClick(0)}
                 >
                   {t("dashboard.prices.all")}
                 </button>
-                <button
-                  className={
-                    selectedDays.includes("ساعة")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("ساعة")}
-                >
-                  {t("dashboard.prices.hour")}
-                </button>
-                <button
-                  className={
-                    selectedDays.includes("يومي")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("يومي")}
-                >
-                  {t("dashboard.prices.daily")}
-                </button>
-                <button
-                  className={
-                    selectedDays.includes("شهري")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("شهري")}
-                >
-                  {t("dashboard.prices.Monthly")}
-                </button>
-                <button
-                  className={
-                    selectedDays.includes("سنوي")
-                      ? "selectedDay button1"
-                      : "button1"
-                  }
-                  onClick={() => handleDayClick("سنوي")}
-                >
-                  {t("dashboard.prices.annual")}
-                </button>
+                {pricesType.map((ele) => (
+                  <button
+                    key={ele.id}
+                    className={
+                      selectedDays.some((e) => e === ele.id)
+                        ? "selectedDay button1"
+                        : "button1"
+                    }
+                    onClick={() => handleDayClick(ele.id)}
+                  >
+                    {lang === "ar" ? ele.ar_name : ele.en_name}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
           {/* this button submit cancel */}
           <div className="BoxBtnSubmit">
-            <button className="submit"> {t("save")}</button>
+            <button onClick={handleSubmit} className="submit">
+              {t("save")}
+            </button>
             <button className="cancel" onClick={toggleDrawer(false)}>
               {t("cancel")}
             </button>

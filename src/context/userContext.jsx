@@ -1,7 +1,5 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { myAxios } from "../api/myAxios";
-import { object } from "yup";
 const UserContext = createContext();
 const getData = async () => {
   const user_type_bussines =
@@ -9,13 +7,11 @@ const getData = async () => {
   if (user_type_bussines) {
     const res = await myAxios.get(`api/v1/user/profile`);
     if (res) {
-      console.log(res);
       return res;
     }
   } else {
     const res = await myAxios.get(`api/v1/ordinaries/profile`);
     if (res) {
-      // console.log(res);
       return res;
     }
   }
@@ -123,7 +119,6 @@ export const UserProvider = ({ children }) => {
   //     }
   //   }
   // }, [isUserUpdated]);
-  console.log("user", user);
   return (
     <UserContext.Provider
       value={{

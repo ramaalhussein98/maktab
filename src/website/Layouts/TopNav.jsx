@@ -65,14 +65,8 @@ const TopNav = ({ setIsUserSelected }) => {
     //     in[comforts.id][0]
     // in[comforts.id][1]
   });
-  const {
-    isLoading,
-    isError,
-    data = { data: [], totalPages: 0 },
-    refetch,
-    isRefetching,
-  } = useOfficeHook({
-    // page: page,
+  const { refetch } = useOfficeHook({
+    page: 1,
     filter: filter,
   });
 

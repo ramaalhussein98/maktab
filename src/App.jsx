@@ -1,6 +1,13 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { BrowserRouter, Routes, Route, json } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  json,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { toast, Toaster } from "react-hot-toast";
 import DashLayout from "./dashboard/components/DashLayout";
@@ -45,11 +52,23 @@ import Coupons from "./dashboard/pages/coupons/Coupons";
 import TermOfService from "./website/pages/term-of-service/TermOfService";
 import AllDeals from "./website/pages/all_deals/AllDeals";
 import PaymentDone from "./website/pages/done_payment/PaymentDone";
+import { StateProvider } from "./dashboard/context/calendarContext";
+import {
+  mainOfficeSignal,
+  initialData,
+  handleSelectMainOffice,
+} from "./dashboard/context/calendarData";
+
+const PrivateRoute = ({ element }) => {
+  const thereisToken = localStorage.getItem("user_token");
+
+  return thereisToken ? element : <Navigate to="/" />;
+};
 
 function App() {
   const { i18n } = useTranslation();
+
   const language = i18n.language;
-  const thereisToken = localStorage.getItem("user_token");
   const settingData = JSON.parse(localStorage.getItem("settingData"));
 
   useEffect(() => {
@@ -222,13 +241,36 @@ function App() {
           }
         />
 
-        <Route path="dashboard" element={<DashLayout />}>
+        {/* <Route
+          path="dashboard"
+          element={<PrivateRoute element={<DashLayout />} />}
+        > */}
+        <Route
+          path="dashboard"
+          element={
+            <DashLayout
+              initialData={initialData}
+              mainOfficeSignal={mainOfficeSignal}
+              handleSelectMainOffice={handleSelectMainOffice}
+            />
+          }
+        >
           <Route path="home">
             <Route index element={<InformationPage />} />
             <Route path="unit-settings" element={<UnitSettings />} />
           </Route>
           <Route path="my_info" element={<MyInfo />} />
-          <Route path="calendar" element={<Calender />} />
+          <Route
+            path="calendar"
+            element={
+              <Calender
+                initialData={initialData}
+                mainOfficeSignal={mainOfficeSignal}
+                handleSelectMainOffice={handleSelectMainOffice}
+              />
+            }
+          />
+
           <Route path="reservations" element={<Reservations />} />
           <Route path="properties" element={<RealEstates />} />
           <Route path="properties/:id" element={<Unit />} />

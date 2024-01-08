@@ -616,7 +616,11 @@ const Addads = () => {
 
     const comfortData = new FormData();
     state.comfort?.map((e, i) => {
-      featuresData.append(`comfort[${i}][comfort_id]`, e);
+      comfortData.append(`comforts[${i}][comfort_id]`, e);
+    });
+    const facilitiesData = new FormData();
+    state.facilities?.map((e, i) => {
+      facilitiesData.append(`facilities[${i}][facility_id]`, e);
     });
 
     const filesData = new FormData();
@@ -665,6 +669,10 @@ const Addads = () => {
           myAxios.post(
             `/api/v1/user/offices/comforts/addToAds/${unitId}`,
             comfortData
+          );
+          myAxios.post(
+            `/api/v1/user/offices/facilities/addToAds/${unitId}`,
+            facilitiesData
           );
           myAxios.post(
             `/api/v1/user/offices/updateViewer/${unitId}`,

@@ -19,7 +19,7 @@ import DateRange from "../../../website/pages/Details/details_component/DateRang
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import myAxios from "../../../api/myAxios";
-import { useQueryHook } from "../../../hooks/useQueryHook";
+import { set } from "lodash";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,32 +41,70 @@ function getStyles(name, selectedUnits, theme) {
   };
 }
 
-const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
+const LeftDrawer = ({
+  open,
+  toggleDrawer,
+  selectedOffice,
+  selectedCoupon,
+  selectedUnit,
+  openType,
+}) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [selectedPriceValue, setSelectedPriceValue] = useState("نسبة");
   const pricesType = JSON.parse(localStorage.getItem("searchData"))?.type_res;
-
   const [selectedDays, setSelectedDays] = useState([]);
-
-  const dateRangeRef = useRef(null);
-  const excludedBoxRef = useRef(null);
-  const [selectedDates, setSelectedDates] = useState([]);
-  const [showCalendar, setShowCalendar] = useState(false);
-
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
     key: "selection",
     color: "var(--main-color)",
   });
+  const [selectedUnits, setSelectedUnits] = useState(
+    selectedUnit ? selectedUnit : null
+  );
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [numberCount, setNumberCount] = useState();
+
+  useEffect(() => {
+    if (selectedCoupon) {
+      setDateRange((prev) => ({
+        ...prev,
+        startDate: new Date(selectedCoupon?.coupon?.start_date),
+        endDate: new Date(selectedCoupon?.coupon?.end_date),
+      }));
+      setSelectedPriceValue(
+        selectedCoupon.coupon.type_discount === "percent" ? "نسبة" : "سعر"
+      );
+      setName(selectedCoupon.coupon.name);
+      setCode(selectedCoupon.coupon.code);
+      setNumberCount(selectedCoupon.coupon.number_used);
+      setPrice(selectedCoupon.coupon.discount);
+
+      setSelectedDays((prev) => {
+        const newSelectedDays = selectedCoupon.coupon.ads_prices.map((ele) => {
+          return ele.id;
+        });
+
+        return newSelectedDays;
+      });
+      setSelectedUnits(selectedUnit);
+    }
+  }, [selectedCoupon, selectedUnit]);
+
+  console.log(selectedUnit);
+
+  const dateRangeRef = useRef(null);
+  const excludedBoxRef = useRef(null);
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const singleDate = false;
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  console.log(selectedDays);
   const handleDayClick = (day) => {
-    console.log(day);
     if (day == 0) {
       setSelectedDays([0]);
     } else {
@@ -85,7 +123,6 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
   const handleSelectPriceChange = (event) => {
     setSelectedPriceValue(event.target.value);
   };
-
   const handleOutsideClick = (event) => {
     if (
       showCalendar &&
@@ -95,7 +132,6 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
       setShowCalendar(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
@@ -106,12 +142,13 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
-
   useEffect(() => {
     const startDateText = dateRange.startDate.toLocaleDateString();
     const endDateText = dateRange.endDate.toLocaleDateString();
-    setStartDate(dateRange.startDate.toLocaleDateString());
-    setEndDate(dateRange.endDate.toLocaleDateString());
+    const date1 = new Date(dateRange.startDate).toISOString();
+    const date2 = new Date(dateRange.endDate).toISOString();
+    setStartDate(date1);
+    setEndDate(date2);
     const newText = ` من ${startDateText} إلى ${endDateText}`;
     const element = document.getElementById("dateBtnText");
     if (element) {
@@ -120,8 +157,6 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
   }, [dateRange]);
 
   const theme = useTheme();
-
-  const [selectedUnits, setSelectedUnits] = useState([]);
 
   const handleChange = (event) => {
     const {
@@ -133,9 +168,27 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
     );
   };
 
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [numberCount, setNumberCount] = useState();
+  const handleSubmit = async () => {
+    const data = new FormData();
+    data.append("name", name);
+    data.append("code", code);
+    data.append("discount", price);
+    if (selectedPriceValue === "سعر") {
+      data.append("type_discount", "rial");
+    } else {
+      data.append("type_discount", "percent");
+    }
+    data.append("number_used", numberCount);
+    data.append("start_date", startDate);
+    data.append("end_date", endDate);
+    data.append("ads_id", selectedUnits.id);
+    selectedDays.forEach((ele, i) => {
+      data.append(`ads_prices[${i}][ads_price_id]`, ele);
+    });
+
+    await myAxios.post("api/v1/user/coupons/create", data);
+  };
+  console.log(selectedUnits);
   return (
     <>
       <div>
@@ -156,26 +209,41 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
             </div>
           </div>
           <Divider />
-
+          {/* this for offer name  */}
+          <div style={{ padding: "24px 24px 0px" }}>
+            <p className="font_18_700">{lang === "ar" ? "الاسم" : "name"} </p>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={lang === "ar" ? "ادخل اسم الكود" : "enter code name"}
+              className="input_style"
+            />
+            <Divider />
+          </div>
           {/* this for offer name  */}
           <div style={{ padding: "24px 24px 0px" }}>
             <p className="font_18_700">{lang === "ar" ? "الكود" : "code"} </p>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
               placeholder={lang === "ar" ? "كود الكوبون" : "coupon code"}
               className="input_style"
             />
             <Divider />
           </div>
           <div style={{ padding: "24px 24px 0px" }}>
-            <p className="font_18_700">{lang === "ar" ? "الكود" : "code"} </p>
+            <p className="font_18_700">
+              {lang === "ar" ? "عدد الاستخدامات" : "number used"}
+            </p>
             <input
               type="number"
               value={numberCount}
               onChange={(e) => setNumberCount(e.target.value)}
-              placeholder={lang === "ar" ? "كود الكوبون" : "coupon code"}
+              placeholder={
+                lang === "ar" ? "ادخل عدد الاستخدامات المسموحة للكوبون" : ""
+              }
               className="input_style"
             />
             <Divider />
@@ -190,7 +258,6 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
-              multiple
               value={selectedUnits}
               className="input_style"
               sx={{
@@ -198,20 +265,18 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
               }}
               onChange={handleChange}
               input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value.id} label={value.title} />
-                  ))}
-                </Box>
-              )}
+              renderValue={(selected) => {
+                if (selected) {
+                  return selected.title;
+                }
+              }}
               MenuProps={MenuProps}
             >
               {selectedOffice?.units?.map((ele) => (
                 <MenuItem
                   key={ele.id}
                   value={ele}
-                  style={getStyles(ele, selectedUnits, theme)}
+                  style={getStyles(ele, selectedOffice?.units, theme)}
                 >
                   {ele.title}
                 </MenuItem>
@@ -339,7 +404,10 @@ const LeftDrawer = ({ open, toggleDrawer, selectedOffice }) => {
           </div>
           {/* this button submit cancel */}
           <div className="BoxBtnSubmit">
-            <button className="submit"> {t("save")}</button>
+            <button onClick={handleSubmit} className="submit">
+              {" "}
+              {t("save")}
+            </button>
             <button className="cancel" onClick={toggleDrawer(false)}>
               {t("cancel")}
             </button>

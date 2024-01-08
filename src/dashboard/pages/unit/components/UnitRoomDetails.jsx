@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import OfficeBoxNumbers from "./OfficeBoxNumbers";
 import "../../../../assets/css/office_details.css";
-import { Box, Switch, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Switch,
+  Button,
+  Typography,
+  FormControl,
+  Select,
+  OutlinedInput,
+  MenuItem,
+} from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 
@@ -111,6 +120,37 @@ const UnitRoomDetails = ({ details }) => {
                 </option>
               ))}
             </select>
+            {/* <FormControl
+              sx={{ minWidth: 120, width: "200px", backgroundColor: "white" }}
+            >
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                onChange={(e) =>
+                  handleChange(ele.ar_name, ele.en_name, e.target.value)
+                }
+                displayEmpty
+                MenuProps={{
+                  getContentAnchorEl: null,
+                }}
+                input={<OutlinedInput />}
+                renderValue={(selected) => {
+                  if (selected) {
+                    return selected;
+                  }
+                  return <em>اضغط لاختيار المكتب</em>;
+                }}
+              >
+                {ele.values?.map((ele, i) => {
+                  console.log(ele);
+                  return (
+                    <MenuItem key={i} value={ele}>
+                      {ele}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl> */}
           </div>
         ))}
       </div>

@@ -110,34 +110,6 @@ const Unit = () => {
 
   //end displaying edit components
 
-  const handleChangeSpecial = async (id) => {
-    const toastId = toast.loading("processing...");
-    try {
-      const res = await changeSpecialMutution.mutateAsync({
-        id,
-      });
-      toast.update(toastId, {
-        type: "success",
-        render: res.data.message,
-        closeOnClick: true,
-        isLoading: false,
-        autoClose: true,
-        closeButton: true,
-        pauseOnHover: false,
-      });
-    } catch (error) {
-      toast.update(toastId, {
-        type: "error",
-        // render: error.response.data.message,
-        closeOnClick: true,
-        isLoading: false,
-        autoClose: true,
-        closeButton: true,
-        pauseOnHover: false,
-      });
-    }
-  };
-
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -184,6 +156,37 @@ const Unit = () => {
         pauseOnHover: false,
       });
     }
+  };
+
+  const handleChangeStatus = async () => {
+    Swal.fire({
+      title: lang === "ar" ? "هل انت متأكد؟" : "Are you sure?",
+      text:
+        lang === "ar"
+          ? "انت على وشك عرض / اخفاء وحدتك"
+          : "You are about to show / hide your unit",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: lang === "ar" ? "نعم، متأكد" : "Yes, sure!",
+      cancelButtonText: lang === "ar" ? "لا" : "No",
+      customClass: {
+        confirmButton: "swal-confirm-button",
+        cancelButton: "swal-cancel-button",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User clicked "Yes, delete it!"
+        onChange(); // Call the onRemove function to delete the box
+      }
+    });
+  };
+
+  const onChange = async () => {
+    const res = await myAxios.post(
+      `api/v1/user/offices/update_status/${unit.id}`
+    );
+    refetch();
+    console.log(res);
   };
 
   if (isLoading) return <Loader />;
@@ -372,6 +375,9 @@ const Unit = () => {
               <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
                 {t("dashboard.incoming_orders.card3.title")}
               </Typography>
+              <Typography className="eitBtn" onClick={handleChangeStatus}>
+                {"تغيير"}
+              </Typography>
             </Box>
             <Box
               sx={{
@@ -383,7 +389,8 @@ const Unit = () => {
                 {" "}
                 {t("dashboard.incoming_orders.card3.label1")}
               </Typography>
-              {unit?.status === 0 ? (
+
+              {unit?.status == 0 ? (
                 <Typography
                   sx={{
                     color: "rgb(244, 67, 54)",
@@ -551,6 +558,7 @@ const Unit = () => {
                       setEditComforts(false);
                     }}
                     refetch={refetch}
+                    unitId={unit.id}
                   />
                 </Box>
               </Fade>

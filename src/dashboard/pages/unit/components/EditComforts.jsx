@@ -43,7 +43,7 @@ const EditComforts = ({ comforts, onCancel, unitId, refetch }) => {
   const handleSubmit = async () => {
     const added = new FormData();
     addedFeatures.forEach((ele, i) => {
-      added.append(`comforts[${i}][boolfeaturea_id]`, ele.id);
+      added.append(`comforts[${i}][comfort_id]`, ele.id);
     });
 
     await myAxios.post(

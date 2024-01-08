@@ -47,12 +47,15 @@ const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
 
   const handleDeleteReadyImages = (index) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to delete this box.",
+      title: lang === "ar" ? "هل أنت متأكد؟" : "Are you sure?",
+      text:
+        lang === "ar"
+          ? "أنت على وشك حذف العنصر"
+          : "You are about to delete this box.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel",
+      confirmButtonText: lang === "ar" ? "نعم، احذف" : "Yes, delete it!",
+      cancelButtonText: lang === "ar" ? "لا" : "No, cancel",
       customClass: {
         confirmButton: "swal-confirm-button",
         cancelButton: "swal-cancel-button",
@@ -102,6 +105,7 @@ const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
       }
     });
   };
+
   const onVideoRemove = async (index) => {
     await myAxios
       .delete(`/api/v1/user/offices/deleteFiles/${officeId}`, {
@@ -117,6 +121,7 @@ const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
         }
       });
   };
+
   const handleVideoSelect = (event) => {
     const file = event.target.files[0];
     const video = document.createElement("video");

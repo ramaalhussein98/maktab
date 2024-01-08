@@ -569,8 +569,11 @@ const OutGoingOrders = () => {
                             src={`https://dashboard.maktab.sa/${ele.main_image}`}
                             alt=""
                           />
-                          <div className="text-lg font-semibold">
-                            {ele.title}
+                          <div className="flex flex-col text-lg font-semibold  gap-2">
+                            <span>{ele.title}</span>
+                            <span className="text-gray-500">
+                              {lang === "ar" ? "تعديل" : "edit"}
+                            </span>
                           </div>
                         </Link>
                       </>

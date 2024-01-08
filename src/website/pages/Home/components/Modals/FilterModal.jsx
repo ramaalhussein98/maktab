@@ -127,7 +127,7 @@ const FilterModal = ({
 
       return filterParams;
     });
-    refetch();
+    // refetch();
     console.log("hi");
   };
   const handleDeleteFilterRes = () => setFilter({});

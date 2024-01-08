@@ -15,7 +15,6 @@ import { HomeImagesAdd } from "../add_ads_folder/add_ads_components";
 import { toast } from "react-toastify";
 import myAxios from "../../../api/myAxios";
 import UnitDetailsNumber from "./components/UnitDetailsNumber";
-import UnitCategory from "./components/UnitCategory";
 
 const reducerFunc = (unit, action) => {
   switch (action.type) {
@@ -317,7 +316,7 @@ const AddUnit = () => {
   console.log(unit);
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
-  const [afterWidth, setAfterWidth] = useState(12.5);
+  const [afterWidth, setAfterWidth] = useState(16.7);
   const [error, setError] = useState(false);
   const [images, setImages] = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
@@ -327,12 +326,12 @@ const AddUnit = () => {
 
   const handleNext = () => {
     setStep(step + 1);
-    setAfterWidth(afterWidth + 12.5);
+    setAfterWidth(afterWidth + 16.7);
   };
   const handlePrev = () => {
     if (step > 1) {
       setStep(step - 1);
-      setAfterWidth(afterWidth - 12.5);
+      setAfterWidth(afterWidth - 16.7);
     }
   };
 
@@ -448,8 +447,6 @@ const AddUnit = () => {
   };
 
   const renderStep = () => {
-    //render both steps
-
     switch (step) {
       case 1:
         return (
@@ -503,11 +500,6 @@ const AddUnit = () => {
             dispatch={dispatch}
           />
         );
-      // case 7:
-      //   return <MapAds />;
-      // case 8:
-      //   <ConfimLocation unit={unit} dispatch={dispatch} />;
-      //   break;
       default:
         return null;
     }
