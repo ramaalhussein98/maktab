@@ -7,14 +7,8 @@ import ReservationSide from "./ReservationSide";
 import { LogoDash } from "../../assets/logos";
 import { Link } from "react-router-dom";
 import CalenderSide from "./CalenderSide";
-import { StateProvider } from "../context/calendarContext";
 
-const SideBar = ({
-  setIsSidebarShown,
-  mainOfficeSignal,
-  handleSelectMainOffice,
-  initialData,
-}) => {
+const SideBar = ({ setIsSidebarShown }) => {
   const [type, setType] = useState();
   const location = useLocation().pathname;
 
@@ -48,11 +42,7 @@ const SideBar = ({
       ) : type === 1 ? (
         <ReservationSide />
       ) : type === 2 ? (
-        <CalenderSide
-          initialData={initialData}
-          mainOfficeSignal={mainOfficeSignal}
-          handleSelectMainOffice={handleSelectMainOffice}
-        />
+        <CalenderSide />
       ) : (
         ""
       )}

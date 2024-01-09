@@ -3,7 +3,13 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import myAxios from "../../../../api/myAxios";
 
-const EditComforts = ({ comforts, onCancel, unitId, refetch }) => {
+const EditComforts = ({
+  comforts,
+  onCancel,
+  unitId,
+  refetch,
+  setIsChangingData,
+}) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const unitsComforts = JSON.parse(localStorage.getItem("searchData"))?.comfort;
@@ -41,6 +47,7 @@ const EditComforts = ({ comforts, onCancel, unitId, refetch }) => {
   };
 
   const handleSubmit = async () => {
+    setIsChangingData(true);
     const added = new FormData();
     addedFeatures.forEach((ele, i) => {
       added.append(`comforts[${i}][comfort_id]`, ele.id);
@@ -56,8 +63,10 @@ const EditComforts = ({ comforts, onCancel, unitId, refetch }) => {
         comforts: deletedFeatures,
       },
     });
+    setIsChangingData(false);
 
     await refetch();
+    onCancel();
   };
   return (
     <div className="unitNameBox">

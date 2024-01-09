@@ -8,6 +8,7 @@ const EditDescription = ({
   id,
   editDescriptionMutation,
   onCancel,
+  setIsChangingData,
 }) => {
   const [_description, setDescription] = useState(description);
   const { t } = useTranslation();
@@ -18,32 +19,18 @@ const EditDescription = ({
   };
 
   const handleSubmit = async (e) => {
+    setIsChangingData(true);
     e.preventDefault();
-    const toastId = toast.loading("storing...");
     try {
       const res = await editDescriptionMutation.mutateAsync({
         description: _description,
         id,
       });
-      toast.update(toastId, {
-        type: "success",
-        render: res.data.message,
-        closeOnClick: true,
-        isLoading: false,
-        autoClose: true,
-        closeButton: true,
-        pauseOnHover: false,
-      });
+      setIsChangingData(false);
+      onCancel();
     } catch (error) {
-      toast.update(toastId, {
-        type: "error",
-        // render: error.response.data.message,
-        closeOnClick: true,
-        isLoading: false,
-        autoClose: true,
-        closeButton: true,
-        pauseOnHover: false,
-      });
+      setIsChangingData(false);
+      onCancel();
     }
   };
   return (

@@ -18,7 +18,6 @@ import { ChatProvider } from "./context/chatContext";
 import { UserProvider } from "./context/userContext.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { StateProvider } from "./dashboard/context/calendarContext.jsx";
 
 const theme = createTheme({
   direction: "rtl", // Both here and <body dir="rtl">
@@ -40,12 +39,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider theme={theme}>
         <UserProvider>
           <ChatProvider>
-            <StateProvider>
-              <QueryClientProvider client={queryClient}>
-                <App />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            </StateProvider>
+            <QueryClientProvider client={queryClient}>
+              <App />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
           </ChatProvider>
         </UserProvider>
       </ThemeProvider>

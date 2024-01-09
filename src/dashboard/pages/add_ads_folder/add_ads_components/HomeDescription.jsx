@@ -5,8 +5,10 @@ import { useTranslation } from "react-i18next";
 
 import OrderTitles from "../../new_order_folder/new_order_components/OrderTitles";
 
-const HomeDescription = ({ state, dispatch }) => {
+const HomeDescription = ({ state, dispatch, stepsErrors }) => {
   const { t } = useTranslation();
+  const [descriptionError, setDescriptionError] = useState(false);
+
   const handleDescriptionChange = (event) => {
     const inputValue = event.target.value;
 
@@ -44,7 +46,7 @@ const HomeDescription = ({ state, dispatch }) => {
               fontWeight: "bold",
             }}
           >
-            {t("dashboard.property_desc.label")}
+            {t("dashboard.property_desc.label")} *
           </Typography>
           <Tooltip
             title={
@@ -98,6 +100,7 @@ const HomeDescription = ({ state, dispatch }) => {
         placeholder={t("dashboard.property_desc.placeholder")}
         required
         value={state?.description}
+        onKeyUp={() => setDescriptionError(true)}
         onChange={handleDescriptionChange}
         InputProps={{
           sx: {
@@ -105,6 +108,9 @@ const HomeDescription = ({ state, dispatch }) => {
           },
         }}
       />
+      <span className="text-sm text-red-500 p-2">
+        {descriptionError && stepsErrors?.descriptionError}
+      </span>
     </Box>
   );
 };

@@ -1,9 +1,11 @@
 import { Box, Divider, Typography } from "@mui/material";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const UnitDetails = ({ unit, dispatch, facilities }) => {
+const UnitDetails = ({ unit, dispatch, facilities, stepsErrors }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
+  const [showNameError, setShowNameError] = useState(false);
 
   const handlePropertyClick = (propertyId) => {
     dispatch({ type: "facilities", value: propertyId });
@@ -12,20 +14,24 @@ const UnitDetails = ({ unit, dispatch, facilities }) => {
     <div className="UnitDetailsContainer">
       <p className="UnitDetailsTitle">تفاصيل الوحدة</p>
       <div className="unitNameBox">
-        <p className="unitName">اسم وحدتك</p>
+        <p className="unitName">اسم وحدتك *</p>
         <input
           type="text"
           placeholder="ادخل اسم عقارك الذي سيظهر للضيوف"
           className="unitInput"
           value={unit.title}
+          onKeyUp={() => setShowNameError(true)}
           onChange={(event) =>
             dispatch({ type: "title", title: event.target.value })
           }
         />
+        <span className="text-sm text-red-500 p-2">
+          {showNameError && stepsErrors?.titleError}
+        </span>
       </div>
       <Divider sx={{ marginY: "2rem" }} />
       <div className="unitNameBox">
-        <p className="unitName"> مساحة عقارك</p>
+        <p className="unitName"> مساحة عقارك *</p>
         <div className="d-flex">
           <input
             type="number"

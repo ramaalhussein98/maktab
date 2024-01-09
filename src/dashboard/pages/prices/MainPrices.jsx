@@ -27,9 +27,9 @@ const MainPrices = () => {
     isLoading,
     isError,
   } = useQueryHook(["prices"], () => getData());
-  console.log(pricesData);
 
   if (isLoading) return <Loader />;
+
   return (
     <Box>
       <Typography className="title_price">
@@ -46,8 +46,8 @@ const MainPrices = () => {
 const PriceCard = ({ img, editMode, name, prices2, setEditMode, id }) => {
   const unitPrices = JSON.parse(localStorage.getItem("searchData")).type_res;
   const { t, i18n } = useTranslation();
+  const [isChangingData, setIsChangingData] = useState(false);
   const lang = i18n.language;
-  console.log(prices2);
   const [newArray, setNewArray] = useState(
     unitPrices?.map((item1) => {
       const correspondingItem = prices2.find(
@@ -66,7 +66,6 @@ const PriceCard = ({ img, editMode, name, prices2, setEditMode, id }) => {
       }
     })
   );
-  console.log(newArray);
 
   const handleInputChange = (e, index) => {
     const updatedArray = [...newArray];
@@ -75,6 +74,7 @@ const PriceCard = ({ img, editMode, name, prices2, setEditMode, id }) => {
   };
 
   const handleSaveChanges = async () => {
+    setIsChangingData(true);
     setEditMode(false); // Disable edit mode after saving
 
     const pricesData = new FormData();
@@ -102,6 +102,7 @@ const PriceCard = ({ img, editMode, name, prices2, setEditMode, id }) => {
       pricesAdd
     );
 
+    setIsChangingData(false);
     Swal.fire({
       title: "تم تعديل الأسعار",
       icon: "success",
@@ -109,55 +110,58 @@ const PriceCard = ({ img, editMode, name, prices2, setEditMode, id }) => {
   };
 
   return (
-    <Paper
-      className="paper_style2 flex-[49%]"
-      sx={{ padding: { xs: "10px !important", md: "24px !important" } }}
-    >
-      <Box className="d_flex_wrap">
-        <Box className="container_img">
-          <img src={img} alt="Home" />
-        </Box>
-        <Box className="container_days">
-          <span className="title_price">{name}</span>
-          <Box className="Box_days">
-            {newArray?.map((price, index) => (
-              <Box key={index}>
-                <p className="font_bold">
-                  {lang === "ar" ? price?.ar_name : price?.en_name}
-                </p>
-                <div className="space"></div>
-                {editMode ? (
-                  <input
-                    className="font_gray_Input"
-                    value={price?.price}
-                    onChange={(e) => handleInputChange(e, index)}
-                  />
-                ) : (
-                  <p className="font_gray">{[price.price]}</p>
-                )}
-              </Box>
-            ))}
+    <>
+      {isChangingData && <Loader />}
+      <Paper
+        className="paper_style2 flex-[49%]"
+        sx={{ padding: { xs: "10px !important", md: "24px !important" } }}
+      >
+        <Box className="d_flex_wrap">
+          <Box className="container_img">
+            <img src={img} alt="Home" />
+          </Box>
+          <Box className="container_days">
+            <span className="title_price">{name}</span>
+            <Box className="Box_days">
+              {newArray?.map((price, index) => (
+                <Box key={index}>
+                  <p className="font_bold">
+                    {lang === "ar" ? price?.ar_name : price?.en_name}
+                  </p>
+                  <div className="space"></div>
+                  {editMode ? (
+                    <input
+                      className="font_gray_Input"
+                      value={price?.price}
+                      onChange={(e) => handleInputChange(e, index)}
+                    />
+                  ) : (
+                    <p className="font_gray">{[price.price]}</p>
+                  )}
+                </Box>
+              ))}
+            </Box>
           </Box>
         </Box>
-      </Box>
-      {editMode && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "8px",
-            flexDirection: { xs: "column", md: "row" },
-          }}
-        >
-          <button className="cancel_btn" onClick={() => setEditMode(false)}>
-            {t("dashboard.outgoing_requests.cancel_btn")}
-          </button>
-          <button className="save_btn" onClick={handleSaveChanges}>
-            {t("dashboard.outgoing_requests.submit_btn")}
-          </button>
-        </Box>
-      )}
-    </Paper>
+        {editMode && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "8px",
+              flexDirection: { xs: "column", md: "row" },
+            }}
+          >
+            <button className="cancel_btn" onClick={() => setEditMode(false)}>
+              {t("dashboard.outgoing_requests.cancel_btn")}
+            </button>
+            <button className="save_btn" onClick={handleSaveChanges}>
+              {t("dashboard.outgoing_requests.submit_btn")}
+            </button>
+          </Box>
+        )}
+      </Paper>
+    </>
   );
 };
 

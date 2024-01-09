@@ -187,6 +187,7 @@ const LeftDrawer = ({
     });
 
     await myAxios.post("api/v1/user/coupons/create", data);
+    toggleDrawer(false);
   };
   console.log(selectedUnits);
   return (

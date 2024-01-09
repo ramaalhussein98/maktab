@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../../assets/css/addAds.css";
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, CircularProgress, Container } from "@mui/material";
 import { WhiteLogo } from "../../../assets/logos";
 import {
   OfiicesNumberDetails,
@@ -281,6 +281,7 @@ const AddUnit = () => {
   const officeId = state && state.id;
   const unitTitle = state && state.title;
   const category_id = state && state.category_id;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [unitsOptions, setUnitsOptions] = useState({
     categories: searchData?.category_aqar,
@@ -313,7 +314,6 @@ const AddUnit = () => {
     images: [],
     details: [],
   });
-  console.log(unit);
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
   const [afterWidth, setAfterWidth] = useState(16.7);
@@ -322,11 +322,17 @@ const AddUnit = () => {
   const [deletedImages, setDeletedImages] = useState([]);
   const [readyImages, setReadyImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState();
+  const [stepsErrors, setStepErrors] = useState({});
   const hasPrevStep = step > 1;
+  const nav = useNavigate();
 
   const handleNext = () => {
-    setStep(step + 1);
-    setAfterWidth(afterWidth + 16.7);
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setStep(step + 1);
+      setIsSubmitting(false);
+      setAfterWidth(afterWidth + 16.7);
+    }, 800);
   };
   const handlePrev = () => {
     if (step > 1) {
@@ -339,13 +345,25 @@ const AddUnit = () => {
     step === 6 ? setIsLastStep(6) : setIsLastStep(null);
   }, [step]);
 
+  const parseFormattedNumber = (formattedValue) => {
+    if (!formattedValue) return NaN;
+
+    // Remove thousand separators and any other non-numeric characters
+    const cleanedValue = formattedValue.replace(/[^0-9.-]/g, "");
+
+    // Parse the cleaned value into a number
+    const number = parseFloat(cleanedValue);
+
+    return isNaN(number) ? NaN : number;
+  };
+
   const handleSubmit = async () => {
     const createData = new FormData();
     createData.append("title", unit.title);
     createData.append("category_aqar_id", category_id);
 
     const updateInfo = new FormData();
-    updateInfo.append("space", unit.space);
+    updateInfo.append("space", parseFormattedNumber(unit.space));
 
     const update_description = {
       description: unit.description,
@@ -364,7 +382,7 @@ const AddUnit = () => {
       detailsData.append(`details[${i}][en_name]`, e.en_name);
       detailsData.append(
         `details[${i}][number_details]`,
-        e.number_details === "أرضي" ? 0 : Number(e.number_details)
+        Number(e.number_details)
       );
       detailsData.append(`details[${i}][status]`, e.status);
     });
@@ -392,9 +410,11 @@ const AddUnit = () => {
     });
 
     const filesData = new FormData();
+
     unit.images.forEach((file) => {
       filesData.append("images[]", file);
     });
+
     filesData.append("main_image", unit.thumbnail.file);
     if (unit.video) {
       filesData.append("video", unit.video);
@@ -444,8 +464,100 @@ const AddUnit = () => {
         );
         myAxios.post(`/api/v1/user/offices/addFiles/${unitId}`, filesData);
       });
-  };
 
+    toast.success(
+      lang === "ar" ? "تمت العملية بنجاح" : "operation completed successfully"
+    );
+
+    nav("/dashboard/properties");
+  };
+  //handling steps errors
+  useEffect(() => {
+    switch (step) {
+      case 1:
+        if (unit.title.length <= 3) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            titleError: "title should be at least 4 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            titleError: "",
+          }));
+        }
+        if (unit.space.length === 0) {
+          setError(true);
+        } else {
+          setError(false);
+        }
+        break;
+      case 4:
+        if (unit.description.length <= 7) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            descriptionError: "description should be at least 8 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            descriptionError: null,
+          }));
+        }
+        break;
+      case 5:
+        if (Array.isArray(unit.prices)) {
+          const log = unit.prices.filter((e) => e.status === true);
+          if (log.length > 0) {
+            const log2 = log.find((e) => e.price.length === 0);
+            if (
+              log2 ||
+              unit.viewer_phone.length === 0 ||
+              unit.viewer_name.length === 0
+            ) {
+              setError(true);
+            } else {
+              setError(false);
+            }
+          } else {
+            setError(true);
+          }
+        } else {
+          setError(false);
+        }
+        if (unit.viewer_name.length <= 3) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNameError: "name should be at least 4 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNameError: null,
+          }));
+        }
+        if (unit.viewer_phone.length < 10 || unit.viewer_phone.length > 11) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNumberError: "name should be at least 10 to 11 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNumberError: null,
+          }));
+        }
+        break;
+    }
+  }, [step, unit]);
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -454,6 +566,7 @@ const AddUnit = () => {
             unit={unit}
             dispatch={dispatch}
             facilities={unitsOptions.facilities}
+            stepsErrors={stepsErrors}
           />
         );
       case 2:
@@ -474,7 +587,13 @@ const AddUnit = () => {
           />
         );
       case 4:
-        return <HomeDescription state={unit} dispatch={dispatch} />;
+        return (
+          <HomeDescription
+            state={unit}
+            dispatch={dispatch}
+            stepsErrors={stepsErrors}
+          />
+        );
       case 5:
         return (
           <UnitPrice
@@ -482,6 +601,7 @@ const AddUnit = () => {
             dispatch={dispatch}
             type={0}
             pricesTypes={unitsOptions.type_res}
+            stepsErrors={stepsErrors}
           />
         );
       case 6:
@@ -601,9 +721,13 @@ const AddUnit = () => {
                     <Button
                       className="button-next"
                       onClick={handleNext}
-                      // disabled={loadingSubmit || hasNextStep || error}
+                      disabled={error}
                     >
-                      {t("dashboard.new_order.main_btn1")}
+                      {isSubmitting ? (
+                        <CircularProgress color="inherit" size={"30px"} />
+                      ) : (
+                        t("dashboard.new_order.main_btn1")
+                      )}
                     </Button>
                   )}
                   {isLastStep && (
@@ -612,7 +736,11 @@ const AddUnit = () => {
                       onClick={handleSubmit}
                       disabled={error}
                     >
-                      {t("dashboard.new_order.main_btn3")}
+                      {isSubmitting ? (
+                        <CircularProgress color="inherit" size={"30px"} />
+                      ) : (
+                        t("dashboard.new_order.main_btn3")
+                      )}
                     </Button>
                   )}
                 </Box>
