@@ -31,7 +31,10 @@ const UnitPrice = ({
   const [selectedUnit, setSelectedUnit] = useState(state.type_down_payment);
 
   useEffect(() => {
-    dispatch({ type: "prices", sub_type: "add", array: pricesTypes });
+    if(state.prices.length ===  0) {
+      dispatch({ type: "prices", sub_type: "add", array: pricesTypes });
+
+    }
   }, []);
 
   const handleToggleSwitch = (id) => {

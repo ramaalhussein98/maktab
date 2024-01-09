@@ -10,7 +10,11 @@ import { toast } from "react-toastify";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import UserName from "./UserName";
-const DashLayout = () => {
+const DashLayout = ({
+  mainOfficeSignal,
+  handleSelectMainOffice,
+  initialData,
+}) => {
   const { t } = useTranslation();
   const location = useLocation().pathname;
   const isTransactionPage =
@@ -87,7 +91,12 @@ const DashLayout = () => {
             : "w-0 sm:w-[0px] overflow-hidden"
         }  min-h-[100vh] sticky sm:fixed  z-20 bg-white top-0`}
       >
-        <SideBar setIsSidebarShown={setIsSidebarShown} />
+        <SideBar
+          initialData={initialData}
+          mainOfficeSignal={mainOfficeSignal}
+          handleSelectMainOffice={handleSelectMainOffice}
+          setIsSidebarShown={setIsSidebarShown}
+        />
       </aside>
       <main className="flex-1 bg-dashPageColor min-h-[100vh] ">
         <nav className="bg-white sticky top-0 flex z-10 items-center gap-8 sm:px-2">

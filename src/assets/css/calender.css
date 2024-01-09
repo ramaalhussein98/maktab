@@ -16,7 +16,7 @@
 
 .fc-daygrid-day.fc-day-today {
   background-color: white !important;
-  border: 2px solid var(--main-color);
+  border: 2px solid #8b8b8b;
 }
 
 .fc-daygrid-event {
@@ -54,7 +54,7 @@
 }
 
 .fc-highlight {
-  background-color: rgb(225, 117, 117) !important;
+  /* background-color: rgb(225, 117, 117) !important; */
 }
 
 .NumbersOfDaysBox {
@@ -62,11 +62,11 @@
   flex-direction: column;
   -moz-box-align: center;
   align-items: center;
-  position: absolute;
   bottom: 0px;
   left: 50%;
+  position: fixed;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 100;
   background-color: rgb(255, 255, 255);
   padding: 16px 32px;
   border-start-start-radius: 12px;

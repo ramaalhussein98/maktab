@@ -8,6 +8,7 @@ import {
   IconButton,
   styled,
   Fade,
+  CircularProgress,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import Star from "../common_components/Star";
@@ -34,6 +35,7 @@ import myAxios from "../../../../api/myAxios";
 import { useMutationHook } from "../../../../hooks/useMutationHook";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import Loader from "../../../../ui/Loader";
 
 const CircleIconButton = styled(IconButton)({
   borderRadius: "50%",
@@ -65,12 +67,16 @@ const getData = async () => {
   const res = await myAxios.get("api/v1/user/offices/me");
   return res?.data?.data;
 };
-const editTitle = async ({ _title, id }) => {
+const editTitle = async ({ _title, id, selectedCategory }) => {
   const res = await myAxios.post(`api/v1/user/offices/update_title/${id}`, {
     title: _title,
   });
+  const res2 = await myAxios.post(`api/v1/user/offices/update_category/${id}`, {
+    category_aqar_id: selectedCategory,
+  });
   return res;
 };
+
 const editInterface = async ({ interface_id, id }) => {
   const res = await myAxios.post(`api/v1/user/offices/update_interface/${id}`, {
     interface_id,
@@ -91,7 +97,7 @@ const editMapLocation = async ({ location, id }) => {
   const res = await myAxios.post(`api/v1/user/offices/update_location/${id}`, {
     lat: location.lat,
     lng: location.lng,
-    zoom: location.zoom,
+    zoom: 10,
     address: location.address,
     city: location.city,
     neighborhood: location.neighborhood,
@@ -232,8 +238,9 @@ const OutGoingOrders = () => {
       });
     }
   };
-  if (isLoading) return "loading...";
+  if (isLoading) return <Loader />;
 
+  console.log(offices);
   return (
     <Box>
       <>
@@ -283,7 +290,7 @@ const OutGoingOrders = () => {
                       )}
                     </div>
 
-                    <div
+                    {/* <div
                       style={{
                         display: "flex",
                         marginTop: "4px",
@@ -309,7 +316,7 @@ const OutGoingOrders = () => {
                       <Box onClick={() => handleDelete(office.id)}>
                         <DeleteForeverIcon className="deleteicon" />
                       </Box>
-                    </div>
+                    </div> */}
                   </Box>
                 </CustomAccordionSummary>
               </Box>
@@ -340,6 +347,7 @@ const OutGoingOrders = () => {
                               editTitleMutation={editTitleMutation}
                               id={office.id}
                               onCancel={onCancel}
+                              categoryId={office.category_aqar.id}
                             />
                           </Box>
                         </Fade>
@@ -361,17 +369,19 @@ const OutGoingOrders = () => {
                               }}
                             >
                               <Typography>
-                                {t("dashboard.incoming_orders.card1.label2")}
+                                {lang === "ar" ? "نوع المكتب" : "office type"}
                               </Typography>
                               <Typography>
                                 {lang === "ar"
-                                  ? office.type_aqar.ar_name
-                                  : office.type_aqar.en_name}
+                                  ? office?.category_aqar?.ar_name
+                                  : office?.category_aqar?.en_name}
                               </Typography>
                             </Box>
                           </Box>
                         </Fade>
                       )}
+                    </OrderCard>
+                    <OrderCard>
                       <Box
                         className="custom-flex-container-space"
                         sx={{
@@ -400,7 +410,7 @@ const OutGoingOrders = () => {
                         <Fade in={edditLoc}>
                           <Box>
                             <EditLocation
-                              interfaceId={office.interface_aqar.id}
+                              interfaceId={office?.interface_aqar?.id}
                               id={office.id}
                               editInterfaceMutation={editInterfaceMutation}
                               onCancel={handleCloseEditLocation}
@@ -415,7 +425,7 @@ const OutGoingOrders = () => {
                               <Typography>
                                 {t("dashboard.incoming_orders.card2.label1")}
                               </Typography>
-                              <Typography>{office.location.city}</Typography>
+                              <Typography>{office?.location?.city}</Typography>
                             </Box>
                             <Box className="custom-flex-container-space">
                               <Typography>
@@ -423,14 +433,16 @@ const OutGoingOrders = () => {
                                 {t("dashboard.incoming_orders.card2.label2")}
                               </Typography>
                               <Typography>
-                                {office?.location.neighborhood}
+                                {office?.location?.neighborhood}
                               </Typography>
                             </Box>
                             <Box className="custom-flex-container-space">
                               <Typography>
                                 {lang === "ar" ? "الشارع" : "road"}
                               </Typography>
-                              <Typography>{office?.location.street}</Typography>
+                              <Typography>
+                                {office?.location?.street}
+                              </Typography>
                             </Box>
                             <Box className="custom-flex-container-space">
                               <Typography>
@@ -445,46 +457,6 @@ const OutGoingOrders = () => {
                                   : office?.interface_aqar?.en_name}
                               </Typography>
                             </Box>
-                          </Box>
-                        </Fade>
-                      )}
-                    </OrderCard>
-                    <OrderCard>
-                      {descriptionEdit && (
-                        <Fade in={descriptionEdit}>
-                          <Box>
-                            <EditDescription
-                              description={office.description}
-                              id={office.id}
-                              editDescriptionMutation={editDescriptionMutation}
-                              onCancel={() => {
-                                setDescriptionEdit(false);
-                              }}
-                            />
-                          </Box>
-                        </Fade>
-                      )}
-                      {!descriptionEdit && (
-                        <Fade in={!descriptionEdit}>
-                          <Box>
-                            <Box className="custom-flex-container-space">
-                              <Typography
-                                sx={{ fontWeight: "600", fontSize: "1.2rem" }}
-                              >
-                                {t("dashboard.incoming_orders.card5.title")}
-                              </Typography>
-
-                              <Typography
-                                className="eitBtn"
-                                onClick={() => {
-                                  setDescriptionEdit(true);
-                                }}
-                              >
-                                {!descriptionEdit &&
-                                  t("dashboard.outgoing_requests.edit_btn")}
-                              </Typography>
-                            </Box>
-                            <Typography>{office?.description}</Typography>
                           </Box>
                         </Fade>
                       )}
@@ -541,10 +513,10 @@ const OutGoingOrders = () => {
                         <Fade in={MapEdit}>
                           <Box>
                             <EditMap
-                              location={office.location}
+                              location={office?.location}
                               onCancel={handleCloseEditMap}
                               editMapLocationMutation={editMapLocationMutation}
-                              id={office.id}
+                              id={office?.id}
                             />
                           </Box>
                         </Fade>
@@ -558,11 +530,11 @@ const OutGoingOrders = () => {
                                 width: "35%",
                               }}
                             >
-                              {office?.location.city +
+                              {office?.location?.city +
                                 ", " +
-                                office?.location.neighborhood +
+                                office?.location?.neighborhood +
                                 ", " +
-                                office?.location.street}
+                                office?.location?.street}
                             </Typography>
                             <Box className="map-image-container">
                               <img
@@ -575,23 +547,6 @@ const OutGoingOrders = () => {
                         </Fade>
                       )}
                     </OrderCard>
-                    <OrderCard className={"edit"}>
-                      <Link
-                        to={"/editOffice"}
-                        state={{ office }}
-                        style={{
-                          textDecoration: "none",
-                          color: "white",
-                          backgroundColor: "var(--green-color)",
-                          padding: "6px 12px",
-                          borderRadius: "12px",
-                        }}
-                      >
-                        {lang === "ar"
-                          ? "تعديل كافة المعلومات"
-                          : "edit all information"}
-                      </Link>
-                    </OrderCard>
                   </Box>
                 </Box>
                 <OrderCard>
@@ -601,6 +556,29 @@ const OutGoingOrders = () => {
                       <span>{office?.units?.length}</span>
                     </Typography>
                   </Box>
+                  <div className="flex gap-4 my-8 flex-wrap justify-between">
+                    {office?.units.map((ele) => (
+                      <>
+                        <Link
+                          key={ele.id}
+                          to={`${ele.id}`}
+                          className="flex flex-[49%] gap-3 items-center hover:bg-gray-100"
+                        >
+                          <img
+                            className="w-[100px] h-[100px] rounded-lg"
+                            src={`https://dashboard.maktab.sa/${ele.main_image}`}
+                            alt=""
+                          />
+                          <div className="flex flex-col text-lg font-semibold  gap-2">
+                            <span>{ele.title}</span>
+                            <span className="text-gray-500">
+                              {lang === "ar" ? "تعديل" : "edit"}
+                            </span>
+                          </div>
+                        </Link>
+                      </>
+                    ))}
+                  </div>
                 </OrderCard>
               </CustomAccordionDetails>
             </CustomAccordion>

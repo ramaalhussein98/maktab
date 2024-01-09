@@ -18,6 +18,7 @@ const LanguageBtn = ({ footerChange }) => {
     const newLanguage = currentLanguage === "en" ? "ar" : "en";
     i18n.changeLanguage(newLanguage);
     document.documentElement.lang = newLanguage;
+    setShowPaper(!showPaper);
   };
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const LanguageBtn = ({ footerChange }) => {
   return (
     <>
       {!footerChange ? (
-        <Box ref={languageRef}>
+        <Box ref={languageRef} sx={{ position: "relative" }}>
           <Button onClick={toggleshowPaper}>
             <LanguageIcon sx={{ color: "black" }} />
             {/* <img src={languageImg} alt="language" style={{ width: "16px" }} /> */}

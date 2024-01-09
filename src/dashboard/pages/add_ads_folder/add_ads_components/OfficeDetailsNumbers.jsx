@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import OfficeBoxNumbers from "./OfficeBoxNumbers";
 import "../../../../assets/css/office_details.css";
-import { Switch, Typography } from "@mui/material";
+import { Box, Switch, Typography } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 
@@ -25,7 +25,10 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
   const [showAge, setShowAge] = useState(true);
   const [showOffices, setShowOffices] = useState(true);
   const [showMeetingRooms, setShowMeetingRooms] = useState(true);
-
+  const unitsFacilities = JSON.parse(
+    localStorage.getItem("searchData")
+  ).facilities;
+  console.log(unitsFacilities);
   // Toggle functions to control the switches
   const handleOfficesToggle = (en_name) => {
     if (showOffices) {
@@ -57,6 +60,9 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
     setShowMeetingRooms(!showMeetingRooms);
   };
 
+  const handlePropertyClick = (propertyId) => {
+    dispatch({ type: "facilities", value: propertyId });
+  };
   return (
     <div>
       <Typography
@@ -77,12 +83,7 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
         status={showFloors}
         ar_name="الدور"
         en_name="floors"
-        numbers={[
-          t("dashboard.contract.groundfloor"),
-          t("dashboard.contract.Peaks"),
-          3,
-          4,
-        ]}
+        numbers={[0, 1, 3, 4]}
       />
       <OfficeBoxNumbers
         dispatch={dispatch}
@@ -148,6 +149,66 @@ const OfficeDetailsNumbers = ({ dispatch, state }) => {
           numbers={[1, 2, 3, 4]}
         />
       )}
+      <div className="unitNameBox">
+        <p className="unitName"> مرافق عقارك الرئيسية</p>
+        <Box
+          sx={{
+            display: "grid",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          }}
+        >
+          {unitsFacilities.map((property) => (
+            <Box
+              key={property.id}
+              onClick={() => handlePropertyClick(property.id)}
+              sx={{
+                height: "100px",
+                width: "100px",
+                border: "1px solid gray",
+                display: "flex",
+                textAlign: "center",
+                alignItems: "end",
+                borderRadius: "12px",
+                position: "relative",
+                cursor: "pointer",
+                padding: "10px 0px",
+                marginBottom: "1rem",
+                backgroundColor: state?.facilities.some(
+                  (item) => item === property.id
+                )
+                  ? "var(--green-color)"
+                  : "transparent",
+                transition: "background-color 0.3s, color 0.3s",
+              }}
+            >
+              <img
+                src={`https://dashboard.maktab.sa/${property.icon}`}
+                alt="img"
+                style={{
+                  position: "absolute",
+                  insetBlockStart: "15px",
+                  insetInlineStart: "14px",
+                  width: "36px",
+                }}
+              />
+              <Typography
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  color: state.facilities.some((item) => item === property.id)
+                    ? "white"
+                    : "black",
+                }}
+              >
+                {lang === "ar" ? property.ar_name : property.en_name}
+              </Typography>
+              <input type="hidden" value={property.id} />
+            </Box>
+          ))}
+        </Box>
+      </div>
     </div>
   );
 };

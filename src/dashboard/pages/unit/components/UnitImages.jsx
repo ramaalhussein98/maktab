@@ -12,27 +12,28 @@ import myAxios from "../../../../api/myAxios";
 
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const HomeImagesAdd = ({
-  images,
-  setImages,
-  selectedImage,
-  setSelectedImage,
-  type,
-  readyImages,
-  setReadyImages,
-  state,
-  dispatch,
-  officeId,
-}) => {
+const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
   const { t, i18n } = useTranslation();
+  const [readyImages, setReadyImages] = useState(
+    images?.filter((ele) => ele.type_file === "image")
+  );
+  const [selectedImage, setSelectedImage] = useState();
+
+  const [thumbnail, setThumbnail] = useState(mainImage);
   const lang = i18n.language;
   const [selectedVideoFile, setSelectedVideoFile] = useState(
-    state?.video || null
+    images?.find((ele) => ele.type_file === "video")
   );
-
+  const [_images, setImages] = useState([]);
+  console.log(_images);
   useEffect(() => {
+    // Update the formData when selectedImages or selectedVideoFile changes
     if (selectedVideoFile) {
-      dispatch({ type: "video", value: selectedVideoFile });
+      // dispatch({ type: "video", value: selectedVideoFile });
+      // setFormData((prevFormData) => ({
+      //   ...prevFormData,
+      //   video: selectedVideoFile,
+      // }));
     }
   }, [selectedVideoFile]);
 
@@ -42,18 +43,19 @@ const HomeImagesAdd = ({
       updatedImages.splice(index, 1);
       return updatedImages;
     });
-
-    dispatch({ type: "images", sub_type: "remove", value: index });
   };
 
   const handleDeleteReadyImages = (index) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to delete this box.",
+      title: lang === "ar" ? "هل أنت متأكد؟" : "Are you sure?",
+      text:
+        lang === "ar"
+          ? "أنت على وشك حذف العنصر"
+          : "You are about to delete this box.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel",
+      confirmButtonText: lang === "ar" ? "نعم، احذف" : "Yes, delete it!",
+      cancelButtonText: lang === "ar" ? "لا" : "No, cancel",
       customClass: {
         confirmButton: "swal-confirm-button",
         cancelButton: "swal-cancel-button",
@@ -67,7 +69,7 @@ const HomeImagesAdd = ({
   };
   const onRemove = async (index) => {
     await myAxios
-      .delete(`/api/v1/user/offices/deleteFiles/${officeId}`, {
+      .delete(`/api/v1/user/offices/deleteFiles/${id}`, {
         data: {
           file_id: index,
         },
@@ -80,7 +82,7 @@ const HomeImagesAdd = ({
             );
             return updatedImages;
           });
-          dispatch({ type: "deletedFiles", value: index });
+          // dispatch({ type: "deletedFiles", value: index });
         }
       });
   };
@@ -103,6 +105,7 @@ const HomeImagesAdd = ({
       }
     });
   };
+
   const onVideoRemove = async (index) => {
     await myAxios
       .delete(`/api/v1/user/offices/deleteFiles/${officeId}`, {
@@ -118,13 +121,6 @@ const HomeImagesAdd = ({
         }
       });
   };
-
-  // useEffect(() => {
-  //   // setFormData((prevFormData) => ({
-  //   //   ...prevFormData,
-  //   //   images: selectedImages, // Append new blob to the array
-  //   // }));
-  // }, [selectedImages]);
 
   const handleVideoSelect = (event) => {
     const file = event.target.files[0];
@@ -159,59 +155,42 @@ const HomeImagesAdd = ({
     }
   };
 
+  const handleSubmit = async () => {
+    console.log(thumbnail, _images, selectedVideoFile);
+    const updateFiles = new FormData();
+    updateFiles.append("main_image", thumbnail.file);
+
+    const addFiles = new FormData();
+    _images.forEach((file) => {
+      addFiles.append("images[]", file);
+    });
+    if (selectedVideoFile) {
+      addFiles.append("video", selectedVideoFile);
+    }
+    await myAxios.post(`/api/v1/user/offices/updateFiles/${id}`, updateFiles);
+
+    await myAxios.post(`/api/v1/user/offices/addFiles/${id}`, addFiles);
+
+    await refetch();
+  };
+
   return (
     <Box>
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: "600",
-          marginBottom: "24px",
-          marginTop: "8px",
-          fontSize: { xs: "1.2rem", md: "1.5rem" },
-        }}
-      >
-        {t("dashboard.property_images.title")}
-      </Typography>
-      <Box sx={{ color: "rgb(118, 118, 118)" }}>
-        <Typography sx={{ fontWeight: "600", fontSize: "16px" }}>
-          {t("dashboard.property_images.desc1")}
-        </Typography>
-        <Typography sx={{ marginY: "8px" }}>
-          {t("dashboard.property_images.desc2")}
-        </Typography>
-        <Typography> {t("dashboard.property_images.desc3")}</Typography>
-      </Box>
       <Box sx={{ marginY: "14px", fontSize: "16px", fontWeight: "600" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+        <Typography variant="label">
+          {t("dashboard.property_images.label1")}
+        </Typography>
+        <Typography
+          sx={{
+            fontWeight: "400",
+            fontSize: "16px",
+            color: "rgb(118, 118, 118)",
           }}
         >
-          <div>
-            <Typography variant="label">
-              {t("dashboard.property_images.label1")}
-            </Typography>
-            <Typography
-              sx={{
-                fontWeight: "400",
-                fontSize: "16px",
-                color: "rgb(118, 118, 118)",
-              }}
-            >
-              {lang === "ar"
-                ? "عدد الثواني المسموح بها 30 ثانية"
-                : "The number of seconds allowed is 30 seconds"}
-            </Typography>
-          </div>
-          <div
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={handleDeleteVideo}
-          >
-            {lang === "ar" ? "حذف الفيديو" : "delete video"}
-          </div>
-        </div>
+          {lang === "ar"
+            ? "عدد الثواني المسموح بها 30 ثانية"
+            : "The number of seconds allowed is 30 seconds"}
+        </Typography>
         <Box>
           <input
             id="video-input"
@@ -232,17 +211,9 @@ const HomeImagesAdd = ({
             }}
           >
             {selectedVideoFile ? (
-              typeof selectedVideoFile === "string" ? (
-                <video autoPlay style={{ width: "100%", height: "100%" }}>
-                  <source
-                    src={`https://dashboard.maktab.sa/${selectedVideoFile}`}
-                  />
-                </video>
-              ) : (
-                <video autoPlay style={{ width: "100%", height: "100%" }}>
-                  <source src={URL.createObjectURL(selectedVideoFile)} />
-                </video>
-              )
+              <video autoPlay style={{ width: "100%", height: "100%" }}>
+                <source src={URL.createObjectURL(selectedVideoFile)} />
+              </video>
             ) : (
               <Box
                 sx={{
@@ -271,26 +242,18 @@ const HomeImagesAdd = ({
           {" "}
           {t("dashboard.property_images.label2")}
         </Typography>
-        <Typography sx={{ color: "rgb(118, 118, 118)", marginY: "8px" }}>
-          {t("dashboard.property_images.hint1")}
-        </Typography>
+
         <CropeerImage
           type={1}
           isFirstButton={true}
           setImages={setImages}
-          noBackground={false}
+          setThumbnail={setThumbnail}
+          thumbnail={thumbnail}
           selectedImage={selectedImage}
-          state={state}
-          dispatch={dispatch}
+          noBackground={true}
           setSelectedImage={setSelectedImage}
         />
 
-        <Typography variant="label">
-          {t("dashboard.property_images.label3")}
-        </Typography>
-        <Typography sx={{ color: "rgb(118, 118, 118)", marginY: "8px" }}>
-          {t("dashboard.property_images.hint2")}
-        </Typography>
         <Box
           sx={{
             display: "flex",
@@ -300,23 +263,21 @@ const HomeImagesAdd = ({
         >
           <CropeerImage
             type={2}
-            width="200px"
+            width="150px"
             height="120px"
             maxImages={8}
             hasBackground={false} // Set hasBackground prop to false
             setImages={setImages}
-            noBackground={true}
+            noBackground={false}
             selectedImage={selectedImage}
-            state={state}
-            dispatch={dispatch}
             setSelectedImage={setSelectedImage}
           />
 
-          {images.map((image, index) => (
+          {_images.map((image, index) => (
             <Box
               key={index}
               sx={{
-                width: { xs: "250px", sm: "200px" },
+                width: { xs: "250px", sm: "150px" },
                 height: "120px",
                 borderRadius: "12px",
                 overflow: "hidden",
@@ -331,7 +292,6 @@ const HomeImagesAdd = ({
                   left: "0rem",
                   color: "white",
                   padding: "0.2rem 0.4rem",
-
                   background: "rgba(0, 0, 0, 0.5)",
                   fontSize: "12px",
                   fontWeight: "600",
@@ -347,7 +307,7 @@ const HomeImagesAdd = ({
 
               <img
                 key={index}
-                src={image}
+                src={image.show}
                 alt={`Selected Image ${index}`}
                 style={{
                   width: "100%",
@@ -373,82 +333,146 @@ const HomeImagesAdd = ({
             </Box>
           ))}
         </Box>
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: "600",
-            marginBottom: "24px",
-            marginTop: "8px",
-            fontSize: { xs: "1.2rem", md: "1.5rem" },
-          }}
-        >
-          {" "}
-          {lang === "ar" ? "الصور التي تم اضافتها" : "images that been added"}
-        </Typography>
-        <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          {readyImages?.map((image, index) => (
-            <Box
-              key={index}
-              sx={{
-                width: { xs: "250px", sm: "200px" },
-                height: "120px",
-                borderRadius: "12px",
-                overflow: "hidden",
-                marginBottom: "1rem",
-                position: "relative",
-              }}
-            >
-              <Typography
+      </Box>
+      {type === 1 && (
+        <>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "600",
+              marginBottom: "24px",
+              marginTop: "8px",
+              fontSize: { xs: "1.2rem", md: "1.5rem" },
+            }}
+          >
+            {" "}
+            {lang === "ar" ? "الصور التي تم اضافتها" : "images that been added"}
+          </Typography>
+          <Box sx={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            {readyImages.map((image, index) => (
+              <Box
+                key={index}
                 sx={{
-                  position: "absolute",
-                  top: "0rem",
-                  left: "0rem",
-                  color: "white",
-                  padding: "0.2rem 0.4rem",
-
-                  background: "rgba(0, 0, 0, 0.5)",
-                  fontSize: "12px",
-                  fontWeight: "600",
-                  borderRadius: "12px 0px",
-                  backgroundColor: "rgba(17, 17, 17, 0.47)",
-                  width: "32px",
-                  height: "24px",
-                  textAlign: "center",
+                  width: { xs: "200px", sm: "150px" },
+                  height: "120px",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  marginBottom: "1rem",
+                  position: "relative",
                 }}
               >
-                {index + 1}
-              </Typography>
-              <img
-                key={index}
-                src={`https://dashboard.maktab.sa/${image.path}`}
-                alt={`Selected Image ${index}`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-              <DeleteIcon
-                sx={{
-                  position: "absolute",
-                  top: "0rem",
-                  right: "0rem",
-                  color: "white",
-                  cursor: "pointer",
-                  // zIndex: 1,
-                  padding: "4px",
-                  borderRadius: "0px 0px 0px 12px",
-                  background:
-                    "radial-gradient(at left bottom, rgba(255, 0, 0, 0.67) 0%, rgba(255, 0, 0, 0.2) 75%)",
-                }}
-                onClick={() => handleDeleteReadyImages(image.id)}
-              />
-            </Box>
-          ))}
-        </Box>
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    top: "0rem",
+                    left: "0rem",
+                    color: "white",
+                    padding: "0.2rem 0.4rem",
+
+                    background: "rgba(0, 0, 0, 0.5)",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    borderRadius: "12px 0px",
+                    backgroundColor: "rgba(17, 17, 17, 0.47)",
+                    width: "32px",
+                    height: "24px",
+                    textAlign: "center",
+                  }}
+                >
+                  {index + 1}
+                </Typography>
+
+                <img
+                  key={index}
+                  src={`https://dashboard.maktab.sa/${image.path}`}
+                  alt={`Selected Image ${index}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+                <DeleteIcon
+                  sx={{
+                    position: "absolute",
+                    top: "0rem",
+                    right: "0rem",
+                    color: "white",
+                    cursor: "pointer",
+                    // zIndex: 1,
+                    padding: "4px",
+                    borderRadius: "0px 0px 0px 12px",
+                    background:
+                      "radial-gradient(at left bottom, rgba(255, 0, 0, 0.67) 0%, rgba(255, 0, 0, 0.2) 75%)",
+                  }}
+                  onClick={() => handleDeleteReadyImages(image.id)}
+                />
+              </Box>
+            ))}
+          </Box>
+        </>
+      )}
+      <Box
+        sx={{
+          borderWidth: "0px 0px thin",
+          borderStyle: "solid",
+          borderColor: "rgba(0, 0, 0, 0.12)",
+          margin: "2rem 4rem",
+        }}
+      ></Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          gap: "1rem ",
+          marginInline: "auto",
+          flexWrap: "wrap",
+          marginTop: "2rem",
+        }}
+      >
+        <Button
+          onClick={handleSubmit}
+          type="submit"
+          sx={{
+            fontWeight: "600",
+            borderRadius: "8px",
+            minWidth: "186px",
+            padding: "0.75rem 2.5rem",
+            height: "50px",
+            backgroundColor: "var(--main-color)",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#0b7b5a",
+              color: "white",
+            },
+          }}
+        >
+          {t("dashboard.outgoing_requests.submit_btn")}
+        </Button>
+        <Button
+          sx={{
+            fontWeight: "600",
+            borderRadius: "8px",
+
+            border: "1px solid var(--main-color)",
+            minWidth: "186px",
+            padding: "0.75rem 2.5rem",
+            height: "50px",
+            backgroundColor: "white",
+            color: "var(--main-color)",
+            "&:hover": {
+              backgroundColor: "#e5f9f4",
+            },
+          }}
+          onClick={onCancel}
+        >
+          {t("dashboard.outgoing_requests.cancel_btn")}
+        </Button>
       </Box>
     </Box>
   );
 };
 
-export default HomeImagesAdd;
+export default UnitImages;

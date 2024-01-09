@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "../../../../assets/css/filter_slick.css";
 import { Box, Button } from "@mui/material";
@@ -27,10 +27,18 @@ const FilterSlick = ({ refetch, setFilter, isAllDealsPage }) => {
   const lang = i18n.language;
   const [activeButton, setActiveButton] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [rerender, setRerender] = useState(0);
+  const [filterData, setFilterData] = useState();
 
-  const filterData = JSON.parse(
-    localStorage.getItem("searchData")
-  )?.category_aqar;
+  useEffect(() => {
+    if (!filterData) {
+      setRerender((prev) => prev + 1);
+      setFilterData(
+        JSON.parse(localStorage.getItem("searchData"))?.category_aqar
+      );
+    }
+  }, [rerender, filterData]);
+  console.log(filterData);
 
   const handleDivClick = (index, label, id) => {
     // Toggle the active state based on the current state
@@ -89,27 +97,29 @@ const FilterSlick = ({ refetch, setFilter, isAllDealsPage }) => {
       className="slick_container"
       sx={{ width: { xs: "100%", md: isAllDealsPage ? "70%" : "50%" } }}
     >
-      <Slider {...settings}>
-        {filterData?.map((data, index) => (
-          <div
-            id={data?.id}
-            key={index}
-            className={`filter_div ${
-              activeButton === data.id ? "activeButton" : ""
-            }`}
-            // className={`filter_div ${index === activeIndex ? "active" : ""}`}
-            onClick={() => handleDivClick(index, data.label, data.id)}
-          >
-            <img
-              src={`https://dashboard.maktab.sa/${data?.icon}`}
-              style={{ width: "24px", margin: "auto" }}
-            />
-            <span className="span1">
-              {lang === "ar" ? data?.ar_name : data?.en_name}
-            </span>
-          </div>
-        ))}
-      </Slider>
+      {filterData && (
+        <Slider {...settings}>
+          {filterData?.map((data, index) => (
+            <div
+              id={data?.id}
+              key={index}
+              className={`filter_div ${
+                activeButton === data.id ? "activeButton" : ""
+              }`}
+              // className={`filter_div ${index === activeIndex ? "active" : ""}`}
+              onClick={() => handleDivClick(index, data.label, data.id)}
+            >
+              <img
+                src={`https://dashboard.maktab.sa/${data?.icon}`}
+                style={{ width: "24px", margin: "auto" }}
+              />
+              <span className="span1">
+                {lang === "ar" ? data?.ar_name : data?.en_name}
+              </span>
+            </div>
+          ))}
+        </Slider>
+      )}
     </Box>
   );
 };

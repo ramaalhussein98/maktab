@@ -63,26 +63,24 @@ const BussinesMainPage = () => {
   return (
     <>
       <div className="main_box_bussines">
-        <p className="welcomeParagraph">أهلا وسهلا بك في مكتب الأعمال </p>
+        <p className="welcomeParagraph">{t("business.welcome")}</p>
         {user_type_bussines ? (
           <Link to="/addoffice" className="add_office_link">
             أضف عقارك
           </Link>
         ) : (
-          <p className="add_office_link">
-            يرجى تسجيل الدخول كأعمال لتتمكن من أضافة مكتبك
-          </p>
+          <p className="add_office_link">{t("business.please")}</p>
         )}
       </div>
       <div className="howadd_container">
-        <p className="how_title">كيف تستضيف؟</p>
+        <p className="how_title"> {t("business.Howdoyouhost")}</p>
         <StepperBussines />
         {/* <div className="stepimgContainer">
           <img src={Step} alt="step" className="imgStep" />
         </div> */}
       </div>
       <div className="maktab_numbers_div">
-        <h1 className="maktab_title">أرقام مكتب</h1>
+        <h1 className="maktab_title"> {t("business.Officenumbers")}</h1>
         <div className="d-flex space_between">{AnimatedNumbers}</div>
       </div>
       {/* mobile app */}
@@ -99,7 +97,7 @@ const BussinesMainPage = () => {
       <div className="mobileContainer2">
         <div>img</div>
         <div className="appDownlaodContiner">
-          <p className="titleApp">حمل التطبيق الاّن</p>
+          <p className="titleApp"> {t("business.dowanlad")}</p>
           <div className="barPurple"></div>
           <p>
             lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem

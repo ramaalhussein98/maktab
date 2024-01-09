@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import ServicesBox from "./ServicesBox";
 import AddIcon from "@mui/icons-material/Add";
 
-const Services = ({ state, dispatch, features }) => {
+const Services = ({ state, dispatch, features, comfort }) => {
   const { i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -27,6 +27,9 @@ const Services = ({ state, dispatch, features }) => {
   const toggleServiceBox = (index) => {
     const toggleNewVal = !state?.services[index].service_toggle;
     dispatch({ type: "services", sub_type: "toggle", index, toggleNewVal });
+  };
+  const handleComfortClick = (propertyId) => {
+    dispatch({ type: "comfort", value: propertyId });
   };
 
   return (
@@ -133,6 +136,71 @@ const Services = ({ state, dispatch, features }) => {
       >
         <AddIcon sx={{ color: "white" }} />
       </Button>
+
+      <div className="UnitDetailsContainer">
+        <p className="UnitDetailsTitle">
+          {" "}
+          وسائل الراحة <span className="gary-color">اختياري</span>
+        </p>
+      </div>
+      <Box
+        sx={{
+          display: "grid",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+        }}
+      >
+        {comfort?.map((property) => (
+          <Box
+            key={property.id}
+            onClick={() => handleComfortClick(property.id)}
+            sx={{
+              height: "100px",
+              width: "100px",
+              border: "1px solid gray",
+              display: "flex",
+              textAlign: "center",
+              alignItems: "end",
+              borderRadius: "12px",
+              position: "relative",
+              cursor: "pointer",
+              padding: "10px 0px",
+              marginBottom: "1rem",
+              backgroundColor: state.comfort.some(
+                (item) => item === property.id
+              )
+                ? "var(--green-color)"
+                : "transparent",
+              transition: "background-color 0.3s, color 0.3s",
+            }}
+          >
+            {/* <img
+              src={`https://dashboard.maktab.sa/${property.icon}`}
+              alt="img"
+              style={{
+                position: "absolute",
+                insetBlockStart: "15px",
+                insetInlineStart: "14px",
+                width: "36px",
+              }}
+            /> */}
+            <Typography
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                fontSize: "15px",
+                color: state.comfort.some((item) => item === property.id)
+                  ? "white"
+                  : "black",
+              }}
+            >
+              {lang === "ar" ? property.ar_name : property.en_name}
+            </Typography>
+            <input type="hidden" value={property.id} />
+          </Box>
+        ))}
+      </Box>
     </div>
   );
 };

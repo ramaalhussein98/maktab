@@ -4,6 +4,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
 import { useQueryHook } from "../../../../hooks/useQueryHook";
 import myAxios from "../../../../api/myAxios";
+import { useQueryClient } from "@tanstack/react-query";
 
 const getData = async () => {
   const res = await myAxios.get("api/v1/user/units/aqars");
@@ -11,11 +12,13 @@ const getData = async () => {
 };
 
 const ChooseUnitModal = ({ open, onClose }) => {
-  const { data: offices, isLoading } = useQueryHook(["all offices"], getData);
+  const queryClient = useQueryClient();
+  const data = queryClient.getQueryData(["myOffices"]);
+  console.log(data);
   const nav = useNavigate();
-  const handleNavigateAddUnitPage = (id, title) => {
+  const handleNavigateAddUnitPage = (id, title, category_id) => {
     console.log(id);
-    nav("/addunit", { state: { id, title } });
+    nav("/addunit", { state: { id, title, category_id } });
   };
   return (
     <Modal open={open} onClose={onClose}>
@@ -24,16 +27,20 @@ const ChooseUnitModal = ({ open, onClose }) => {
           <span className="choose_unit">حدد العقار</span>
           <CloseIcon onClick={onClose} />
         </div>
-        {offices?.map((data) => (
-          <Paper
-            className="paper_unit_style"
-            key={data.id}
-            onClick={() => handleNavigateAddUnitPage(data.id, data.title)}
-          >
-            <span className="unit_title">{data.title}</span>
-            <ChevronLeftIcon />
-          </Paper>
-        ))}
+        <Box sx={{ maxHeight: "400px", overflowY: "auto" }}>
+          {data?.map((data) => (
+            <Paper
+              className="paper_unit_style"
+              key={data.id}
+              onClick={() =>
+                handleNavigateAddUnitPage(data.id, data.title, data.category_id)
+              }
+            >
+              <span className="unit_title">{data.title}</span>
+              <ChevronLeftIcon />
+            </Paper>
+          ))}
+        </Box>
       </Box>
     </Modal>
   );

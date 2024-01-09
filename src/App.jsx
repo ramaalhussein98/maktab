@@ -1,6 +1,13 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { BrowserRouter, Routes, Route, json } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  json,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { toast, Toaster } from "react-hot-toast";
 import DashLayout from "./dashboard/components/DashLayout";
@@ -38,19 +45,30 @@ import ElectronicInvoices from "./dashboard/pages/Electronic_invoices/Electronic
 import CreateTypeContract from "./dashboard/pages/create_type_contract/CreateTypeContract";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import EditAds from "./dashboard/pages/editAds/EditAds";
 import myAxios from "./api/myAxios";
 import BussinesMainPage from "./website/pages/Busseins_main_page/BussinesMainPage";
+import Unit from "./dashboard/pages/unit/Unit";
+import Coupons from "./dashboard/pages/coupons/Coupons";
 import TermOfService from "./website/pages/term-of-service/TermOfService";
 import AllDeals from "./website/pages/all_deals/AllDeals";
 import PaymentDone from "./website/pages/done_payment/PaymentDone";
+import { StateProvider } from "./dashboard/context/calendarContext";
+import {
+  mainOfficeSignal,
+  initialData,
+  handleSelectMainOffice,
+} from "./dashboard/context/calendarData";
+
+const PrivateRoute = ({ element }) => {
+  const thereisToken = localStorage.getItem("user_token");
+
+  return thereisToken ? element : <Navigate to="/" />;
+};
 
 function App() {
   const { i18n } = useTranslation();
   const language = i18n.language;
-  const thereisToken = localStorage.getItem("user_token");
   const settingData = JSON.parse(localStorage.getItem("settingData"));
-
   useEffect(() => {
     const searchData = localStorage.getItem("searchData");
     const getData = async () => {
@@ -93,48 +111,6 @@ function App() {
     if (!searchData) {
       getData();
     }
-    setTimeout(() => {
-      const unitsFacilities = localStorage.getItem("unitsFacilities");
-      const getData2 = async () => {
-        const res = await myAxios.get("api/v1/user/units/facilities");
-        console.log(res);
-        if (res.data.status === true) {
-          localStorage.setItem(
-            "unitsFacilities",
-            JSON.stringify(res.data.data)
-          );
-        }
-      };
-      if (!unitsFacilities) {
-        getData2();
-      }
-    }, 750);
-    setTimeout(() => {
-      const roomDetails = localStorage.getItem("roomDetails");
-      const getData4 = async () => {
-        const res = await myAxios.get("api/v1/user/units/room_details");
-        console.log(res);
-        if (res.data.status === true) {
-          localStorage.setItem("roomDetails", JSON.stringify(res.data.data));
-        }
-      };
-      if (!roomDetails) {
-        getData4();
-      }
-    }, 1250);
-    setTimeout(() => {
-      const unitsFeatures = localStorage.getItem("unitsFeatures");
-      const getData3 = async () => {
-        const res = await myAxios.get("api/v1/user/units/features");
-        console.log(res);
-        if (res.data.status === true) {
-          localStorage.setItem("unitsFeatures", JSON.stringify(res.data.data));
-        }
-      };
-      if (!unitsFeatures) {
-        getData3();
-      }
-    }, 1750);
   }, []);
 
   useEffect(() => {
@@ -263,15 +239,33 @@ function App() {
           }
         />
 
-        <Route path="dashboard" element={<DashLayout />}>
+        {/* <Route
+          path="dashboard"
+          element={<PrivateRoute element={<DashLayout />} />}
+        > */}
+        <Route
+          path="dashboard"
+          element={<PrivateRoute element={<DashLayout />} />}
+        >
           <Route path="home">
             <Route index element={<InformationPage />} />
             <Route path="unit-settings" element={<UnitSettings />} />
           </Route>
           <Route path="my_info" element={<MyInfo />} />
-          <Route path="calendar" element={<Calender />} />
+          <Route
+            path="calendar"
+            element={
+              <Calender
+                initialData={initialData}
+                mainOfficeSignal={mainOfficeSignal}
+                handleSelectMainOffice={handleSelectMainOffice}
+              />
+            }
+          />
+
           <Route path="reservations" element={<Reservations />} />
           <Route path="properties" element={<RealEstates />} />
+          <Route path="properties/:id" element={<Unit />} />
           <Route path="transactions" element={<FinancialTransactions />} />
           <Route path="billing_statements" element={<BillingStatements />} />
           <Route path="statements" element={<AccountStatements />} />
@@ -293,13 +287,13 @@ function App() {
           <Route path="prices">
             <Route path="main" element={<MainPrices />} />
             <Route path="offers" element={<Offers />} />
+            <Route path="coupons" element={<Coupons />} />
             <Route path="down-prices" element={<DownPrice />} />
           </Route>
         </Route>
 
         <Route path="addoffice" element={<Addads />} />
         <Route path="addunit" element={<AddUnit />} />
-        <Route path="editOffice" element={<EditAds />} />
       </Routes>
     </>
   );

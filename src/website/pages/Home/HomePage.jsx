@@ -53,7 +53,7 @@ const HomePage = () => {
     page: page,
     filter: filter,
   });
-
+  console.log(isRefetching);
   const isMapPage = location.split("/").includes("map");
 
   const paginationData = {

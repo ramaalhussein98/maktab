@@ -12,9 +12,17 @@ import {
 import { useTranslation } from "react-i18next";
 import HomeDescription from "../add_ads_folder/add_ads_components/HomeDescription";
 import { HomeImagesAdd } from "../add_ads_folder/add_ads_components";
+import { toast } from "react-toastify";
+import myAxios from "../../../api/myAxios";
+import UnitDetailsNumber from "./components/UnitDetailsNumber";
 
 const reducerFunc = (unit, action) => {
   switch (action.type) {
+    case "categoryId":
+      return {
+        ...unit,
+        category_id: action.categoryId,
+      };
     case "unit_rooms":
       if (action.sub_type === "increase") {
         console.log(action);
@@ -102,6 +110,23 @@ const reducerFunc = (unit, action) => {
         };
       }
     }
+    case "comfort": {
+      const filteredArr = unit.comfort.filter((e) => e !== action.value);
+
+      const valueIsInArr = unit.comfort.indexOf(action.value);
+
+      if (valueIsInArr > -1) {
+        return {
+          ...unit,
+          comfort: filteredArr,
+        };
+      } else {
+        return {
+          ...unit,
+          comfort: [...unit.comfort, action.value],
+        };
+      }
+    }
     case "facilities": {
       const filteredArr = unit.facilities.filter((e) => e !== action.value);
 
@@ -119,6 +144,50 @@ const reducerFunc = (unit, action) => {
         };
       }
     }
+    case "details":
+      if (action.data.type === "remove") {
+        // Remove the object with the same en_name
+        const updatedDetails = unit.details.filter(
+          (obj) => obj.en_name !== action.data.object.en_name
+        );
+
+        return {
+          ...unit,
+          details: updatedDetails,
+        };
+      } else if (action.data.type === "add") {
+        // Check if the array already contains an object with the same en_name
+        const existingObjectIndex = unit.details.findIndex(
+          (obj) => obj.en_name === action.data.object.en_name
+        );
+
+        if (existingObjectIndex !== -1) {
+          // If the object with the same en_name exists, update its values
+          const updatedDetails = unit.details.map((obj, index) => {
+            if (index === existingObjectIndex) {
+              return {
+                ...obj,
+                // Update the properties you want to change here
+                status: action.data.object.status,
+                number_details: action.data.object.number_details,
+              };
+            }
+            return obj;
+          });
+
+          return {
+            ...unit,
+            details: updatedDetails,
+          };
+        } else {
+          // If the object with the same en_name doesn't exist, add it
+          return {
+            ...unit,
+            details: [...unit.details, action.data.object],
+          };
+        }
+      }
+      break;
     case "prices":
       if (action.sub_type === "add") {
         const newPrices = action.array.map((ele) => {
@@ -201,27 +270,33 @@ const AddUnit = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const searchData = JSON.parse(localStorage.getItem("searchData"));
-  const roomDetails = JSON.parse(localStorage.getItem("roomDetails"));
-  const unitsFeatures = JSON.parse(localStorage.getItem("unitsFeatures"));
-  const unitsFacilities = JSON.parse(localStorage.getItem("unitsFacilities"));
+  const unitsFacilities = JSON.parse(
+    localStorage.getItem("searchData")
+  ).facilities;
+  const unitsFeatures = JSON.parse(
+    localStorage.getItem("searchData")
+  ).featurea_ads;
+  const comfort = JSON.parse(localStorage.getItem("searchData")).comfort;
   const { state } = location;
-  const unitId = state && state.id;
+  const officeId = state && state.id;
   const unitTitle = state && state.title;
+  const category_id = state && state.category_id;
 
   const [unitsOptions, setUnitsOptions] = useState({
-    categories: searchData?.categories,
+    categories: searchData?.category_aqar,
     type_res: searchData?.type_res,
     typeAqars: searchData?.type_aqars,
     officeFeatures: searchData?.features,
     interfaces: searchData?.interface_aqars,
     facilities: unitsFacilities,
-    roomDetails,
+    comfort,
     unitsFeatures,
   });
 
   const [unit, dispatch] = useReducer(reducerFunc, {
+    category_id: "",
     title: "",
-    ads_id: unitId,
+    ads_id: officeId,
     viewer_name: "",
     viewer_phone: "",
     description: "",
@@ -234,12 +309,14 @@ const AddUnit = () => {
     type_down_payment: "",
     video: "",
     thumbnail: "",
+    comfort: [],
     images: [],
+    details: [],
   });
   console.log(unit);
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
-  const [afterWidth, setAfterWidth] = useState(12.5);
+  const [afterWidth, setAfterWidth] = useState(16.7);
   const [error, setError] = useState(false);
   const [images, setImages] = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
@@ -249,22 +326,127 @@ const AddUnit = () => {
 
   const handleNext = () => {
     setStep(step + 1);
-    setAfterWidth(afterWidth + 12.5);
+    setAfterWidth(afterWidth + 16.7);
   };
   const handlePrev = () => {
     if (step > 1) {
       setStep(step - 1);
-      setAfterWidth(afterWidth - 12.5);
+      setAfterWidth(afterWidth - 16.7);
     }
   };
 
   useEffect(() => {
-    step === 8 ? setIsLastStep(10) : setIsLastStep(null);
+    step === 6 ? setIsLastStep(6) : setIsLastStep(null);
   }, [step]);
 
-  const renderStep = () => {
-    //render both steps
+  const handleSubmit = async () => {
+    const createData = new FormData();
+    createData.append("title", unit.title);
+    createData.append("category_aqar_id", category_id);
 
+    const updateInfo = new FormData();
+    updateInfo.append("space", unit.space);
+
+    const update_description = {
+      description: unit.description,
+    };
+
+    const pricesData = new FormData();
+    unit.prices?.map((e, i) => {
+      pricesData.append(`prices[${i}][type_res_id]`, e.type_res_id);
+      pricesData.append(`prices[${i}][price]`, Number(e.price));
+      pricesData.append(`prices[${i}][status]`, e.status);
+    });
+
+    const detailsData = new FormData();
+    unit.details?.map((e, i) => {
+      detailsData.append(`details[${i}][ar_name]`, e.ar_name);
+      detailsData.append(`details[${i}][en_name]`, e.en_name);
+      detailsData.append(
+        `details[${i}][number_details]`,
+        e.number_details === "أرضي" ? 0 : Number(e.number_details)
+      );
+      detailsData.append(`details[${i}][status]`, e.status);
+    });
+
+    const servicesData = new FormData();
+    unit.services?.map((e, i) => {
+      servicesData.append(`services[${i}][ar_name]`, e.ar_name);
+      servicesData.append(`services[${i}][en_name]`, e.en_name);
+      servicesData.append(`services[${i}][status]`, e.service_toggle);
+      servicesData.append(`services[${i}][price]`, e.price);
+    });
+
+    const featuresData = new FormData();
+    unit.features?.map((e, i) => {
+      featuresData.append(`features[${i}][boolfeaturea_id]`, e);
+    });
+
+    const comfortData = new FormData();
+    unit.comfort?.map((e, i) => {
+      comfortData.append(`comforts[${i}][comfort_id]`, e);
+    });
+    const facilitiesData = new FormData();
+    unit.facilities?.map((e, i) => {
+      facilitiesData.append(`facilities[${i}][facility_id]`, e);
+    });
+
+    const filesData = new FormData();
+    unit.images.forEach((file) => {
+      filesData.append("images[]", file);
+    });
+    filesData.append("main_image", unit.thumbnail.file);
+    if (unit.video) {
+      filesData.append("video", unit.video);
+    }
+    const updateViewer = new FormData();
+    updateViewer.append("viewer_name", unit.viewer_name);
+    updateViewer.append("viewer_phone", unit.viewer_phone);
+    await myAxios
+      .post(`/api/v1/user/offices/add_unit/${officeId}`, createData)
+      .then((res) => {
+        const unitId = res.data?.data?.id;
+        myAxios.post(`/api/v1/user/offices/updateInfo/${unitId}`, updateInfo);
+
+        myAxios.post(
+          `/api/v1/user/offices/prices/addToAds/${unitId}`,
+          pricesData
+        );
+        myAxios.post(
+          `/api/v1/user/offices/updateViewer/${unitId}`,
+          updateViewer
+        );
+        myAxios.post(
+          `/api/v1/user/offices/details/addToAds/${unitId}`,
+          detailsData
+        );
+        if (servicesData) {
+          myAxios.post(
+            `/api/v1/user/offices/services/addToAds/${unitId}`,
+            servicesData
+          );
+        }
+        myAxios.post(
+          `/api/v1/user/offices/features/addToAds/${unitId}`,
+          featuresData
+        );
+        myAxios.post(
+          `/api/v1/user/offices/facilities/addToAds/${unitId}`,
+          facilitiesData
+        );
+        myAxios.post(
+          `/api/v1/user/offices/comforts/addToAds/${unitId}`,
+          comfortData
+        );
+        myAxios.post(
+          `/api/v1/user/offices/update_description/${unitId}`,
+          update_description
+        );
+        myAxios.post(`/api/v1/user/offices/addFiles/${unitId}`, filesData);
+      });
+  };
+
+  const renderStep = () => {
     switch (step) {
       case 1:
         return (
@@ -276,7 +458,7 @@ const AddUnit = () => {
         );
       case 2:
         return (
-          <OfiicesNumberDetails
+          <UnitDetailsNumber
             unit={unit}
             dispatch={dispatch}
             roomDetails={unitsOptions.roomDetails}
@@ -287,7 +469,8 @@ const AddUnit = () => {
           <UnitFeatures
             unit={unit}
             dispatch={dispatch}
-            features={unitsOptions.unitsFeatures}
+            comfort={comfort}
+            features={unitsFeatures}
           />
         );
       case 4:
@@ -317,18 +500,9 @@ const AddUnit = () => {
             dispatch={dispatch}
           />
         );
-      // case 7:
-      //   return <MapAds />;
-      // case 8:
-      //   <ConfimLocation unit={unit} dispatch={dispatch} />;
-      //   break;
       default:
         return null;
     }
-  };
-
-  const handleSubmit = () => {
-    console.log("ji");
   };
 
   return (

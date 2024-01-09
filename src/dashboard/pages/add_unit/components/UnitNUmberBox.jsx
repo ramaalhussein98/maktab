@@ -3,7 +3,7 @@ import { Box, Paper } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const OfficeBoxNumbers = ({
+const UnitNumberBox = ({
   title,
   numbers,
   dispatch,
@@ -100,4 +100,4 @@ const OfficeBoxNumbers = ({
   );
 };
 
-export default OfficeBoxNumbers;
+export default UnitNumberBox;

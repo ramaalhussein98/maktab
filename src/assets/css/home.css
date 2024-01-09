@@ -28,8 +28,9 @@
   height: 50px !important;
   padding: 0px 12px;
   font-size: 13px;
-
+  min-width: 150px !important;
   margin-right: 20px !important;
+  margin-left: 20px !important;
   .filter_btn_img {
     width: 14px;
     margin-left: 5px;
@@ -66,7 +67,8 @@
   box-shadow: none !important;
   white-space: nowrap !important;
   background: rgb(34, 34, 34) !important;
-  height: 45px !important;
+  height: 48px !important;
+  min-width: 160px !important;
   .img1 {
     margin-right: 5px;
   }
@@ -309,6 +311,9 @@
   [lang="en"] .filter_btn {
     margin-right: 5px !important;
     margin-left: 5px !important;
+  }
+  .filter_continerScoreeld {
+    top: 0px;
   }
   /* .mapButton{
     display: none !important;

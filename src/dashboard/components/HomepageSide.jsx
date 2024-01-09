@@ -6,7 +6,8 @@ import { useLocation } from "react-router-dom";
 const HomepageSide = () => {
   const [typeSide, setTypeSide] = useState();
   const location = useLocation().pathname;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const user_type_bussines =
     localStorage.getItem("user_type") === "bussines" ? true : false;
   useEffect(() => {
@@ -53,6 +54,7 @@ const HomepageSide = () => {
       title: t("dashboard.sideContent.link5"),
       url: "prices/main",
     },
+
     {
       id: 6,
       title: t("dashboard.sideContent.link6"),
@@ -102,6 +104,11 @@ const HomepageSide = () => {
       id: 3,
       title: t("dashboard.pricesNav.link3"),
       url: "prices/down-prices",
+    },
+    {
+      id: 40,
+      title: lang === "ar" ? "الكوبونات" : "coupons",
+      url: "prices/coupons",
     },
   ];
   const ArrayBillsSide = [

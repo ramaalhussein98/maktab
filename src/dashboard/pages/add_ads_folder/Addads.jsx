@@ -156,6 +156,23 @@ const reducerFunc = (state, action) => {
         };
       }
     }
+    case "comfort": {
+      const filteredArr = state.comfort.filter((e) => e !== action.value);
+
+      const valueIsInArr = state.comfort.indexOf(action.value);
+
+      if (valueIsInArr > -1) {
+        return {
+          ...state,
+          comfort: filteredArr,
+        };
+      } else {
+        return {
+          ...state,
+          comfort: [...state.comfort, action.value],
+        };
+      }
+    }
     case "services":
       if (action.sub_type === "add") {
         return {
@@ -302,6 +319,23 @@ const reducerFunc = (state, action) => {
         ...state,
         type_down_payment: action.value,
       };
+    case "facilities": {
+      const filteredArr = state.facilities.filter((e) => e !== action.value);
+
+      const valueIsInArr = state.facilities.indexOf(action.value);
+
+      if (valueIsInArr > -1) {
+        return {
+          ...state,
+          facilities: filteredArr,
+        };
+      } else {
+        return {
+          ...state,
+          facilities: [...state.facilities, action.value],
+        };
+      }
+    }
   }
 
   throw Error("Unknown action: " + action.type);
@@ -315,14 +349,15 @@ const Addads = () => {
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
   const [afterWidth, setAfterWidth] = useState(10);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [officeOptions, setOfficeOptions] = useState({
     categories: searchData?.category_aqar,
     type_res: searchData?.type_res,
     typeAqars: searchData?.type_aqars,
     officeFeatures: searchData?.featurea_ads,
     interfaces: searchData?.interface_aqars,
+    comfort: searchData?.comfort,
   });
-
   const [error, setError] = useState(false);
   const [images, setImages] = useState([]);
   const [selectedCheckLicense, setSelectedCheckLicense] = useState("");
@@ -346,7 +381,9 @@ const Addads = () => {
     details: [],
     description: "",
     features: [],
+    facilities: [],
     services: [],
+    comfort: [],
     lat: "",
     lng: "",
     zoom: "",
@@ -362,9 +399,13 @@ const Addads = () => {
     images: [],
   });
 
+  console.log(state);
   //handling steps errors
   useEffect(() => {
     switch (step) {
+      case 1:
+        setError(false);
+        break;
       case 2:
         if (state.title.length === 0 || state.category_id.length === 0) {
           setError(true);
@@ -497,89 +538,155 @@ const Addads = () => {
   };
 
   const handleSubmit = async () => {
-    const formDataSend = new FormData();
-    // Iterate through properties of formData and append each property to sendForm
-    for (const property in state) {
-      if (property === "furnished") {
-        formDataSend.append("furnisher", state[property]);
-      } else if (property === "viewer_phone") {
-        formDataSend.append("viewer_phone", Number(state[property]));
-      } else if (property === "area") {
-        formDataSend.append("space", state[property]);
-      } else if (property === "thumbnail") {
-        formDataSend.append("main_image", state[property].file);
-      } else if (property === "prices") {
-        const filteredPrices = state[property].filter(
-          (price) => price.status === true
-        );
-        filteredPrices?.map((e, i) => {
-          formDataSend.append(`prices[${i}][type_res_id]`, e.type_res_id);
-          formDataSend.append(`prices[${i}][price]`, Number(e.price));
-          formDataSend.append(`prices[${i}][status]`, e.status);
-        });
-      } else if (property === "details") {
-        state[property]?.map((e, i) => {
-          formDataSend.append(`details[${i}][ar_name]`, e.ar_name);
-          formDataSend.append(`details[${i}][en_name]`, e.en_name);
-          formDataSend.append(
-            `details[${i}][number_details]`,
-            e.number_details === "أرضي" ? 0 : Number(e.number_details)
+    const createData = new FormData();
+    createData.append("title", state.title);
+    createData.append("license_number", state.license_number);
+    createData.append("category_aqar_id", state.category_id);
+
+    const updateInfo = new FormData();
+    updateInfo.append("furnisher", state.furnished);
+    updateInfo.append("space", state.area);
+    updateInfo.append("height", state.height);
+    updateInfo.append("width", state.width);
+    updateInfo.append("type_aqar_id", state.type_aqar_id);
+    updateInfo.append("advertiser_relationship", state.advertiser_relationship);
+    if (state.advertiser_relationship_type) {
+      updateInfo.append(
+        "advertiser_relationship_type",
+        state.advertiser_relationship_type
+      );
+    }
+
+    const updateViewer = new FormData();
+    updateViewer.append("viewer_name", state.viewer_name);
+    updateViewer.append("viewer_phone", state.viewer_phone);
+
+    const updateDownPayment = new FormData();
+    updateDownPayment.append("down_payment", state.down_payment);
+    updateDownPayment.append("type_down_payment", state.type_down_payment);
+
+    const update_description = {
+      description: state.description,
+    };
+
+    const updateLocation = {
+      lat: state.lat,
+      lng: state.lng,
+      zoom: state.zoom,
+      address: state.city + ", " + state.neighborhood + ", " + state.street,
+      city: state.city,
+      neighborhood: state.neighborhood,
+      street: state.street,
+    };
+
+    const updateInterface = {
+      interface_id: state.interface_id,
+    };
+
+    const pricesData = new FormData();
+    state.prices?.map((e, i) => {
+      pricesData.append(`prices[${i}][type_res_id]`, e.type_res_id);
+      pricesData.append(`prices[${i}][price]`, Number(e.price));
+      pricesData.append(`prices[${i}][status]`, e.status);
+    });
+
+    const detailsData = new FormData();
+    state.details?.map((e, i) => {
+      detailsData.append(`details[${i}][ar_name]`, e.ar_name);
+      detailsData.append(`details[${i}][en_name]`, e.en_name);
+      detailsData.append(
+        `details[${i}][number_details]`,
+        e.number_details === "أرضي" ? 0 : Number(e.number_details)
+      );
+      detailsData.append(`details[${i}][status]`, e.status);
+    });
+
+    const servicesData = new FormData();
+    state.services?.map((e, i) => {
+      servicesData.append(`services[${i}][ar_name]`, e.ar_name);
+      servicesData.append(`services[${i}][en_name]`, e.en_name);
+      servicesData.append(`services[${i}][status]`, e.service_toggle);
+      servicesData.append(`services[${i}][price]`, e.price);
+    });
+
+    const featuresData = new FormData();
+    state.features?.map((e, i) => {
+      featuresData.append(`features[${i}][boolfeaturea_id]`, e);
+    });
+
+    const comfortData = new FormData();
+    state.comfort?.map((e, i) => {
+      comfortData.append(`comforts[${i}][comfort_id]`, e);
+    });
+    const facilitiesData = new FormData();
+    state.facilities?.map((e, i) => {
+      facilitiesData.append(`facilities[${i}][facility_id]`, e);
+    });
+
+    const filesData = new FormData();
+    state.images.forEach((file) => {
+      filesData.append("images[]", file);
+    });
+    filesData.append("main_image", state.thumbnail.file);
+    if (state.video) {
+      filesData.append("video", state.video);
+    }
+    await myAxios.post("api/v1/user/offices/create", createData).then((res) => {
+      const id = res.data?.data?.id;
+      myAxios.post(
+        `/api/v1/user/offices/update_location/${id}`,
+        updateLocation
+      );
+      myAxios.post(`/api/v1/user/offices/updateInfo/${id}`, updateInfo);
+      myAxios.post(
+        `/api/v1/user/offices/update_interface/${id}`,
+        updateInterface
+      );
+      myAxios
+        .post(`/api/v1/user/offices/add_unit/${id}`, createData)
+        .then((res) => {
+          const unitId = res.data?.data?.id;
+          myAxios.post(`/api/v1/user/offices/updateInfo/${unitId}`, updateInfo);
+
+          myAxios.post(
+            `/api/v1/user/offices/prices/addToAds/${unitId}`,
+            pricesData
           );
-          formDataSend.append(`details[${i}][status]`, e.status);
+          myAxios.post(
+            `/api/v1/user/offices/details/addToAds/${unitId}`,
+            detailsData
+          );
+          if (servicesData) {
+            myAxios.post(
+              `/api/v1/user/offices/services/addToAds/${unitId}`,
+              servicesData
+            );
+          }
+          myAxios.post(
+            `/api/v1/user/offices/features/addToAds/${unitId}`,
+            featuresData
+          );
+          myAxios.post(
+            `/api/v1/user/offices/comforts/addToAds/${unitId}`,
+            comfortData
+          );
+          myAxios.post(
+            `/api/v1/user/offices/facilities/addToAds/${unitId}`,
+            facilitiesData
+          );
+          myAxios.post(
+            `/api/v1/user/offices/updateViewer/${unitId}`,
+            updateViewer
+          );
+          updateDownPayment.append("id", unitId);
+          myAxios.post(`/api/v1/user/offices/down_payment`, updateDownPayment);
+          myAxios.post(
+            `/api/v1/user/offices/update_description/${unitId}`,
+            update_description
+          );
+          myAxios.post(`/api/v1/user/offices/addFiles/${unitId}`, filesData);
         });
-      } else if (property === "services") {
-        state[property]?.map((e, i) => {
-          formDataSend.append(`services[${i}][ar_name]`, e.ar_name);
-          formDataSend.append(`services[${i}][en_name]`, e.en_name);
-          formDataSend.append(`services[${i}][status]`, e.service_toggle);
-          formDataSend.append(`services[${i}][price]`, e.price);
-        });
-      } else if (property === "features") {
-        state[property]?.map((e, i) => {
-          formDataSend.append(`features[${i}][id]`, e);
-        });
-      } else if (property === "images") {
-        continue;
-      } else if (property === "advertiser_relationship_type") {
-        if (state[property].length === 0) continue;
-        formDataSend.append(property, state[property]);
-      } else {
-        formDataSend.append(property, state[property]);
-      }
-    }
-
-    const address =
-      state.city + ", " + state.neighborhood + ", " + state.street;
-
-    formDataSend.append("address", address);
-    if (images.length >= 4) {
-      try {
-        const res = await myAxios
-          .post("api/v1/user/offices/save", formDataSend)
-          .then((result) => {
-            if (result.data.status === true) {
-              const addFilesData = new FormData();
-              const id = result.data.data.id;
-              state.images.forEach((file) => {
-                addFilesData.append("images[]", file);
-              });
-              if (state.video) {
-                addFilesData.append("video", state.video);
-              }
-              const addFiles = myAxios.post(
-                `api/v1/user/offices/addFiles/${id}`,
-                addFilesData
-              );
-            }
-            toast.success(res.data.status);
-          });
-        console.log(res);
-      } catch (error) {
-        console.error("Error sending FormData:", error);
-      }
-    } else {
-      toast.error("يرجى إرفاق 4 صور على الأقل");
-    }
+    });
   };
 
   const renderStep = () => {
@@ -619,6 +726,7 @@ const Addads = () => {
           <Services
             features={officeOptions.officeFeatures}
             state={state}
+            comfort={officeOptions.comfort}
             dispatch={dispatch}
           />
         );
@@ -662,8 +770,6 @@ const Addads = () => {
     }
   };
 
-  console.log(state);
-  console.log(state.details);
   return (
     <>
       <Box
@@ -757,19 +863,23 @@ const Addads = () => {
                   {!isLastStep && (
                     <Button
                       className="button-next"
-                      onClick={handleNext}
+                      onClick={() => handleNext()}
                       disabled={error}
                     >
-                      {t("dashboard.new_order.main_btn1")}
+                      {isSubmitting
+                        ? "loading..."
+                        : t("dashboard.new_order.main_btn1")}
                     </Button>
                   )}
                   {isLastStep && (
                     <Button
                       className="button-last"
-                      onClick={handleSubmit}
+                      onClick={() => handleSubmit()}
                       disabled={error}
                     >
-                      {t("dashboard.new_order.main_btn3")}
+                      {isSubmitting
+                        ? "loading..."
+                        : t("dashboard.new_order.main_btn3")}
                     </Button>
                   )}
                 </Box>

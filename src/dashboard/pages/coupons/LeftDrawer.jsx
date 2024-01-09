@@ -19,8 +19,7 @@ import DateRange from "../../../website/pages/Details/details_component/DateRang
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@mui/material/styles";
 import myAxios from "../../../api/myAxios";
-import { useQueryHook } from "../../../hooks/useQueryHook";
-import { el } from "date-fns/locale";
+import { set } from "lodash";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -46,15 +45,14 @@ const LeftDrawer = ({
   open,
   toggleDrawer,
   selectedOffice,
-  selectedOffer,
+  selectedCoupon,
   selectedUnit,
   openType,
-  refetch,
 }) => {
-  const pricesType = JSON.parse(localStorage.getItem("searchData"))?.type_res;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const [selectedPriceValue, setSelectedPriceValue] = useState("سعر");
+  const [selectedPriceValue, setSelectedPriceValue] = useState("نسبة");
+  const pricesType = JSON.parse(localStorage.getItem("searchData"))?.type_res;
   const [selectedDays, setSelectedDays] = useState([]);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
@@ -65,25 +63,28 @@ const LeftDrawer = ({
   const [selectedUnits, setSelectedUnits] = useState(
     selectedUnit ? selectedUnit : null
   );
+  const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [numberCount, setNumberCount] = useState();
 
   useEffect(() => {
-    if (selectedOffer) {
+    if (selectedCoupon) {
       setDateRange((prev) => ({
         ...prev,
-        startDate: new Date(selectedOffer?.offer?.start_date),
-        endDate: new Date(selectedOffer?.offer?.end_date),
+        startDate: new Date(selectedCoupon?.coupon?.start_date),
+        endDate: new Date(selectedCoupon?.coupon?.end_date),
       }));
       setSelectedPriceValue(
-        selectedOffer.offer.type_discount === "percent" ? "نسبة" : "سعر"
+        selectedCoupon.coupon.type_discount === "percent" ? "نسبة" : "سعر"
       );
-      setName(selectedOffer.offer.name);
-
-      setPrice(selectedOffer.offer.discount);
+      setName(selectedCoupon.coupon.name);
+      setCode(selectedCoupon.coupon.code);
+      setNumberCount(selectedCoupon.coupon.number_used);
+      setPrice(selectedCoupon.coupon.discount);
 
       setSelectedDays((prev) => {
-        const newSelectedDays = selectedOffer.offer.ads_prices.map((ele) => {
+        const newSelectedDays = selectedCoupon.coupon.ads_prices.map((ele) => {
           return ele.id;
         });
 
@@ -91,7 +92,10 @@ const LeftDrawer = ({
       });
       setSelectedUnits(selectedUnit);
     }
-  }, [selectedOffer, selectedUnit]);
+  }, [selectedCoupon, selectedUnit]);
+
+  console.log(selectedUnit);
+
   const dateRangeRef = useRef(null);
   const excludedBoxRef = useRef(null);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -119,7 +123,6 @@ const LeftDrawer = ({
   const handleSelectPriceChange = (event) => {
     setSelectedPriceValue(event.target.value);
   };
-
   const handleOutsideClick = (event) => {
     if (
       showCalendar &&
@@ -129,7 +132,6 @@ const LeftDrawer = ({
       setShowCalendar(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener("click", handleOutsideClick);
     return () => {
@@ -140,7 +142,6 @@ const LeftDrawer = ({
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
   };
-
   useEffect(() => {
     const startDateText = dateRange.startDate.toLocaleDateString();
     const endDateText = dateRange.endDate.toLocaleDateString();
@@ -168,57 +169,26 @@ const LeftDrawer = ({
   };
 
   const handleSubmit = async () => {
-    if (openType === 1) {
-      const data = new FormData();
-
-      data.append("name", name);
-      data.append("discount", price);
-      if (selectedPriceValue === "سعر") {
-        data.append("type_discount", "rial");
-      } else {
-        data.append("type_discount", "percent");
-      }
-      data.append("start_date", startDate);
-      data.append("end_date", endDate);
-      data.append("ads_id", selectedUnits.id);
-      selectedDays.forEach((ele, i) => {
-        data.append(`ads_prices[${i}][ads_price_id]`, ele);
-      });
-
-      await myAxios.post("api/v1/user/offers/save_offices", data);
-      refetch();
-    } else if (openType === 2) {
-      const updateData = new FormData();
-
-      updateData.append("name", name);
-      updateData.append("discount", price);
-      if (selectedPriceValue === "سعر") {
-        updateData.append("type_discount", "rial");
-      } else {
-        updateData.append("type_discount", "percent");
-      }
-      updateData.append("start_date", startDate);
-      updateData.append("end_date", endDate);
-      updateData.append("ads_id", selectedUnits.id);
-      selectedDays.forEach((ele, i) => {
-        const getPivotData = selectedOffer.offer.ads_prices.find(
-          (e) => e.id === ele
-        );
-        if (getPivotData) {
-          updateData.append(`ads_prices[${i}][id]`, getPivotData.pivot.id);
-        }
-        updateData.append(`ads_prices[${i}][ads_price_id]`, ele);
-      });
-
-      await myAxios.post(
-        `api/v1/user/offers/update_offices/${selectedOffer.offer.id}`,
-        updateData
-      );
-      toggleDrawer(false);
-      refetch();
+    const data = new FormData();
+    data.append("name", name);
+    data.append("code", code);
+    data.append("discount", price);
+    if (selectedPriceValue === "سعر") {
+      data.append("type_discount", "rial");
+    } else {
+      data.append("type_discount", "percent");
     }
-  };
+    data.append("number_used", numberCount);
+    data.append("start_date", startDate);
+    data.append("end_date", endDate);
+    data.append("ads_id", selectedUnits.id);
+    selectedDays.forEach((ele, i) => {
+      data.append(`ads_prices[${i}][ads_price_id]`, ele);
+    });
 
+    await myAxios.post("api/v1/user/coupons/create", data);
+  };
+  console.log(selectedUnits);
   return (
     <>
       <div>
@@ -230,30 +200,61 @@ const LeftDrawer = ({
             className="DrawerWidth"
           >
             <div className="DrawerTitleDiv">
-              <span>{t("dashboard.prices.addneoffer")}</span>
+              <span>
+                {lang === "ar" ? "اضافة كوبون جديد" : "add new coupon"}
+              </span>
               <button onClick={toggleDrawer(false)}>
                 <CloseIcon />
               </button>
             </div>
           </div>
           <Divider />
-
           {/* this for offer name  */}
           <div style={{ padding: "24px 24px 0px" }}>
-            <p className="font_18_700">{t("dashboard.prices.offername")} </p>
-            <p className="p_gray_18">{t("dashboard.prices.notbevisible")}</p>
+            <p className="font_18_700">{lang === "ar" ? "الاسم" : "name"} </p>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t("dashboard.prices.writeoffername")}
+              placeholder={lang === "ar" ? "ادخل اسم الكود" : "enter code name"}
+              className="input_style"
+            />
+            <Divider />
+          </div>
+          {/* this for offer name  */}
+          <div style={{ padding: "24px 24px 0px" }}>
+            <p className="font_18_700">{lang === "ar" ? "الكود" : "code"} </p>
+            <input
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder={lang === "ar" ? "كود الكوبون" : "coupon code"}
+              className="input_style"
+            />
+            <Divider />
+          </div>
+          <div style={{ padding: "24px 24px 0px" }}>
+            <p className="font_18_700">
+              {lang === "ar" ? "عدد الاستخدامات" : "number used"}
+            </p>
+            <input
+              type="number"
+              value={numberCount}
+              onChange={(e) => setNumberCount(e.target.value)}
+              placeholder={
+                lang === "ar" ? "ادخل عدد الاستخدامات المسموحة للكوبون" : ""
+              }
               className="input_style"
             />
             <Divider />
           </div>
           {/* this for select unit */}
           <div style={{ padding: "24px 24px 0px" }}>
-            <p className="font_18_700">{t("dashboard.prices.unitoffer")}</p>
+            <p className="font_18_700">
+              {lang === "ar"
+                ? " الوحدات التي تريد أن يطبق عليها الكوبون"
+                : "unit that the coupon should apply "}
+            </p>
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
@@ -404,6 +405,7 @@ const LeftDrawer = ({
           {/* this button submit cancel */}
           <div className="BoxBtnSubmit">
             <button onClick={handleSubmit} className="submit">
+              {" "}
               {t("save")}
             </button>
             <button className="cancel" onClick={toggleDrawer(false)}>

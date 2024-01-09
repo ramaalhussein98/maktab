@@ -18,6 +18,7 @@ import { useParams } from "react-router";
 import { useQueryHook } from "../../../hooks/useQueryHook";
 import myAxios from "../../../api/myAxios";
 import { useOfficeHook } from "../../../hooks/useOfficeHook";
+import LoaderHome from "../../../ui/LoaderHome";
 
 const Details = () => {
   const { t } = useTranslation();
@@ -87,256 +88,259 @@ const Details = () => {
   return (
     <>
       {/* this section for md and above screens  */}
-      <Box sx={{ display: { xs: "none", md: "block" }, marginTop: "2rem" }}>
-        <Container
-          sx={{
-            maxWidth: "1400px !important",
-            padding: { xs: "0px", sm: "24px" },
-          }}
-        >
-          <Typography
-            variant="h4"
+      {isLoading ? (
+        <LoaderHome />
+      ) : (
+        <Box sx={{ display: { xs: "none", md: "block" }, marginTop: "2rem" }}>
+          <Container
             sx={{
-              fontWeight: "bold",
-              fontSize: { xs: "1.5rem", md: "2.25rem" },
+              maxWidth: "1400px !important",
+              padding: { xs: "0px", sm: "24px" },
             }}
           >
-            {data?.title}
-          </Typography>
-          <Box sx={{ display: "flex", marginY: "1rem" }}>
-            <Box className="Box_ad_num">
-              <Typography sx={{ fontWeight: "bold", fontSize: "12px" }}>
-                {t("details_page.ad_num")}:
-              </Typography>{" "}
-              <Typography sx={{ marginX: "0.5rem", fontSize: "12px" }}>
-                {/* {adInfo?.ref_number} */}
-                {data?.ref_number}
-              </Typography>
-            </Box>
-            <Box
-              className="Box_ad_num"
+            <Typography
+              variant="h4"
               sx={{
-                marginX: "0.3rem",
+                fontWeight: "bold",
+                fontSize: { xs: "1.5rem", md: "2.25rem" },
               }}
             >
-              <Typography sx={{ fontWeight: "bold", fontSize: "12px" }}>
-                {t("details_page.ad_date")}:
-              </Typography>
-              <Typography sx={{ marginX: "0.5rem", fontSize: "12px" }}>
-                {formattedDate}
-              </Typography>
-            </Box>
-          </Box>
-          <Box
-            className="d_flex_space_between"
-            sx={{
-              marginY: "2rem",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                flexDirection: { xs: "column", md: "row" },
-              }}
-            >
-              <Typography
+              {data?.title}
+            </Typography>
+            <Box sx={{ display: "flex", marginY: "1rem" }}>
+              <Box className="Box_ad_num">
+                <Typography sx={{ fontWeight: "bold", fontSize: "12px" }}>
+                  {t("details_page.ad_num")}:
+                </Typography>{" "}
+                <Typography sx={{ marginX: "0.5rem", fontSize: "12px" }}>
+                  {/* {adInfo?.ref_number} */}
+                  {data?.ref_number}
+                </Typography>
+              </Box>
+              <Box
+                className="Box_ad_num"
                 sx={{
-                  display: "flex",
                   marginX: "0.3rem",
-                  marginBottom: "4px",
-                  fontSize: { xs: "13px", md: "15px" },
                 }}
               >
-                <StarIcon
-                  sx={{
-                    color: "gold",
-                    marginLeft: "3px",
-                    fomtSize: "1.2rem",
-                  }}
-                />
-                5
-                {/* {adInfo?.user_rate === null
-                    ? `(${0})`
-                    : `(${adInfo?.user_rate})`} */}
-              </Typography>
-              <Typography
-                sx={{
-                  display: "flex",
-                  marginX: "0.3rem",
-                  marginBottom: "4px",
-                  fontSize: { xs: "13px", md: "15px" },
-                }}
-              >
-                <LocationOnIcon
-                  sx={{
-                    color: "var(--main-color)",
-                    marginLeft: "3px",
-                    fomtSize: "1.2rem",
-                  }}
-                />
-                {data?.location?.address}
-              </Typography>
-              <Typography
-                sx={{
-                  display: "flex",
-                  marginX: "0.3rem",
-                  marginBottom: "4px",
-                  fontSize: { xs: "13px", md: "15px" },
-                }}
-              >
-                <CropOriginalIcon
-                  sx={{
-                    color: "var(--main-color)",
-                    marginLeft: "3px",
-                    fomtSize: "1.2rem",
-                  }}
-                />
-                {t("details_page.unit_area")}
-
-                {data?.space}
-              </Typography>
+                <Typography sx={{ fontWeight: "bold", fontSize: "12px" }}>
+                  {t("details_page.ad_date")}:
+                </Typography>
+                <Typography sx={{ marginX: "0.5rem", fontSize: "12px" }}>
+                  {formattedDate}
+                </Typography>
+              </Box>
             </Box>
             <Box
+              className="d_flex_space_between"
               sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "baseline",
-                flexDirection: { xs: "column", md: "row" },
+                marginY: "2rem",
               }}
             >
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  marginX: "0.3rem",
-                  marginBottom: "4px",
-                  fontSize: { xs: "13px", md: "15px" },
+                  flexWrap: "wrap",
+                  flexDirection: { xs: "column", md: "row" },
                 }}
               >
-                <FavoriteIcons
-                //   adInfo={adInfo}
-                ></FavoriteIcons>
-                {t("details_page.fav_button")}
-              </Box>
-
-              <Button
-                sx={{
-                  color: "inherit",
-                  marginX: "0.3rem",
-                  position: "relative",
-                  padding: "0",
-                }}
-                onClick={() => setListOpen(!isListOpen)}
-                ref={socialMediaLinksRef}
-              >
-                <IosShareIcon sx={{ marginLeft: "3px" }} />
-                {t("details_page.share_button")}
-                {isListOpen && <SocailMedaiLinks />}
-              </Button>
-            </Box>
-          </Box>
-          <DetailsImages data={data} />
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: { xs: "1.5rem", md: "2.25rem" },
-                }}
-              >
-                {t("details_page.details_title")}
-              </Typography>
-              <Typography sx={{ fontSize: { xs: "15px", md: "18px" } }}>
-                {data?.description}
-              </Typography>
-              {isNewHome && (
-                <Box
-                  className="d_flex_space_between"
+                <Typography
                   sx={{
-                    padding: "23px 40px",
-                    backgroundColor: "#eee",
-                    borderRadius: "20px",
-                    marginY: "2rem",
+                    display: "flex",
+                    marginX: "0.3rem",
+                    marginBottom: "4px",
+                    fontSize: { xs: "13px", md: "15px" },
                   }}
                 >
-                  <Box>
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        color: "red",
-                        fontWeight: "bold",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {t("new")}
-                    </Typography>
-                    <Typography sx={{ fontSize: "18px" }}>
-                      {t("Newly_added_office")}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ alignItems: "center", display: "flex" }}>
-                    <StarIcon
-                      sx={{ color: "#009fff", width: "3rem", height: "3rem" }}
-                    />
-                  </Box>
-                </Box>
-              )}
-              <DetailsTabs data={data} />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <DetailsCard adInfo={data} />
-            </Grid>
-          </Grid>
-          {/* similar ads */}
-          {filteredAds?.length > 0 ? (
-            <Box>
-              <Typography
-                variant="h4"
+                  <StarIcon
+                    sx={{
+                      color: "gold",
+                      marginLeft: "3px",
+                      fomtSize: "1.2rem",
+                    }}
+                  />
+                  5
+                  {/* {adInfo?.user_rate === null
+                    ? `(${0})`
+                    : `(${adInfo?.user_rate})`} */}
+                </Typography>
+                <Typography
+                  sx={{
+                    display: "flex",
+                    marginX: "0.3rem",
+                    marginBottom: "4px",
+                    fontSize: { xs: "13px", md: "15px" },
+                  }}
+                >
+                  <LocationOnIcon
+                    sx={{
+                      color: "var(--main-color)",
+                      marginLeft: "3px",
+                      fomtSize: "1.2rem",
+                    }}
+                  />
+                  {data?.location?.address}
+                </Typography>
+                <Typography
+                  sx={{
+                    display: "flex",
+                    marginX: "0.3rem",
+                    marginBottom: "4px",
+                    fontSize: { xs: "13px", md: "15px" },
+                  }}
+                >
+                  <CropOriginalIcon
+                    sx={{
+                      color: "var(--main-color)",
+                      marginLeft: "3px",
+                      fomtSize: "1.2rem",
+                    }}
+                  />
+                  {t("details_page.unit_area")}
+
+                  {data?.space}
+                </Typography>
+              </Box>
+              <Box
                 sx={{
-                  fontWeight: "bold",
-                  marginTop: "2rem",
-                  fontSize: { xs: "1.5rem", md: "2rem" },
-                  marginBottom: "1rem",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
+                  flexDirection: { xs: "column", md: "row" },
                 }}
               >
-                {t("details_page.similer_sec_title")}
-              </Typography>
-
-              <Box>
-                <Grid
-                  container
-                  spacing={2}
-                  sx={{ justifyContent: "center", width: "100%" }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginX: "0.3rem",
+                    marginBottom: "4px",
+                    fontSize: { xs: "13px", md: "15px" },
+                  }}
                 >
-                  {filteredAds?.map((ad, i) => (
-                    <Grid
-                      item
-                      xs={10}
-                      sm={6}
-                      md={4}
-                      lg={3}
-                      key={i}
-                      sx={{
-                        paddingLeft: {
-                          xs: "0px !important",
-                          sm: "16px !important",
-                        },
-                      }}
-                    >
-                      <AdCard key={ad?.id} officeData={ad} />
-                    </Grid>
-                  ))}
-                </Grid>
+                  <FavoriteIcons
+                  //   adInfo={adInfo}
+                  ></FavoriteIcons>
+                  {t("details_page.fav_button")}
+                </Box>
+
+                <Button
+                  sx={{
+                    color: "inherit",
+                    marginX: "0.3rem",
+                    position: "relative",
+                    padding: "0",
+                  }}
+                  onClick={() => setListOpen(!isListOpen)}
+                  ref={socialMediaLinksRef}
+                >
+                  <IosShareIcon sx={{ marginLeft: "3px" }} />
+                  {t("details_page.share_button")}
+                  {isListOpen && <SocailMedaiLinks />}
+                </Button>
               </Box>
             </Box>
-          ) : (
-            ""
-          )}
-        </Container>
-      </Box>
+            <DetailsImages data={data} />
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={8}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: { xs: "1.5rem", md: "2.25rem" },
+                  }}
+                >
+                  {t("details_page.details_title")}
+                </Typography>
+                <Typography sx={{ fontSize: { xs: "15px", md: "18px" } }}>
+                  {data?.description}
+                </Typography>
+                {isNewHome && (
+                  <Box
+                    className="d_flex_space_between"
+                    sx={{
+                      padding: "23px 40px",
+                      backgroundColor: "#eee",
+                      borderRadius: "20px",
+                      marginY: "2rem",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          color: "red",
+                          fontWeight: "bold",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        {t("new")}
+                      </Typography>
+                      <Typography sx={{ fontSize: "18px" }}>
+                        {t("Newly_added_office")}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ alignItems: "center", display: "flex" }}>
+                      <StarIcon
+                        sx={{ color: "#009fff", width: "3rem", height: "3rem" }}
+                      />
+                    </Box>
+                  </Box>
+                )}
+                <DetailsTabs data={data} />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <DetailsCard adInfo={data} />
+              </Grid>
+            </Grid>
+            {/* similar ads */}
+            {filteredAds?.length > 0 ? (
+              <Box>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    marginTop: "2rem",
+                    fontSize: { xs: "1.5rem", md: "2rem" },
+                    marginBottom: "1rem",
+                  }}
+                >
+                  {t("details_page.similer_sec_title")}
+                </Typography>
 
+                <Box>
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{ justifyContent: "center", width: "100%" }}
+                  >
+                    {filteredAds?.map((ad, i) => (
+                      <Grid
+                        item
+                        xs={10}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        key={i}
+                        sx={{
+                          paddingLeft: {
+                            xs: "0px !important",
+                            sm: "16px !important",
+                          },
+                        }}
+                      >
+                        <AdCard key={ad?.id} officeData={ad} />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
+              </Box>
+            ) : (
+              ""
+            )}
+          </Container>
+        </Box>
+      )}
       {/* this section page for xs screens */}
       <DetailsXsScreens adInfo={data} />
     </>

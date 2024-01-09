@@ -34,13 +34,14 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const getData = async () => {
-  const res = await myAxios.get("api/v1/user/offers");
+  const res = await myAxios.get("api/v1/user/coupons");
   return res?.data?.data;
 };
 
-const Offers = () => {
+const Coupons = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
+
   const {
     data: offers,
     isLoading,
@@ -57,12 +58,12 @@ const Offers = () => {
         for (const mainObject of offers) {
           if (mainObject && mainObject?.units) {
             for (const unit of mainObject.units) {
-              if (unit?.offers?.length > 0) {
-                unit?.offers.forEach((offer) => {
+              if (unit?.coupons?.length > 0) {
+                unit?.coupons.forEach((offer) => {
                   // Extract the title and offer details
                   const offerDetails = {
                     title: unit?.title,
-                    offer: offer,
+                    coupon: offer,
                   };
                   offersArray.push(offerDetails);
                 });
@@ -77,6 +78,7 @@ const Offers = () => {
     // Call the function to extract offers
     extractOffers();
   }, [offers]); // Run the effect whenever dataArray changes
+  console.log(offers);
 
   const [selectedOffice, setSelectedOffice] = useState("");
 
@@ -86,7 +88,7 @@ const Offers = () => {
   const [openType, setOpenType] = useState();
 
   // for edit functionality
-  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [selectedUnit, setSelectedUnit] = useState();
   // for edit functionality
 
@@ -104,12 +106,14 @@ const Offers = () => {
   const handleOfficeChange = (event) => {
     setSelectedOffice(event.target.value);
   };
+
   const [isStatusChanges, setIsStatusChanges] = useState(false);
+
   const handleSwitchChange = async (id, checked) => {
     setIsStatusChanges(true);
     console.log(id, checked);
     // You can include your Axios request here
-    const res = await myAxios.post(`api/v1/user/offers/status_offices/${id}`);
+    const res = await myAxios.post(`api/v1/user/coupons/update_status/${id}`);
     if (res.data.status === true) {
       setIsStatusChanges(false);
       await refetch();
@@ -117,14 +121,12 @@ const Offers = () => {
   };
 
   const handleDeleteOffer = (id) => {
-    console.log(id);
-
     Swal.fire({
       title: lang === "ar" ? "هل انت متأكد؟" : "Are you sure?",
       text:
         lang === "ar"
-          ? "انت على وشك حذف العرض"
-          : "You are about to delete the offer",
+          ? "انت على وشك حذف الكوبون"
+          : "You are about to delete the coupon",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: lang === "ar" ? "نعم، متأكد" : "Yes, sure!",
@@ -143,33 +145,35 @@ const Offers = () => {
 
   const onRemove = async (id) => {
     setIsStatusChanges(true);
-    console.log(id);
-    const res = await myAxios.delete(`api/v1/user/offers/delete_offices/${id}`);
-    console.log(res);
+    await myAxios.delete(`api/v1/user/coupons/delete/${id}`);
     setIsStatusChanges(false);
     refetch();
   };
 
   const handleEdit = (offer) => {
     console.log(offer);
-    setSelectedOffer(offer);
+    setSelectedCoupon(offer);
     // Find the selected unit
     const selectedUnit = offers.reduce((selected, ele) => {
-      const unit = ele.units.find((unit) => unit.id == offer.offer.ads_id);
-      return unit || selected;
+      const unit = ele.units.find((unit) => unit.id == offer.coupon.ads_id);
+      console.log(unit, selected);
+      return unit;
     }, null);
     setSelectedUnit(selectedUnit);
     setOpenType(2);
     setOpen(true);
   };
-
   if (isLoading) return <Loader />;
 
   return (
     <>
       {(isRefetching || isStatusChanges) && <Loader />}
+
       <Box sx={{ padding: { xs: "0px", md: "20px" } }}>
-        <span className="title_price"> {t("dashboard.pricesNav.link2")} </span>
+        <span className="title_price">
+          {" "}
+          {lang === "ar" ? "الكوبونات" : "coupons"}{" "}
+        </span>
         <Box
           className="d_flex_wrap"
           sx={{ marginY: "1rem", alignItems: "center" }}
@@ -211,12 +215,13 @@ const Offers = () => {
                 {selectedOffice.title}
               </Typography>
               <button className="edit_btn" onClick={toggleDrawer(true)}>
-                {t("dashboard.prices.add_new_offer")}
+                {lang === "ar" ? "اضافة كوبون جديد" : "add new coupon"}
               </button>
             </Box>
             {extractedOffers.map((ele, i) => {
-              const startDateString = ele.offer.start_date;
-              const endDateString = ele.offer.end_date;
+              const startDateString = ele?.coupon?.start_date;
+              const endDateString = ele?.coupon?.end_date;
+              console.log(startDateString, endDateString);
               const startDate = new Date(startDateString);
               const endDate = new Date(endDateString);
               const options = {
@@ -236,13 +241,14 @@ const Offers = () => {
                 "ar-EG",
                 options
               ).format(endDate);
-              const status = ele.offer.status == 0 ? false : true;
+              const status = ele?.coupon?.status == 0 ? false : true;
+
               const result = `من ${formattedStartDate} الى ${formattedEndDate}`;
               return (
                 <Paper className="paper_style" key={i}>
                   <Box className="d_flex_space_between">
                     <Typography className="font_bold">
-                      {ele.offer.name}
+                      {ele.coupon.name}
                     </Typography>
                     <Box className="box_switch">
                       <div className="div1">
@@ -254,7 +260,7 @@ const Offers = () => {
                               checked={status}
                               onChange={(event) =>
                                 handleSwitchChange(
-                                  ele.offer.id,
+                                  ele?.coupon.id,
                                   event.target.checked
                                 )
                               }
@@ -284,9 +290,9 @@ const Offers = () => {
                         {t("dashboard.prices.discount_percentage")}
                       </p>
                       <div className="div11">
-                        <span>{ele.offer.discount}</span>
+                        <span>{ele?.coupon?.discount}</span>
                         <span>
-                          {ele.offer.type_discount === "percent"
+                          {ele?.coupon?.type_discount === "percent"
                             ? "%"
                             : lang === "ar"
                             ? "ريال"
@@ -301,7 +307,7 @@ const Offers = () => {
                     />
                     <Box className="div1">
                       <p className="p1"> {t("dashboard.prices.applied_to")} </p>
-                      <div className="div11">{ele.title}</div>
+                      <div className="div11">{ele?.title}</div>
                     </Box>
                     <Divider
                       orientation="vertical"
@@ -311,7 +317,7 @@ const Offers = () => {
                     <Box className="div1">
                       <p className="p1"> {t("dashboard.prices.offer_days")} </p>
                       <div className="div11 flex">
-                        {ele?.offer?.ads_prices.map((e, i) => {
+                        {ele?.coupon?.ads_prices.map((e, i) => {
                           const target = unitsPrices.find(
                             (element) => element?.id === e?.id
                           );
@@ -332,7 +338,7 @@ const Offers = () => {
                     </button>
                     <button
                       className="delete"
-                      onClick={(e) => handleDeleteOffer(ele.offer.id)}
+                      onClick={() => handleDeleteOffer(ele?.coupon.id)}
                     >
                       {t("dashboard.users_manage.delete_btn")}
                     </button>
@@ -348,14 +354,13 @@ const Offers = () => {
           selectedOffice={selectedOffice}
           open={open}
           toggleDrawer={toggleDrawer}
-          selectedOffer={selectedOffer}
+          selectedCoupon={selectedCoupon}
           openType={openType}
           selectedUnit={selectedUnit}
-          refetch={refetch}
         />
       )}
     </>
   );
 };
 
-export default Offers;
+export default Coupons;

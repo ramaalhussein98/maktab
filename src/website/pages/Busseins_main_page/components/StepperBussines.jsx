@@ -16,7 +16,7 @@ import PaidIcon from "@mui/icons-material/Paid";
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
-
+import { useTranslation } from "react-i18next";
 const gradientBackground = (colors) =>
   `linear-gradient( 136deg, ${colors.join(", ")})`;
 
@@ -93,14 +93,16 @@ CustomStepIconComponent.propTypes = {
 };
 
 const StepperBussines = () => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const steps = [
-    " إضف بيانات الوحدة",
-    " أضف السعر والشروط",
-    " وحدتك تنعرض أكثر من 500 ألف مستأجر",
-    " تأكد أن الوحدة جاهزة لإيجار",
-    "ستصلك رسالة بكل طلب إيجار",
-    "أنشاء عقد بينك وبين المستأجر",
-    "نقوم تحويل مستحقاتك",
+    t("business.Addunitdata"),
+    t("business.Addprice"),
+    t("business.unitexp"),
+    t("business.make"),
+    t("business.recive"),
+    t("business.contract"),
+    t("business.Wetransfer"),
   ];
 
   return (

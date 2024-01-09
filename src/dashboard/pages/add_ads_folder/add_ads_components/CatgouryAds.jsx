@@ -47,6 +47,7 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
           {t("dashboard.new_order.order_info.label1")}
         </label>
         <TextField
+          className="textfield"
           id="my-text-field"
           type="text"
           value={state?.title || ""}
@@ -55,16 +56,18 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
           error={nameError}
           helperText={nameError ? "الرجاء ادخال اسم عقار صحيح" : ""}
           placeholder={t("dashboard.new_order.order_info.placeholder1")}
-          sx={{
-            width: "100%",
-            borderRadius: "12px",
-            marginBottom: "6px",
-            textAlign: lang === "ar" ? "right" : "left",
-            "&[readonly]": {
-              backgroundColor: "lightgray",
-              color: "darkgray",
-            },
-          }}
+          // sx={{
+          //   width: "100%",
+          //   borderRadius: "24px",
+          //   border: "none",
+          //   marginBottom: "6px",
+          //   // boxShadow: "0 6px 12px rgba(0, 0, 0, .3)",
+          //   textAlign: lang === "ar" ? "right" : "left",
+          //   "&[readonly]": {
+          //     backgroundColor: "lightgray",
+          //     color: "darkgray",
+          //   },
+          // }}
         />
         <Typography sx={{ fontWeight: "500", marginTop: "18px" }}>
           {t("dashboard.new_order.order_info.title")}
