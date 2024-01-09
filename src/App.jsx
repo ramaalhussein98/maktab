@@ -21,7 +21,6 @@ import RealEstates from "./dashboard/pages/RealEstates/RealEstates";
 import Addads from "./dashboard/pages/add_ads_folder/Addads";
 import Layout from "./website/Layouts/Layout";
 import Payment from "./website/pages/payment/Payment";
-import Prices from "./dashboard/pages/prices/Prices";
 import MainPrices from "./dashboard/pages/prices/MainPrices";
 import Offers from "./dashboard/pages/prices/Offers";
 import DownPrice from "./dashboard/pages/prices/DownPrice";
@@ -52,16 +51,9 @@ import Coupons from "./dashboard/pages/coupons/Coupons";
 import TermOfService from "./website/pages/term-of-service/TermOfService";
 import AllDeals from "./website/pages/all_deals/AllDeals";
 import PaymentDone from "./website/pages/done_payment/PaymentDone";
-import { StateProvider } from "./dashboard/context/calendarContext";
-import {
-  mainOfficeSignal,
-  initialData,
-  handleSelectMainOffice,
-} from "./dashboard/context/calendarData";
 
 const PrivateRoute = ({ element }) => {
   const thereisToken = localStorage.getItem("user_token");
-
   return thereisToken ? element : <Navigate to="/" />;
 };
 
@@ -245,31 +237,13 @@ function App() {
           path="dashboard"
           element={<PrivateRoute element={<DashLayout />} />}
         > */}
-        <Route
-          path="dashboard"
-          element={
-            <DashLayout
-              initialData={initialData}
-              mainOfficeSignal={mainOfficeSignal}
-              handleSelectMainOffice={handleSelectMainOffice}
-            />
-          }
-        >
+        <Route path="dashboard" element={<DashLayout />}>
           <Route path="home">
             <Route index element={<InformationPage />} />
             <Route path="unit-settings" element={<UnitSettings />} />
           </Route>
           <Route path="my_info" element={<MyInfo />} />
-          <Route
-            path="calendar"
-            element={
-              <Calender
-                initialData={initialData}
-                mainOfficeSignal={mainOfficeSignal}
-                handleSelectMainOffice={handleSelectMainOffice}
-              />
-            }
-          />
+          <Route path="calendar" element={<Calender />} />
 
           <Route path="reservations" element={<Reservations />} />
           <Route path="properties" element={<RealEstates />} />

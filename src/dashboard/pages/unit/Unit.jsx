@@ -70,11 +70,12 @@ const Unit = () => {
   const paramsId = useParams().id;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-
+  const [isChangingData, setIsChangingData] = useState(false);
   const {
     data: unit,
     isLoading,
     refetch,
+    isRefetching,
   } = useQueryHook(["unit", paramsId], () => getData(paramsId));
 
   const editInfoMutation = useMutationHook(editInfo, ["unit", paramsId]);
@@ -182,19 +183,21 @@ const Unit = () => {
   };
 
   const onChange = async () => {
+    setIsChangingData(true);
     const res = await myAxios.post(
       `api/v1/user/offices/update_status/${unit.id}`
     );
+    setIsChangingData(false);
     refetch();
-    console.log(res);
   };
 
   if (isLoading) return <Loader />;
   console.log(unit);
   return (
     <>
+      {(isRefetching || isChangingData) && <Loader />}
       <Link
-        to={"../"}
+        to={"/dashboard/properties"}
         className="text-2xl font-semibold hover:bg-[#c20000ab] w-fit py-1 px-4 rounded-lg hover:text-white mb-5 block"
       >
         {unit?.title}
@@ -220,6 +223,7 @@ const Unit = () => {
                     onCancel={onCancel}
                     categoryId={unit?.category_aqar?.id}
                     unitSpace={unit?.space}
+                    setIsChangingData={setIsChangingData}
                   />
                 </Box>
               </Fade>
@@ -281,6 +285,7 @@ const Unit = () => {
                     onCancel={() => {
                       setDescriptionEdit(false);
                     }}
+                    setIsChangingData={setIsChangingData}
                   />
                 </Box>
               </Fade>
@@ -320,6 +325,7 @@ const Unit = () => {
                     mainImage={unit.main_image}
                     id={unit.id}
                     refetch={refetch}
+                    setIsChangingData={setIsChangingData}
                     onCancel={() => {
                       setFilesEdit(false);
                     }}
@@ -412,7 +418,12 @@ const Unit = () => {
                   <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
                     {lang === "ar" ? " تفاصيل المكتب" : "Office Details"}
                   </Typography>
-                  <UnitRoomDetails details={unit.ads_details} />
+                  <UnitRoomDetails
+                    onCancel={() => {
+                      setEditDetails(false);
+                    }}
+                    details={unit.ads_details}
+                  />
                 </Box>
               </Fade>
             )}
@@ -430,7 +441,7 @@ const Unit = () => {
                         setEditDetails(true);
                       }}
                     >
-                      {!descriptionEdit &&
+                      {!editDetails &&
                         t("dashboard.outgoing_requests.edit_btn")}
                     </Typography>
                   </Box>
@@ -463,6 +474,7 @@ const Unit = () => {
                       setEditFacilities(false);
                     }}
                     unitId={unit.id}
+                    setIsChangingData={setIsChangingData}
                     refetch={refetch}
                   />
                 </Box>
@@ -507,6 +519,7 @@ const Unit = () => {
                   <EditFeatures
                     features={unit.features}
                     ads_features={unit.featurea_ads}
+                    setIsChangingData={setIsChangingData}
                     unitId={unit.id}
                     onCancel={() => {
                       setEditFeatures(false);
@@ -554,6 +567,7 @@ const Unit = () => {
                   </Typography>
                   <EditComforts
                     comforts={unit.comforts}
+                    setIsChangingData={setIsChangingData}
                     onCancel={() => {
                       setEditComforts(false);
                     }}

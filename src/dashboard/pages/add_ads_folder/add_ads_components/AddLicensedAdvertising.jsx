@@ -31,10 +31,12 @@ const AddLicensedAdvertising = ({
   setSelectedCheckLicense,
   state,
   dispatch,
+  stepsErrors,
 }) => {
   const [checked, setChecked] = useState(false);
   const [checkedRequest, setCheckedRequest] = useState(false);
   const { t } = useTranslation();
+  const [showError, setShowError] = useState(false);
 
   const handleLicesneNumbervaule = (event) => {
     // setLicenseNumber(event.target.value);
@@ -129,6 +131,7 @@ const AddLicensedAdvertising = ({
             value={state?.license_number}
             onChange={handleLicesneNumbervaule}
             placeholder={t("dashboard.contract.plzenter")}
+            onKeyUp={() => setShowError(true)}
             style={{
               width: "100%",
               border: "1px solid #ddd",
@@ -140,6 +143,9 @@ const AddLicensedAdvertising = ({
               marginTop: "5px",
             }}
           />
+          <span className="text-sm text-red-500 p-2">
+            {showError && stepsErrors?.license_number}
+          </span>
         </>
       )}
       <Divider sx={{ marginY: "2rem" }} />

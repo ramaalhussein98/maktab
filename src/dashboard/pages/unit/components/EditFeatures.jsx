@@ -9,6 +9,7 @@ const EditFeatures = ({
   unitId,
   refetch,
   ads_features,
+  setIsChangingData,
 }) => {
   const { t, i18n } = useTranslation();
   console.log(features, ads_features);
@@ -60,6 +61,7 @@ const EditFeatures = ({
   };
 
   const handleSubmit = async () => {
+    setIsChangingData(true);
     const added = new FormData();
     addedFeatures.forEach((ele, i) => {
       added.append(`features[${i}][boolfeaturea_id]`, ele.id);
@@ -76,8 +78,10 @@ const EditFeatures = ({
         },
       });
     });
+    setIsChangingData(false);
 
     await refetch();
+    onCancel();
   };
   return (
     <div className="unitNameBox my-4">

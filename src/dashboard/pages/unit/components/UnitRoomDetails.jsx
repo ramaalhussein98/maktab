@@ -27,7 +27,7 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const UnitRoomDetails = ({ details }) => {
+const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
   const { t, i18n } = useTranslation();
   const [state, setState] = useState([...details]);
   const lang = i18n.language;
@@ -86,6 +86,7 @@ const UnitRoomDetails = ({ details }) => {
       values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
     },
   ];
+
   const handlePropertyClick = (propertyId) => {
     // dispatch({ type: "facilities", value: propertyId });
   };
@@ -200,7 +201,7 @@ const UnitRoomDetails = ({ details }) => {
               backgroundColor: "#e5f9f4",
             },
           }}
-          // onClick={onCancel}
+          onClick={onCancel}
         >
           {t("dashboard.outgoing_requests.cancel_btn")}
         </Button>

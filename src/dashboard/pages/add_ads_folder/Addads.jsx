@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { Button, Container, Box } from "@mui/material";
+import { Button, Container, Box, CircularProgress } from "@mui/material";
 import {
   HomeImagesAdd,
   HomeDetails,
@@ -12,7 +12,7 @@ import {
 } from "./add_ads_components";
 import Services from "./add_ads_components/services/Services";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { WhiteLogo } from "../../../assets/logos";
 import AddLicensedAdvertising from "./add_ads_components/AddLicensedAdvertising";
 import "../../../assets/css/addAds.css";
@@ -344,7 +344,7 @@ const reducerFunc = (state, action) => {
 const Addads = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-
+  const nav = useNavigate();
   const searchData = JSON.parse(localStorage.getItem("searchData"));
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
@@ -364,6 +364,8 @@ const Addads = () => {
   const [deletedImages, setDeletedImages] = useState([]);
   const [readyImages, setReadyImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState();
+
+  const [stepsErrors, setStepErrors] = useState({});
 
   const [state, dispatch] = useReducer(reducerFunc, {
     license_number: "",
@@ -399,18 +401,43 @@ const Addads = () => {
     images: [],
   });
 
-  console.log(state);
   //handling steps errors
   useEffect(() => {
     switch (step) {
       case 1:
-        setError(false);
+        if (state.license_number.length === 7) {
+          setError(false);
+
+          setStepErrors((prev) => ({
+            ...prev,
+            license_number: "",
+          }));
+        } else {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            license_number: " license number should be equals to 7",
+          }));
+        }
         break;
       case 2:
-        if (state.title.length === 0 || state.category_id.length === 0) {
+        if (state.category_id.length === 0) {
           setError(true);
         } else {
           setError(false);
+        }
+        if (state.title.length <= 3) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            titleError: "title should be at least 4 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            titleError: "",
+          }));
         }
         break;
       case 3:
@@ -450,10 +477,18 @@ const Addads = () => {
         }
         break;
       case 5:
-        if (state.description.length === 0) {
+        if (state.description.length <= 7) {
           setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            descriptionError: "description should be at least 8 chars",
+          }));
         } else {
           setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            descriptionError: null,
+          }));
         }
         break;
       case 7:
@@ -483,7 +518,32 @@ const Addads = () => {
         } else {
           setError(false);
         }
-
+        if (state.viewer_name.length <= 3) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNameError: "name should be at least 4 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNameError: null,
+          }));
+        }
+        if (state.viewer_phone.length < 10 || state.viewer_phone.length > 11) {
+          setError(true);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNumberError: "name should be at least 10 to 11 chars",
+          }));
+        } else {
+          setError(false);
+          setStepErrors((prev) => ({
+            ...prev,
+            veiwerNumberError: null,
+          }));
+        }
         break;
       case 9:
         if (
@@ -514,8 +574,12 @@ const Addads = () => {
   const hasPrevStep = step > 1;
 
   const handleNext = () => {
-    setStep(step + 1);
-    setAfterWidth(afterWidth + 10);
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setStep(step + 1);
+      setIsSubmitting(false);
+      setAfterWidth(afterWidth + 10);
+    }, 800);
   };
 
   const handlePrev = () => {
@@ -545,9 +609,9 @@ const Addads = () => {
 
     const updateInfo = new FormData();
     updateInfo.append("furnisher", state.furnished);
-    updateInfo.append("space", state.area);
-    updateInfo.append("height", state.height);
-    updateInfo.append("width", state.width);
+    updateInfo.append("space", parseFormattedNumber(state.area));
+    updateInfo.append("height", parseFormattedNumber(state.height));
+    updateInfo.append("width", parseFormattedNumber(state.width));
     updateInfo.append("type_aqar_id", state.type_aqar_id);
     updateInfo.append("advertiser_relationship", state.advertiser_relationship);
     if (state.advertiser_relationship_type) {
@@ -687,6 +751,11 @@ const Addads = () => {
           myAxios.post(`/api/v1/user/offices/addFiles/${unitId}`, filesData);
         });
     });
+    toast.success(
+      lang === "ar" ? "تمت العملية بنجاح" : "operation completed successfully"
+    );
+
+    nav("/dashboard/properties");
   };
 
   const renderStep = () => {
@@ -698,6 +767,7 @@ const Addads = () => {
             setSelectedCheckLicense={setSelectedCheckLicense}
             state={state}
             dispatch={dispatch}
+            stepsErrors={stepsErrors}
           />
         );
       case 2:
@@ -706,6 +776,7 @@ const Addads = () => {
             categories={officeOptions.categories}
             dispatch={dispatch}
             state={state}
+            stepsErrors={stepsErrors}
           />
         );
       case 3:
@@ -720,7 +791,13 @@ const Addads = () => {
       case 4:
         return <OfficeDetailsNumbers dispatch={dispatch} state={state} />;
       case 5:
-        return <HomeDescription state={state} dispatch={dispatch} />;
+        return (
+          <HomeDescription
+            state={state}
+            dispatch={dispatch}
+            stepsErrors={stepsErrors}
+          />
+        );
       case 6:
         return (
           <Services
@@ -739,6 +816,7 @@ const Addads = () => {
             dispatch={dispatch}
             type={0}
             pricesTypes={officeOptions.type_res}
+            stepsErrors={stepsErrors}
           />
         );
       case 9:
@@ -866,9 +944,11 @@ const Addads = () => {
                       onClick={() => handleNext()}
                       disabled={error}
                     >
-                      {isSubmitting
-                        ? "loading..."
-                        : t("dashboard.new_order.main_btn1")}
+                      {isSubmitting ? (
+                        <CircularProgress color="inherit" size={"30px"} />
+                      ) : (
+                        t("dashboard.new_order.main_btn1")
+                      )}
                     </Button>
                   )}
                   {isLastStep && (
@@ -877,9 +957,11 @@ const Addads = () => {
                       onClick={() => handleSubmit()}
                       disabled={error}
                     >
-                      {isSubmitting
-                        ? "loading..."
-                        : t("dashboard.new_order.main_btn3")}
+                      {isSubmitting ? (
+                        <CircularProgress color="inherit" size={"30px"} />
+                      ) : (
+                        t("dashboard.new_order.main_btn3")
+                      )}
                     </Button>
                   )}
                 </Box>

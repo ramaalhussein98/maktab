@@ -50,23 +50,26 @@ const Coupons = () => {
   } = useQueryHook(["down"], () => getData());
   const unitsPrices = JSON.parse(localStorage.getItem("searchData"))?.type_res;
   const [extractedOffers, setExtractedOffers] = useState([]);
+  const [selectedOffice, setSelectedOffice] = useState("");
   useEffect(() => {
     // Function to extract offers
     const extractOffers = () => {
       const offersArray = [];
       if (offers) {
         for (const mainObject of offers) {
-          if (mainObject && mainObject?.units) {
-            for (const unit of mainObject.units) {
-              if (unit?.coupons?.length > 0) {
-                unit?.coupons.forEach((offer) => {
-                  // Extract the title and offer details
-                  const offerDetails = {
-                    title: unit?.title,
-                    coupon: offer,
-                  };
-                  offersArray.push(offerDetails);
-                });
+          if (selectedOffice.id === mainObject.id) {
+            if (mainObject && mainObject?.units) {
+              for (const unit of mainObject.units) {
+                if (unit?.coupons?.length > 0) {
+                  unit?.coupons.forEach((coupon) => {
+                    // Extract the title and offer details
+                    const offerDetails = {
+                      title: unit?.title,
+                      coupon: coupon,
+                    };
+                    offersArray.push(offerDetails);
+                  });
+                }
               }
             }
           }
@@ -77,10 +80,8 @@ const Coupons = () => {
     };
     // Call the function to extract offers
     extractOffers();
-  }, [offers]); // Run the effect whenever dataArray changes
+  }, [offers, selectedOffice]);
   console.log(offers);
-
-  const [selectedOffice, setSelectedOffice] = useState("");
 
   const [switchState, setSwitchState] = useState(true);
 

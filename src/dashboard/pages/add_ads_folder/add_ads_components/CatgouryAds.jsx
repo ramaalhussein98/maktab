@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-const CatgouryAds = ({ categories, dispatch, state }) => {
+const CatgouryAds = ({ categories, dispatch, state, stepsErrors }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const [nameError, setNameError] = useState();
-
+  const [showError, setShowError] = useState(false);
   const handleNameChange = (event) => {
     const inputValue = event.target.value;
     // Check if the input value contains only Arabic and English letters
@@ -51,6 +51,7 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
           id="my-text-field"
           type="text"
           value={state?.title || ""}
+          onKeyUp={() => setShowError(true)}
           onChange={handleNameChange}
           size="small"
           error={nameError}
@@ -69,6 +70,9 @@ const CatgouryAds = ({ categories, dispatch, state }) => {
           //   },
           // }}
         />
+        <span className="text-sm text-red-500 p-2">
+          {showError && stepsErrors?.titleError}
+        </span>
         <Typography sx={{ fontWeight: "500", marginTop: "18px" }}>
           {t("dashboard.new_order.order_info.title")}
         </Typography>

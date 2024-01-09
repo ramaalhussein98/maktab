@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -8,11 +8,7 @@ import "../../../assets/css/calender.css";
 import { Skeleton } from "@mui/material";
 // import { AppState } from "../../context/calendarContext";
 
-const Calender = ({
-  mainOfficeSignal,
-  handleSelectMainOffice,
-  initialData,
-}) => {
+const Calender = () => {
   const { i18n } = useTranslation();
   const { t } = useTranslation();
   const [showBoxDays, setShowBoxDays] = useState(false); //this for box to show busy tou want or available
@@ -153,12 +149,6 @@ const Calender = ({
 
   return (
     <>
-      {/* <div>
-        <p>Selected Main Office: {mainOfficeSignal.value.title}</p>
-      </div>
-      <button onClick={() => console.log(mainOfficeSignal.value.title)}>
-        click
-      </button> */}
       <div className="fullCalenderParent">
         <FullCalendar
           className="calendar-container"

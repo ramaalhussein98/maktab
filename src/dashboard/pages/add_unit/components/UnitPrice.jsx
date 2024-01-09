@@ -22,6 +22,7 @@ const UnitPrice = ({
   pricesTypes,
   type,
   parseFormattedNumber,
+  stepsErrors,
 }) => {
   console.log(state);
   const isEditMode = type === 1;
@@ -29,11 +30,12 @@ const UnitPrice = ({
   const { i18n } = useTranslation();
   const lang = i18n.language;
   const [selectedUnit, setSelectedUnit] = useState(state.type_down_payment);
+  const [showNameError, setShowNameError] = useState(false);
+  const [showNumberError, setShowNumberError] = useState(false);
 
   useEffect(() => {
-    if(state.prices.length ===  0) {
+    if (state.prices.length === 0) {
       dispatch({ type: "prices", sub_type: "add", array: pricesTypes });
-
     }
   }, []);
 
@@ -167,6 +169,7 @@ const UnitPrice = ({
         name="inspector_name"
         value={state?.viewer_name || ""}
         onChange={hadleVeiwerDetailsChange}
+        onKeyUp={() => setShowNameError(true)}
         size="small"
         // placeholder={t("dashboard.new_order.order_info.placeholder1")}
         sx={{
@@ -180,6 +183,9 @@ const UnitPrice = ({
           },
         }}
       />
+      <span className="text-sm text-red-500 p-2">
+        {showNameError && stepsErrors?.veiwerNameError}
+      </span>
       <label
         htmlFor="my-text-field"
         style={{ fontWeight: "500", marginBottom: "4px" }}
@@ -192,6 +198,7 @@ const UnitPrice = ({
         name="number_phone"
         value={state?.viewer_phone || ""}
         onChange={hadleVeiwerDetailsChange}
+        onKeyUp={() => setShowNumberError(true)}
         size="small"
         // placeholder={t("dashboard.new_order.order_info.placeholder1")}
         sx={{
@@ -205,6 +212,9 @@ const UnitPrice = ({
           },
         }}
       />
+      <span className="text-sm text-red-500 p-2">
+        {showNumberError && stepsErrors?.veiwerNumberError}
+      </span>
     </>
   );
 };

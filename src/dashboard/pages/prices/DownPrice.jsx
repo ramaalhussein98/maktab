@@ -35,6 +35,7 @@ const DownPrice = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [unit, setUnit] = useState("%");
   const [price, setPrice] = useState(50);
+  const [isChangingData, setIsChangingData] = useState(false);
   console.log(office);
 
   useEffect(() => {
@@ -58,6 +59,7 @@ const DownPrice = () => {
     setPrice(e.target.value);
   };
   const handleSaveNewPrice = async () => {
+    setIsChangingData(true);
     const data = new FormData();
     data.append("down_payment", price);
     data.append("type_down_payment", unit);
@@ -65,17 +67,20 @@ const DownPrice = () => {
 
     const res = await myAxios.post("api/v1/user/offices/down_payment", data);
     if (res.data.status === true) {
+      await refetch();
       Swal.fire({
         title: "تم تعديل السعر",
         icon: "success",
       });
+      setIsChangingData(false);
+      setShowEdit(false);
     }
-    await refetch();
   };
   if (isLoading) return <Loader />;
 
   return (
     <Box sx={{ padding: "20px" }}>
+      {isChangingData && <Loader />}
       <span className="title_price">{t("dashboard.pricesNav.link3")} </span>
       <Box
         className="d_flex_wrap"

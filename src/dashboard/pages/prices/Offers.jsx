@@ -49,23 +49,26 @@ const Offers = () => {
   } = useQueryHook(["down"], () => getData());
   const unitsPrices = JSON.parse(localStorage.getItem("searchData"))?.type_res;
   const [extractedOffers, setExtractedOffers] = useState([]);
+  const [selectedOffice, setSelectedOffice] = useState("");
   useEffect(() => {
     // Function to extract offers
     const extractOffers = () => {
       const offersArray = [];
       if (offers) {
         for (const mainObject of offers) {
-          if (mainObject && mainObject?.units) {
-            for (const unit of mainObject.units) {
-              if (unit?.offers?.length > 0) {
-                unit?.offers.forEach((offer) => {
-                  // Extract the title and offer details
-                  const offerDetails = {
-                    title: unit?.title,
-                    offer: offer,
-                  };
-                  offersArray.push(offerDetails);
-                });
+          if (selectedOffice.id === mainObject.id) {
+            if (mainObject && mainObject?.units) {
+              for (const unit of mainObject.units) {
+                if (unit?.offers?.length > 0) {
+                  unit?.offers.forEach((offer) => {
+                    // Extract the title and offer details
+                    const offerDetails = {
+                      title: unit?.title,
+                      offer: offer,
+                    };
+                    offersArray.push(offerDetails);
+                  });
+                }
               }
             }
           }
@@ -76,9 +79,7 @@ const Offers = () => {
     };
     // Call the function to extract offers
     extractOffers();
-  }, [offers]); // Run the effect whenever dataArray changes
-
-  const [selectedOffice, setSelectedOffice] = useState("");
+  }, [offers, selectedOffice]);
 
   const [switchState, setSwitchState] = useState(true);
 
@@ -91,13 +92,15 @@ const Offers = () => {
   // for edit functionality
 
   const toggleDrawer = (isOpen) => (event) => {
+    setSelectedOffer(null);
+    setSelectedUnit(null);
+    setOpenType(1);
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
     }
-    setOpenType(1);
     setOpen(isOpen);
   };
 
@@ -151,16 +154,15 @@ const Offers = () => {
   };
 
   const handleEdit = (offer) => {
-    console.log(offer);
+    setOpenType(2);
     setSelectedOffer(offer);
+    setOpen(true);
     // Find the selected unit
     const selectedUnit = offers.reduce((selected, ele) => {
       const unit = ele.units.find((unit) => unit.id == offer.offer.ads_id);
       return unit || selected;
     }, null);
     setSelectedUnit(selectedUnit);
-    setOpenType(2);
-    setOpen(true);
   };
 
   if (isLoading) return <Loader />;
@@ -351,6 +353,8 @@ const Offers = () => {
           selectedOffer={selectedOffer}
           openType={openType}
           selectedUnit={selectedUnit}
+          setSelectedOffer={setSelectedOffer}
+          setSelectedUnit={setSelectedUnit}
           refetch={refetch}
         />
       )}

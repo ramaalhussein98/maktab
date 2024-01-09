@@ -22,6 +22,7 @@ const EditInformation = ({
   editInfoMutation,
   id,
   unitSpace,
+  setIsChangingData,
 }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
@@ -38,33 +39,18 @@ const EditInformation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("storing...");
+    setIsChangingData(true);
     try {
       const res = await editInfoMutation.mutateAsync({
         _title,
         id,
         space,
       });
-
-      toast.update(toastId, {
-        type: "success",
-        render: res.data.message,
-        closeOnClick: true,
-        isLoading: false,
-        autoClose: true,
-        closeButton: true,
-        pauseOnHover: false,
-      });
+      setIsChangingData(false);
+      onCancel();
     } catch (error) {
-      toast.update(toastId, {
-        type: "error",
-        // render: error.response.data.message,
-        closeOnClick: true,
-        isLoading: false,
-        autoClose: true,
-        closeButton: true,
-        pauseOnHover: false,
-      });
+      setIsChangingData(false);
+      onCancel();
     }
   };
   return (

@@ -12,7 +12,15 @@ import myAxios from "../../../../api/myAxios";
 
 // import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
+const UnitImages = ({
+  images,
+  mainImage,
+  type = 1,
+  onCancel,
+  id,
+  refetch,
+  setIsChangingData,
+}) => {
   const { t, i18n } = useTranslation();
   const [readyImages, setReadyImages] = useState(
     images?.filter((ele) => ele.type_file === "image")
@@ -156,6 +164,7 @@ const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
   };
 
   const handleSubmit = async () => {
+    setIsChangingData(true);
     console.log(thumbnail, _images, selectedVideoFile);
     const updateFiles = new FormData();
     updateFiles.append("main_image", thumbnail.file);
@@ -170,8 +179,10 @@ const UnitImages = ({ images, mainImage, type = 1, onCancel, id, refetch }) => {
     await myAxios.post(`/api/v1/user/offices/updateFiles/${id}`, updateFiles);
 
     await myAxios.post(`/api/v1/user/offices/addFiles/${id}`, addFiles);
+    setIsChangingData(false);
 
     await refetch();
+    onCancel();
   };
 
   return (
