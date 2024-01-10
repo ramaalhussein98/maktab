@@ -53,7 +53,7 @@ const HomePage = () => {
     page: page,
     filter: filter,
   });
-  console.log(isRefetching);
+  // console.log(isRefetching);
   const isMapPage = location.split("/").includes("map");
 
   const paginationData = {
@@ -160,7 +160,7 @@ const HomePage = () => {
                   <NoData />
                 )}
               </Grid>
-              {data?.data?.length > 20 ? (
+              {data?.next_page_url != null ? (
                 <Link to="all_deals" className="showMoreAds">
                   {" "}
                   المزيد من المكاتب

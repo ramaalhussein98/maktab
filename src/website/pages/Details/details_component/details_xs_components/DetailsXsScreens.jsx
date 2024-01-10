@@ -121,7 +121,7 @@ const DetailsXsScreens = ({ adInfo }) => {
                 }}
               >
                 <FavoriteButton
-                // adInfo={adInfo}
+                adInfo={adInfo}
                 />
                 <Box>
                   <Button onClick={() => setShareListOpen(!ShareListOpen)}>

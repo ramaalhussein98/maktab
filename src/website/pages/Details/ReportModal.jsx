@@ -10,9 +10,10 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-// import { toast, ToastContainer } from "react-toastify";
+
 import { useTranslation } from "react-i18next";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
+import myAxios from "../../../api/myAxios";
 
 const StyledSelect = styled(Select)((props) => ({
   "& .MuiSvgIcon-root": {
@@ -30,7 +31,8 @@ const SelectPlaceholder = styled(MenuItem)`
 
 const ReportModal = ({ open, onClose, adID }) => {
   // check if there is no token dont shown somthing
-
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
 
@@ -52,30 +54,26 @@ const ReportModal = ({ open, onClose, adID }) => {
       );
       return;
     }
-    const formData = new FormData();
-    formData.append("reason", selectedOption);
-    formData.append("content", report);
-
+    const requestData = {
+      reason: selectedOption,
+      text: report,
+      ads_id: adID,
+    };
+    const endpoint = user_type_bussines
+      ? "api/v1/user/reports/save"
+      : "api/v1/ordinaries/evaluations/save_to_ads";
     try {
-      const response = await fetch(
-        `https://dashboard.aqartik.com/api/deal/report_deal/${adID}`,
-        {
-          method: "POST",
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("user_token")}`,
-          },
-          body: formData,
-        }
-      );
+      const res = await myAxios.post(endpoint, requestData);
 
-      if (response.ok) {
-        toast.success("Report submitted successfully!"); // Show success toaster
-        onClose(); // Close the modal
+      if (res?.data?.status === true) {
+        toast.success(res?.data?.message);
+        onClose();
       } else {
-        toast.error("Failed to submit report. Please try again."); // Show error toaster
+        toast.error(res?.data?.message);
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again later."); // Show error toaster
+      // Handle error (e.g., show a toast message)
+      toast.error("Error while submitting data");
     }
   };
 

@@ -1,20 +1,39 @@
 import { Button } from "@mui/material";
 import { useState } from "react";
-
-const FavoriteBtn = () => {
-  const [isClicked, setIsClicked] = useState(false);
+import { toast } from "react-toastify";
+import myAxios from "../api/myAxios";
+const FavoriteBtn = ({ adInfo }) => {
+  const [isFavorite, setIsFavorite] = useState(adInfo?.is_favourite);
+  const userToken = localStorage.getItem("user_token");
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   const iconStyle = {
     display: "block",
-    fill: isClicked ? "red" : "rgba(0, 0, 0, 0.5)",
+    fill: isFavorite ? "red" : "rgba(0, 0, 0, 0.5)",
     height: "24px",
     width: "24px",
     stroke: "#fff",
     strokeWidth: "2px",
     overflow: "visible",
   };
-  const handleClick = (e) => {
-    e.preventDefault(); // Prevent the default behavior of the button click
-    setIsClicked(!isClicked);
+  const handleClick = async (e) => {
+    const endpoint = user_type_bussines
+      ? `/api/v1/user/favorites/add_fav_ads/${adInfo?.id}`
+      : `/api/v1/ordinaries/favorites/add_fav_ads/${adInfo?.id}`;
+    e.preventDefault();
+    if (!userToken) {
+      // If no token, show the login modal
+      toast.error("يرجى تسجيل الدخول");
+    } else {
+      const res = await myAxios.post(endpoint);
+
+      if (res?.data?.status === true) {
+        toast.success(res?.data?.message);
+        setIsFavorite(!isFavorite);
+      } else {
+        toast.error(res?.data?.message);
+      }
+    }
   };
   return (
     <Button
@@ -30,7 +49,7 @@ const FavoriteBtn = () => {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
-        style={iconStyle} // Use the object notation for the style prop
+        style={iconStyle}
         aria-hidden="true"
         role="presentation"
         focusable="false"

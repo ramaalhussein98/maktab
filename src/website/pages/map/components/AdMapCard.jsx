@@ -115,7 +115,11 @@ const AdMapCard = ({
 
                 <div className="d-flex">
                   <StarIcon sx={{ fontSize: "16px" }} />
-                  5.0
+                  {activeAd?.rate === null
+                    ? `(${0})`
+                    : `(${parseFloat(activeAd?.rate)
+                        .toFixed(2)
+                        .replace(/\.?0*$/, "")})`}
                 </div>
               </div>
               <div style={{ display: "Flex", justifyContent: "space-between" }}>
@@ -189,7 +193,7 @@ const AdMapCard = ({
                   <div
                     style={{ position: "absolute", top: "0px", left: "0px" }}
                   >
-                    <FavoriteBtn />
+                    <FavoriteBtn adInfo={activeAd} />
                   </div>
                 </div>
                 <div className="descrption" style={{ color: "gray" }}>
@@ -233,7 +237,11 @@ const AdMapCard = ({
                   </div>
                   <div className="d-flex">
                     <StarIcon sx={{ fontSize: "16px" }} />
-                    5.0
+                    {activeAd?.rate === null
+                      ? `(${0})`
+                      : `(${parseFloat(activeAd?.rate)
+                          .toFixed(2)
+                          .replace(/\.?0*$/, "")})`}
                   </div>
                 </div>
               </Box>

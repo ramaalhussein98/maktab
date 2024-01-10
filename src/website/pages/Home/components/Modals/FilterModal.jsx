@@ -135,9 +135,13 @@ const FilterModal = ({
       return filterParams;
     });
     // refetch();
+    setOpenFilterModal(false);
   };
 
-  const handleDeleteFilterRes = () => setFilter({});
+  const handleDeleteFilterRes = () => {
+    setFilter({});
+    setOpenFilterModal(false);
+  };
   return (
     <Modal
       open={openFilterModal}

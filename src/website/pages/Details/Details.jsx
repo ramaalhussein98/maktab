@@ -19,6 +19,7 @@ import { useQueryHook } from "../../../hooks/useQueryHook";
 import myAxios from "../../../api/myAxios";
 import { useOfficeHook } from "../../../hooks/useOfficeHook";
 import LoaderHome from "../../../ui/LoaderHome";
+import FavoriteBtn from "../../../ui/FavoriteBtn";
 
 const Details = () => {
   const { t } = useTranslation();
@@ -159,10 +160,12 @@ const Details = () => {
                       fomtSize: "1.2rem",
                     }}
                   />
-                  5
-                  {/* {adInfo?.user_rate === null
+
+                  {data?.rate === null
                     ? `(${0})`
-                    : `(${adInfo?.user_rate})`} */}
+                    : `(${parseFloat(data?.rate)
+                        .toFixed(2)
+                        .replace(/\.?0*$/, "")})`}
                 </Typography>
                 <Typography
                   sx={{
@@ -218,9 +221,7 @@ const Details = () => {
                     fontSize: { xs: "13px", md: "15px" },
                   }}
                 >
-                  <FavoriteIcons
-                  //   adInfo={adInfo}
-                  ></FavoriteIcons>
+                  <FavoriteIcons adInfo={data}></FavoriteIcons>
                   {t("details_page.fav_button")}
                 </Box>
 

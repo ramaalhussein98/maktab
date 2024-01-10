@@ -9,58 +9,44 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 // import LogInModal from "../../../authentication/loginFolder/LogInModal";
+import myAxios from "../../../../../api/myAxios";
 
 const FiveStars = ({ adInfo }) => {
   const userToken = localStorage.getItem("user_token");
+  const user_type_bussines =
+    localStorage.getItem("user_type") === "bussines" ? true : false;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const nav = useNavigate();
   const [rating, setRating] = useState(0);
-  // const { data, isLoading, post } = useDataFetcher();
+  const endpoint = user_type_bussines
+    ? "api/v1/user/evaluations/save_to_ads"
+    : "api/v1/ordinaries/evaluations/save_to_ads";
 
-  // useEffect(() => {
-  //   if (adInfo?.can_rate !== true) {
-  //     setRating(adInfo?.my_rate?.rate);
-  //   }
-  // }, [adInfo]);
+  useEffect(() => {
+    if (adInfo?.can_rate !== true) {
+      setRating(adInfo?.my_rate);
+    }
+  }, [adInfo]);
 
-  // const handleStarClick = async (selectedRating) => {
-  //   if (adInfo?.can_rate !== true) {
-  //     return;
-  //   }
-  //   setRating(selectedRating);
-  //   const token = localStorage.getItem("user_token");
-  //   const formData = new FormData();
-  //   formData.append("rate", selectedRating);
-  //   const res = await axios.post(
-  //     `https://www.dashboard.aqartik.com/api/deal/rate_user/${adInfo?.id}`,
-  //     formData,
-  //     {
-  //       headers: {
-  //         authorization: `Bearer ${token}`,
-  //       },
-  //     }
-  //   );
-  //   if (res.data.status === 1) {
-  //     toast.success(lang === "ar" ? "تمت العملية بنجاح" : "done");
-  //   } else if (
-  //     data.data.status === 0 &&
-  //     data.data.message === "401 Unauthorized"
-  //   ) {
-  //     toast.error(
-  //       lang === "ar"
-  //         ? "غير مصرح، يرجى تسجيل الدخول"
-  //         : "unauthorized, please login again"
-  //     );
-  //     localStorage.removeItem("user_token");
-  //     localStorage.removeItem("userId");
-  //     localStorage.removeItem("userName");
-  //     localStorage.removeItem("userMembership");
-  //     localStorage.removeItem("userLocation");
-  //     nav("/login");
-  //   } else {
-  //   }
-  // };
+  const handleStarClick = async (selectedRating) => {
+    // if (adInfo?.can_rate !== true) {
+    //   return;
+    // }
+    setRating(selectedRating);
+    const requestData = {
+      rate: selectedRating,
+      ads_id: adInfo?.id,
+    };
+
+    const res = await myAxios.post(endpoint, requestData);
+
+    if (res?.data?.status === true) {
+      toast.success(res?.data?.message);
+    } else {
+      toast.error(res?.data?.message);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", gap: 0 }}>
@@ -68,7 +54,7 @@ const FiveStars = ({ adInfo }) => {
         [1, 2, 3, 4, 5].map((star) => (
           <IconButton
             key={star}
-            // onClick={() => handleStarClick(star)}
+            onClick={() => handleStarClick(star)}
             color={
               adInfo?.user_rate !== null
                 ? "disabled"

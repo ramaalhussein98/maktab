@@ -12,7 +12,6 @@ import {
 import DetailsTabContent from "./DetailsTabContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import Map from "../../../../../assets/images/map.jpg";
-
 import DetailsFeaturesBox from "./DetailsFeaturesBox";
 import FiveStars from "./FiveStars";
 import { useTranslation } from "react-i18next";

@@ -195,7 +195,12 @@ const DetailsXsTabs = ({ adInfo }) => {
                     ></StarIcon>
                     <Typography sx={{ color: "black" }}>
                       {/* {adInfo?.user_rate} {lang === "ar" ? "تقييم" : "rate"} */}
-                      5.0
+
+                      {adInfo?.rate === null
+                        ? `(${0})`
+                        : `(${parseFloat(adInfo?.rate)
+                            .toFixed(2)
+                            .replace(/\.?0*$/, "")})`}
                     </Typography>
                   </Box>
                   <Box
@@ -370,26 +375,24 @@ const DetailsXsTabs = ({ adInfo }) => {
             )}
             {activeTab === 2 && (
               <>
-                {userToken && (
-                  <Box
-                    sx={{
-                      border: "1px solid #d2cdcd",
-                      padding: "1rem",
-                      width: "15rem",
-                      borderRadius: "1rem",
-                      marginTop: "3rem",
-                    }}
-                  >
-                    <Typography sx={{ fontWeight: "bold", color: "gray" }}>
-                      {t(
-                        "details_page.details_tabs.guest_reviews_tab.review_title"
-                      )}
-                      ..
-                    </Typography>
+                <Box
+                  sx={{
+                    border: "1px solid #d2cdcd",
+                    padding: "1rem",
+                    width: "15rem",
+                    borderRadius: "1rem",
+                    marginTop: "3rem",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold", color: "gray" }}>
+                    {t(
+                      "details_page.details_tabs.guest_reviews_tab.review_title"
+                    )}
+                    ..
+                  </Typography>
 
-                    <FiveStars adInfo={adInfo} />
-                  </Box>
-                )}
+                  <FiveStars adInfo={adInfo} />
+                </Box>
 
                 {/* <LogInModal
                   open={showLoginModal}

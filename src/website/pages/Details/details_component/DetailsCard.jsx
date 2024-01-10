@@ -50,7 +50,11 @@ const DetailsCard = ({ adInfo }) => {
     setSelectedComfortOptions(selectedValues);
   };
   const handleReportOpenModal = () => {
-    setModalReportOpen(true);
+    if (userToken) {
+      setModalReportOpen(true);
+    } else {
+      toast.error("يرجى تسجيل الدخول");
+    }
   };
 
   const handleReportCloseModal = () => {

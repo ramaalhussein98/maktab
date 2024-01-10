@@ -14,6 +14,7 @@ import Map from "../map/Map";
 const AllDeals = () => {
   const { t, i18n } = useTranslation();
   const [toggleMapAds, setToggleMapAds] = useState(false);
+  const [page, setpage] = useState(1);
   const [filter, setFilter] = useState({
     // "exact[category_aqar.id]": null,
     // "contains[title]": "",
@@ -33,7 +34,7 @@ const AllDeals = () => {
     refetch,
     isRefetching,
   } = useOfficeHook({
-    // page: page,
+    page: page,
     filter: filter,
   });
   const handleToggleMapAds = () => {
@@ -44,6 +45,9 @@ const AllDeals = () => {
     setTimeout(() => {
       setToggleMapAds(!toggleMapAds);
     }, 500);
+  };
+  const handleMoreData = () => {
+    setpage(page + 1);
   };
 
   return (
@@ -117,6 +121,13 @@ const AllDeals = () => {
                 ))
               ) : (
                 <NoData />
+              )}
+              {data?.next_page_url != null ? (
+                <button className="mapButton" onClick={handleMoreData}>
+                  المزيد من الأعلانات
+                </button>
+              ) : (
+                " "
               )}
             </Grid>
 

@@ -19,6 +19,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import FavoriteBtn from "../../../../ui/FavoriteBtn";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import FavoriteIcons from "../../Details/details_component/FavoriteIcons";
 // SwiperCore.use([Pagination]);
 const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
   // const homeImages = ad.gallery;
@@ -147,7 +148,7 @@ const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
 
       <CustomPrevArrow onClick={handlePrevClick} />
       <CustomNextArrow onClick={handleNextClick} />
-      <FavoriteBtn />
+      <FavoriteBtn adInfo={officeData} />
     </Box>
   );
 };

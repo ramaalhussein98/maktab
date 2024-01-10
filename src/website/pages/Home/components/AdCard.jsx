@@ -64,7 +64,11 @@ const AdCard = ({ officeData }) => {
             <div className="title">{fullTitle} </div>
             <div className="d-flex">
               <StarIcon sx={{ fontSize: "16px" }} />
-              5.0
+              {officeData?.rate === null
+                ? `(${0})`
+                : `(${parseFloat(officeData?.rate)
+                    .toFixed(2)
+                    .replace(/\.?0*$/, "")})`}
             </div>
           </div>
           <div className="descrption"> {officeData?.location?.address}</div>
