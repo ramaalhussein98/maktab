@@ -32,6 +32,7 @@ import EditFacilities from "./components/EditFacilities";
 import EditFeatures from "./components/EditFeatures";
 import EditComforts from "./components/EditComforts";
 import Loader from "../../../ui/Loader";
+import EditServices from "./components/EditServices";
 
 const getData = async (paramId) => {
   const res = await myAxios.get(`api/v1/user/offices/${paramId}`);
@@ -99,6 +100,7 @@ const Unit = () => {
   const [editFacilities, setEditFacilities] = useState(false);
   const [editFeatures, setEditFeatures] = useState(false);
   const [editComforts, setEditComforts] = useState(false);
+  const [editServices, setEditServices] = useState(false);
   const handleEditInformation = () => {
     setEditInfo(true);
   };
@@ -606,6 +608,55 @@ const Unit = () => {
               </Fade>
             )}
           </OrderCard>
+          {/* services section  */}
+          {/* <OrderCard sx={{ background: "#fff" }}>
+            {editServices && (
+              <Fade in={editServices}>
+                <Box>
+                  <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
+                    {lang === "ar" ? " وسائل الراحة" : "comforts"}
+                  </Typography>
+                  <EditServices
+                    serivces={unit?.services}
+                    setIsChangingData={setIsChangingData}
+                    onCancel={() => {
+                      setEditServices(false);
+                    }}
+                    refetch={refetch}
+                    unitId={unit.id}
+                  />
+                </Box>
+              </Fade>
+            )}
+            {!editServices && (
+              <Fade in={!editServices}>
+                <Box>
+                  <Box className="custom-flex-container-space">
+                    <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
+                      {lang === "ar" ? "الخدمات الاضافية" : "more services"}
+                    </Typography>
+
+                    <Typography
+                      className="eitBtn"
+                      onClick={() => {
+                        setEditServices(true);
+                      }}
+                    >
+                      {!editServices &&
+                        t("dashboard.outgoing_requests.edit_btn")}
+                    </Typography>
+                  </Box>
+                  <Typography>
+                    {unit?.comforts
+                      .map((feature) =>
+                        lang === "ar" ? feature.ar_name : feature.en_name
+                      )
+                      .join(", ")}
+                  </Typography>
+                </Box>
+              </Fade>
+            )}
+          </OrderCard> */}
         </Box>
       </Box>
     </>
