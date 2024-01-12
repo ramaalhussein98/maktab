@@ -46,8 +46,57 @@
     display: flex;
     font-weight: 400;
   }
-}
+  .pricebold {
+    font-weight: bold;
+  }
+  .redprice {
+    color: var(--main-color);
+    margin-right: 2px;
+    margin-left: 2px;
+    position: relative;
+    font-size: 18px;
+  }
+  .redprice::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
 
+    height: 1.5px;
+    top: 50%;
+    background-color: var(--main-color);
+  }
+}
+.offer_div {
+  background-color: #c03838;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  width: 3rem;
+  position: absolute;
+  top: 0px;
+  right: 1rem;
+  z-index: 111;
+  height: 60px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  outline: 4px solid rgba(255, 255, 255, 0.3);
+  padding: 5px;
+}
+.accpet_rent{
+  font-size: 13px;
+  color: black;
+}
+/* [lang = "en"] .offer_div{
+  right: auto;
+  left: 1rem;
+} */
+.fontSizeSmall {
+  font-size: 12px;
+  display: block;
+  margin-left: auto;
+  text-align: right;
+}
 /* card map sm screens  */
 .adCardMapContainer {
   width: 100%;
@@ -66,7 +115,7 @@
 }
 .spanPriceType {
   position: relative;
-  color: #717171 ;
+  color: #717171;
   font-size: 13px;
   /* font-weight: 600; */
   margin-left: 9px;

@@ -174,6 +174,14 @@ function App() {
           }
         />
         <Route
+          path="/features"
+          element={
+            <Layout>
+              <AllDeals />
+            </Layout>
+          }
+        />
+        <Route
           path="payment"
           element={
             <Layout>
@@ -275,8 +283,14 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="addoffice" element={<Addads />} />
-        <Route path="addunit" element={<AddUnit />} />
+        <Route
+          path="addoffice"
+          element={<PrivateRoute element={<Addads />} />}
+        />
+        <Route
+          path="addunit"
+          element={<PrivateRoute element={<AddUnit />} />}
+        />
       </Routes>
     </>
   );

@@ -34,6 +34,7 @@ const LogInModal = ({ open, onClose }) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [timer, setTimer] = useState(180);
   const [isCounterActive, setIsCounterActive] = useState(true);
+  const [phoneNumberError, setPhoneNumberError] = useState(false);
   // const { setToken } = useAxiosConfig();
   const { data, isLoading, error, get, post } = useDataFetcher();
   const [loginMethod, setLoginMethod] = useState("");
@@ -87,8 +88,10 @@ const LogInModal = ({ open, onClose }) => {
     );
   };
   const validatePhoneNumber = () => {
-    const saudiNumberRegex = /^(05[0-9]{8}|5[0-9]{8})$/;
+    const saudiNumberRegex = /^0[5-9][0-9]{8}$/;
+   
     const isValid = saudiNumberRegex.test(phoneNumber);
+ 
     setIsValidPhoneNumber(isValid);
   };
 
@@ -97,6 +100,13 @@ const LogInModal = ({ open, onClose }) => {
     setPhoneNumber(newValue);
     setIsDisabled(false); // i add this to can rewrite the phone number unable disabled
     //  setTimeout(validatePhoneNumber, 300); // Call the debounceValidation after a delay when adding characters
+    const startsWithZero = phoneNumber.trim().startsWith("0");
+    if (startsWithZero) {
+      setPhoneNumberError(false);
+    } else {
+      // Clear the error message if the number is valid
+      setPhoneNumberError(true);
+    }
   };
 
   const verifyOTP = async (e) => {
@@ -204,7 +214,7 @@ const LogInModal = ({ open, onClose }) => {
       <Box className="LoginContaier">
         {step > 1 && (
           <Button
-            className="btnBack"
+            className="btnBack1"
             onClick={handleBack}
             sx={{
               textAlign: lang === "ar" ? "right" : "left",
@@ -271,6 +281,17 @@ const LogInModal = ({ open, onClose }) => {
                     },
                   }}
                 />
+                {phoneNumberError && (
+                  <div
+                    style={{
+                      color: "red",
+                      marginTop: "0.5rem",
+                      display: "block",
+                    }}
+                  >
+                    يرجى إدخال رقم يبدأ 0
+                  </div>
+                )}
               </Box>
             </Box>
           )}
@@ -349,7 +370,7 @@ const LogInModal = ({ open, onClose }) => {
               </Box>
             )}
           </Box>
-          <Box className="d_flex_space">
+          <Box className="d_flex_space mt-3">
             <Button
               type="submit"
               className="btnLoginSubmit"

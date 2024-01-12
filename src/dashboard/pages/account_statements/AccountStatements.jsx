@@ -27,7 +27,7 @@ const AccountStatements = () => {
     { width: "15%", label: t("dashboard.contract.Tenantname") },
     { width: "10%", label: t("dashboard.Accountstatements.date") },
     { width: "30%", label: t("dashboard.Accountstatements.Statement") },
-    { width: "15%", label: "المبلغ المدفوع" },
+    { width: "15%", label: " المبلغ المدفوع لحجز مكتب " },
     { width: "15%", label: t("dashboard.Accountstatements.Balance") },
     { width: "20%", label: "المبلغ الإجمالي بعد خصم العمولة" },
   ];
@@ -295,7 +295,7 @@ const AccountStatements = () => {
                     color: "var(--green-color)",
                   }}
                 >
-                  {data.amount.label} +
+                  {data.amount.label}
                   <span
                     style={{
                       content: '""',

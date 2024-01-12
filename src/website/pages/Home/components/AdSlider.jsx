@@ -149,6 +149,10 @@ const AdSlider = ({ officeData, handleAdClick, isAdMapCardComponent }) => {
       <CustomPrevArrow onClick={handlePrevClick} />
       <CustomNextArrow onClick={handleNextClick} />
       <FavoriteBtn adInfo={officeData} />
+      <div className="offer_div">
+        <p className="fontSizeSmall">خصم</p>
+      
+        50%</div>
     </Box>
   );
 };

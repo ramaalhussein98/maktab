@@ -36,6 +36,7 @@ const LogInModalOrdinar = ({ open, onClose }) => {
   const [resendCountdown, setResendCountdown] = useState(0);
   const [codeReceived, setCodeReceived] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [phoneNumberError, setPhoneNumberError] = useState(false);
   const [timer, setTimer] = useState(180);
   const [isCounterActive, setIsCounterActive] = useState(true);
   // const { setToken } = useAxiosConfig();
@@ -91,7 +92,7 @@ const LogInModalOrdinar = ({ open, onClose }) => {
     );
   };
   const validatePhoneNumber = () => {
-    const saudiNumberRegex = /^(05[0-9]{8}|5[0-9]{8})$/;
+    const saudiNumberRegex = /^0[5-9][0-9]{8}$/;
     const isValid = saudiNumberRegex.test(phoneNumber);
     setIsValidPhoneNumber(isValid);
   };
@@ -101,6 +102,13 @@ const LogInModalOrdinar = ({ open, onClose }) => {
     setPhoneNumber(newValue);
     setIsDisabled(false); // i add this to can rewrite the phone number unable disabled
     //  setTimeout(validatePhoneNumber, 300); // Call the debounceValidation after a delay when adding characters
+    const startsWithZero = phoneNumber.trim().startsWith("0");
+    if (startsWithZero) {
+      setPhoneNumberError(false);
+    } else {
+      // Clear the error message if the number is valid
+      setPhoneNumberError(true);
+    }
   };
 
   const verifyOTP = async (e) => {
@@ -131,7 +139,6 @@ const LogInModalOrdinar = ({ open, onClose }) => {
         //     apiKey: "3YMh-YqHw-x6xY-G1n4-UtsW-lFVm",
         //     authorization: `Bearer ${res?.data?.data?.access_token}`,
         //   },
-       
 
         // setToken(res?.data?.data?.access_token);
         setIsDisabled(true);
@@ -150,12 +157,12 @@ const LogInModalOrdinar = ({ open, onClose }) => {
         // );
 
         // if (res2) {
-          // setIsUserUpdated((prev) => prev + 1);
+        // setIsUserUpdated((prev) => prev + 1);
 
-          // localStorage.setItem("userMembership", res2.data.user.membership_id);
-          // localStorage.setItem("userId", res2.data?.user.id);
-          // setUserNameContext(res2.data?.user.username);
-          // setUserId(res2.data?.user.id);
+        // localStorage.setItem("userMembership", res2.data.user.membership_id);
+        // localStorage.setItem("userId", res2.data?.user.id);
+        // setUserNameContext(res2.data?.user.username);
+        // setUserId(res2.data?.user.id);
         //   setTimeout(() => {
         //     navigate("/");
         //   }, 1000);
@@ -195,15 +202,6 @@ const LogInModalOrdinar = ({ open, onClose }) => {
     let countdown = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer === 0) {
-          //console.log("finished");
-          // try {
-          //   const res = myAxios.post("/api/changeCode", {
-          //     phone: phoneNumber,
-          //   });
-          //   console.log(res);
-          // } catch (err) {
-          //   console.log(err);
-          // }
           setIsCounterActive(false);
           clearInterval(countdown);
           return 0;
@@ -214,7 +212,7 @@ const LogInModalOrdinar = ({ open, onClose }) => {
 
     return () => {
       clearInterval(countdown);
-      setTimer(10);
+      setTimer(180);
       // after i change this to 180
     };
   }, [step, isCounterActive]);
@@ -238,7 +236,7 @@ const LogInModalOrdinar = ({ open, onClose }) => {
       <Box className="LoginContaier">
         {step > 1 && (
           <Button
-            className="btnBack"
+            className="btnBack1"
             onClick={handleBack}
             sx={{
               textAlign: lang === "ar" ? "right" : "left",
@@ -306,6 +304,17 @@ const LogInModalOrdinar = ({ open, onClose }) => {
                     },
                   }}
                 />
+                {phoneNumberError && (
+                  <div
+                    style={{
+                      color: "red",
+                      marginTop: "0.5rem",
+                      display: "block",
+                    }}
+                  >
+                    يرجى إدخال رقم يبدأ 0
+                  </div>
+                )}
               </Box>
             </Box>
           )}
@@ -383,7 +392,7 @@ const LogInModalOrdinar = ({ open, onClose }) => {
               </Box>
             )}
           </Box>
-          <Box className="d_flex_space">
+          <Box className="d_flex_space mt-8">
             <Button
               type="submit"
               className="btnLoginSubmit"
@@ -437,7 +446,7 @@ const LogInModalOrdinar = ({ open, onClose }) => {
             </Typography>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <Box>
               {isCounterActive && (
                 <Typography>

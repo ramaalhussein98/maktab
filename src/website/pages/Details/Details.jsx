@@ -256,7 +256,7 @@ const Details = () => {
                 <Typography sx={{ fontSize: { xs: "15px", md: "18px" } }}>
                   {data?.description}
                 </Typography>
-                {isNewHome && (
+             
                   <Box
                     className="d_flex_space_between"
                     sx={{
@@ -287,7 +287,7 @@ const Details = () => {
                       />
                     </Box>
                   </Box>
-                )}
+              
                 <DetailsTabs data={data} />
               </Grid>
               <Grid item xs={12} md={4}>

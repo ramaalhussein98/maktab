@@ -47,44 +47,10 @@ const MyInfo = () => {
       setSelectedImage(null);
     }
   };
-  // const handleMembershipTypeChange = (e) => {
-  //   setMembershipId(Number(e.target.value));
-  // };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  // useEffect(() => {
-  //   const token = localStorage.getItem("user_token");
-  //   const getData = async () => {
-  //     const res2 = await myAxios.get(`api/v1/user/profile`, {
-  //       headers: {
-  //         authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     if (res2) {
-  //       setIsLoadingData(false);
-  //       setMemberShips(res2.data.types);
-  //     } else if (
-  //       res2.data.status === 0 &&
-  //       res2.data.message === "401 Unauthorized"
-  //     ) {
-  //       setIsLoadingData(false);
-  //       toast.error(
-  //         lang === "ar"
-  //           ? "غير مصرح، يرجى تسجيل الدخول"
-  //           : "unauthorized, please login again"
-  //       );
-  //       localStorage.removeItem("user_token");
-  //       localStorage.removeItem("userId");
-  //       localStorage.removeItem("userName");
-  //       localStorage.removeItem("userMembership");
-  //       localStorage.removeItem("userData");
-  //       nav("/");
-  //     } else {
-  //     }
-  //   };
-  //   getData();
-  // }, []);
 
   const initialValues = {
     type_id: user?.type?.id,
@@ -108,8 +74,8 @@ const MyInfo = () => {
     username: Yup.string()
       .required("اسم المستخدم مطلوب")
       .min(3, "يجب على أقل ثلاث أحرف"),
-    company_name: Yup.string().required("اسم الشركة مطلوب"),
-    office_name: Yup.string().required("اسم المكتب مطلوب"),
+    company_name: Yup.string(),
+    office_name: Yup.string(),
     email: Yup.string()
       .required("الايميل  مطلوب")
       .email("يجب أن يكون بنية صحيحة"),
@@ -160,45 +126,11 @@ const MyInfo = () => {
           updateUserInformation();
         }
       }
-      // console.log(values);
-      // setUser(res?.data?.data);
-      // const updatedUserData = res?.data?.data;
-      // localStorage.setItem("userData", JSON.stringify(updatedUserData));
-      // console.log("Data posted successfully:", updatedUserData);
     } catch (err) {
       // Handle API call error
     }
-    // try {
-    //   const formData = new FormData();
-
-    //   // Append text fields to the FormData object
-    //   Object.keys(values).forEach((key) => {
-    //     formData.append(key, values[key]);
-    //   });
-
-    //   // Append the image file to the FormData object
-    //   if (imageFile) {
-    //     formData.append("profileImage", imageFile);
-    //   }
-
-    //   // const response = await myAxios.post("/api/v1/user/profile", formData, {
-    //   //   headers: {
-    //   //     "Content-Type": "multipart/form-data",
-    //   //     // Authorization: `Bearer ${yourAuthToken}`,
-    //   //   },
-    //   // });
-
-    //   // console.log("Data posted successfully:", response.data);
-    // } catch (error) {
-    //   console.error("Failed to post data:", error);
-    // }
-    // console.log(values);
-    // console.log(selectedImage);
   };
 
-  // const handleData = () => {
-  //   console.log("hi");
-  // };
   return (
     <div style={{ overflowX: "hidden" }}>
       <Formik

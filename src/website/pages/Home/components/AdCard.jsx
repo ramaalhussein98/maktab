@@ -47,7 +47,7 @@ const AdCard = ({ officeData }) => {
   };
   return (
     <div
-    // className="AdContainer"
+    className="mb-5"
     >
       <div>
         <div
@@ -73,6 +73,7 @@ const AdCard = ({ officeData }) => {
           </div>
           <div className="descrption"> {officeData?.location?.address}</div>
           <div className="descrption">
+            <b className="accpet_rent">يقبل الإيجار:</b>
             {[
               ...new Set(officeData?.ads_prices?.map((ele) => ele.type_res_id)),
             ].map((typeResId, index) => (
@@ -82,13 +83,16 @@ const AdCard = ({ officeData }) => {
               </span>
             ))}
           </div>
-          <div className="price">
+          <div className="price justify-between">
+            <div >
+              <span>قبل:</span>
+              <span className="redprice ">2000</span>
+              <span >ر.س</span>
+            </div>
             {officeData?.ads_prices?.length > 0 && (
               <span
                 style={{
                   fontWeight: "bold",
-                  marginLeft: lang === "ar" ? "5px" : "0",
-                  marginRight: lang === "en" ? "5px" : "0",
                 }}
               >
                 {formatNumberWithCommas(highestPriceItem?.price)}{" "}

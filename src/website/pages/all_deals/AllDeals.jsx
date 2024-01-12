@@ -79,6 +79,7 @@ const AllDeals = () => {
                 justifyContent: "center",
                 width: "100%",
                 margin: { xs: "auto" },
+              
               }}
             >
               {isLoading ? (
@@ -114,6 +115,7 @@ const AllDeals = () => {
                         xs: "0px !important",
                         sm: "16px !important",
                       },
+                     
                     }}
                   >
                     <AdCard officeData={ele} />
