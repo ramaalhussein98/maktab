@@ -7,6 +7,7 @@ import ReservationSide from "./ReservationSide";
 import { LogoDash } from "../../assets/logos";
 import { Link } from "react-router-dom";
 import CalenderSide from "./CalenderSide";
+import { CalendarProvider } from "../context/calendarContext";
 
 const SideBar = ({ setIsSidebarShown }) => {
   const [type, setType] = useState();

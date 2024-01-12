@@ -32,6 +32,8 @@ const EditLocation = ({ interfaceId, id, editInterfaceMutation, onCancel }) => {
         interface_id: selectedInterface,
         id,
       });
+      onCancel();
+
       toast.update(toastId, {
         type: "success",
         render: res.data.message,
@@ -81,9 +83,6 @@ const EditLocation = ({ interfaceId, id, editInterfaceMutation, onCancel }) => {
               className={`${styles.select} select`}
               classes={lang === "ar" && { icon: styles.selectIcon }}
               sx={{
-                borderRadius: "12px !important",
-                boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 3px",
-                border: "1px solid rgba(0, 0, 0, 0.06) !important",
                 paddingBlock: "5px",
                 height: "48px",
                 width: "100%",

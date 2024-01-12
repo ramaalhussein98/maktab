@@ -93,6 +93,7 @@ const UnitImages = ({
             );
             return updatedImages;
           });
+          refetch();
         }
       });
   };

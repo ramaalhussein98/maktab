@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -6,9 +6,20 @@ import allLocales from "@fullcalendar/core/locales-all";
 import { useTranslation } from "react-i18next";
 import "../../../assets/css/calender.css";
 import { Skeleton } from "@mui/material";
+import { CalendarContext } from "../../context/calendarContext";
 // import { AppState } from "../../context/calendarContext";
 
 const Calender = () => {
+  const {
+    initialData,
+    mainOffice,
+    selectedUnit,
+    priceType,
+    selectedPrice,
+    selectedEndTime,
+    selectedStartTime,
+  } = useContext(CalendarContext);
+
   const { i18n } = useTranslation();
   const { t } = useTranslation();
   const [showBoxDays, setShowBoxDays] = useState(false); //this for box to show busy tou want or available
@@ -34,6 +45,11 @@ const Calender = () => {
         if (!selectedDates.includes(isoDateString)) {
           // selectedDates.push(isoDateString);
           setSelectedDates((prev) => [...prev, isoDateString]);
+        } else {
+          // Remove the date from the array if it's already present
+          setSelectedDates((prev) =>
+            prev.filter((date) => date !== isoDateString)
+          );
         }
       }
 
@@ -42,21 +58,6 @@ const Calender = () => {
   };
   // console.log("selected:", selectedDates);
   // console.log("chosen:", chosenDates);
-
-  const handleSaveChanges = () => {
-    const result = new Set([...selectedDates, ...chosenDates]);
-    // console.log("res", result);
-    setShowBoxDays(false);
-    const updatedEvents = Array.from(result).map((date) => ({
-      date,
-      title: i18n.language === "ar" ? "مشغول" : "busy",
-      className: "busy-day ",
-      // display: "background",
-    }));
-    setEvents(updatedEvents);
-    setChosenDates(Array.from(result));
-    setSelectedDates([]);
-  };
 
   const handleToggleAvailability = () => {
     const commonItems = selectedDates.filter((item) =>
@@ -84,6 +85,7 @@ const Calender = () => {
       selectedDates.filter((item) => !commonItems.includes(item))
     );
   };
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -91,18 +93,7 @@ const Calender = () => {
   }, []);
 
   const getPriceForDate = (date) => {
-    // You can implement your logic here to fetch the price for the given date.
-    const Prices = [
-      { date: date, price: 11 },
-      { date: date, price: 11 },
-      { date: date, price: 11 },
-      { date: date, price: 11 },
-      { date: date, price: 11 },
-      { date: date, price: 11 },
-      { date: date, price: 11 },
-    ];
-    const foundPrice = Prices.find((item) => item.date === date);
-    return foundPrice ? foundPrice.price : "hi";
+    return selectedPrice && selectedPrice.price;
   };
 
   const handleDayCellContent = (arg) => {
@@ -146,7 +137,22 @@ const Calender = () => {
     setShowBoxDays(false);
     setSelectedDates([]);
   };
+  console.log(selectedDates);
 
+  const handleSaveChanges = () => {
+    const result = new Set([...selectedDates, ...chosenDates]);
+    console.log("res", selectedDates);
+    setShowBoxDays(false);
+    const updatedEvents = Array.from(result).map((date) => ({
+      date,
+      title: i18n.language === "ar" ? "مشغول" : "busy",
+      className: "busy-day",
+      // display: "background",
+    }));
+    setEvents(updatedEvents);
+    setChosenDates(Array.from(result));
+    setSelectedDates([]);
+  };
   return (
     <>
       <div className="fullCalenderParent">

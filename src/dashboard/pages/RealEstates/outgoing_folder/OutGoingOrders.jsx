@@ -139,7 +139,6 @@ const OutGoingOrders = () => {
 
   //start displaying edit components
   const [edditInfo, setEditInfo] = useState(false);
-  const [descriptionEdit, setDescriptionEdit] = useState(false);
   const [edditLoc, setEditLoc] = useState(false);
   const [MapEdit, setMapEdit] = useState(false);
   const handleEditInformation = () => {
@@ -161,8 +160,6 @@ const OutGoingOrders = () => {
     setMapEdit(true);
   };
   //end displaying edit components
-
-  const [userDateReached, setUserDateReached] = useState();
 
   const handleChangeSpecial = async (id) => {
     const toastId = toast.loading("processing...");
@@ -481,7 +478,7 @@ const OutGoingOrders = () => {
                           {" "}
                           {t("dashboard.incoming_orders.card3.label1")}
                         </Typography>
-                        {office?.status === 0 ? (
+                        {office?.status == 0 ? (
                           <Typography
                             sx={{
                               color: "rgb(244, 67, 54)",

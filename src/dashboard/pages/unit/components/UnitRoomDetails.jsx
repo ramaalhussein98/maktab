@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
+import myAxios from "../../../../api/myAxios";
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
   "& .MuiSwitch-switchBase.Mui-checked": {
@@ -27,11 +28,38 @@ const GreenSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
+const UnitRoomDetails = ({
+  details,
+  onCancel,
+  id,
+  refetch,
+  setIsChangingData,
+}) => {
   const { t, i18n } = useTranslation();
   const [state, setState] = useState([...details]);
   const lang = i18n.language;
-  console.log(state);
+  const values = [
+    {
+      en_name: "floors",
+      ar_name: "الدور",
+      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    {
+      en_name: "office Age",
+      ar_name: "عمر العقار",
+      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    {
+      en_name: "offices numbers",
+      ar_name: "عدد المكاتب",
+      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+    {
+      en_name: "Meeting Rooms",
+      ar_name: "غرف الاجتماعات",
+      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    },
+  ];
 
   const handleChange = (ar_name, en_name, value) => {
     console.log(ar_name, en_name, value);
@@ -64,32 +92,41 @@ const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
       ]);
     }
   };
-  const values = [
-    {
-      en_name: "floors",
-      ar_name: "الدور",
-      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    },
-    {
-      en_name: "office Age",
-      ar_name: "عمر العقار",
-      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    },
-    {
-      en_name: "offices numbers",
-      ar_name: "عدد المكاتب",
-      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    },
-    {
-      en_name: "Meeting Rooms",
-      ar_name: "غرف الاجتماعات",
-      values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    },
-  ];
+  const handleSubmit = async () => {
+    console.log(state);
+    setIsChangingData(true);
 
-  const handlePropertyClick = (propertyId) => {
-    // dispatch({ type: "facilities", value: propertyId });
+    const addData = new FormData();
+    const editData = new FormData();
+
+    state.map((ele, i) => {
+      if ("id" in ele) {
+        editData.append(`details[${i}][id]`, ele.id);
+        editData.append(`details[${i}][status]`, 1);
+        editData.append(`details[${i}][ar_name]`, ele.ar_name);
+        editData.append(`details[${i}][en_name]`, ele.en_name);
+        editData.append(`details[${i}][number_details]`, ele.number_details);
+      } else {
+        addData.append(`details[${i}][ar_name]`, ele.ar_name);
+        addData.append(`details[${i}][status]`, ele.status);
+        addData.append(`details[${i}][en_name]`, ele.en_name);
+        addData.append(`details[${i}][number_details]`, ele.number_details);
+      }
+    });
+
+    const res = await myAxios.post(
+      `api/v1/user/offices/details/addToAds/${id}`,
+      addData
+    );
+    const res2 = await myAxios.post(
+      `api/v1/user/offices/details/updateToAds/${id}`,
+      editData
+    );
+    setIsChangingData(false);
+    await refetch();
+    onCancel();
   };
+
   return (
     <>
       <div className="flex gap-6 flex-col my-6">
@@ -98,7 +135,32 @@ const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
             <label className="w-1/3" htmlFor="">
               {lang === "ar" ? ele.ar_name : ele.en_name}
             </label>
-            <select
+            <Select
+              value={
+                state?.find(
+                  (e) => e.en_name.toLowerCase() === ele.en_name.toLowerCase()
+                )?.number_details || ""
+              }
+              onChange={(e) =>
+                handleChange(ele.ar_name, ele.en_name, e.target.value)
+              }
+              displayEmpty
+              inputProps={{ "aria-label": "Without label" }}
+              sx={{
+                width: "100%",
+                "& .MuiSelect-icon": {
+                  color: "black",
+                  display: "block !important",
+                },
+              }}
+            >
+              {ele.values.map((number) => (
+                <MenuItem key={number} value={number}>
+                  {number}
+                </MenuItem>
+              ))}
+            </Select>
+            {/* <select
               className="outline-none border-transparent w-1/2 shadow rounded-lg py-2 px-4"
               name=""
               onChange={(e) =>
@@ -120,7 +182,7 @@ const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
                   {number}
                 </option>
               ))}
-            </select>
+            </select> */}
             {/* <FormControl
               sx={{ minWidth: 120, width: "200px", backgroundColor: "white" }}
             >
@@ -168,7 +230,7 @@ const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
         }}
       >
         <Button
-          // onClick={handleSubmit}
+          onClick={handleSubmit}
           type="submit"
           sx={{
             fontWeight: "600",
@@ -187,6 +249,7 @@ const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
           {t("dashboard.outgoing_requests.submit_btn")}
         </Button>
         <Button
+          onClick={onCancel}
           sx={{
             fontWeight: "600",
             borderRadius: "8px",
@@ -201,7 +264,6 @@ const UnitRoomDetails = ({ details, onCancel, setIsChangingData }) => {
               backgroundColor: "#e5f9f4",
             },
           }}
-          onClick={onCancel}
         >
           {t("dashboard.outgoing_requests.cancel_btn")}
         </Button>

@@ -125,6 +125,8 @@ const EditMap = ({ location, onCancel, editMapLocationMutation, id }) => {
         },
         id,
       });
+      onCancel();
+
       toast.update(toastId, {
         type: "success",
         render: res.data.message,

@@ -48,7 +48,7 @@ const EditInformation = ({
         id,
         selectedCategory,
       });
-
+      onCancel();
       toast.update(toastId, {
         type: "success",
         render: res.data.message,
@@ -91,10 +91,6 @@ const EditInformation = ({
               maxWidth: "340px",
               width: { xs: "80%", md: "90%" },
               borderRadius: "12px !important",
-              boxShadow: "1",
-              "& .css-1iy5sao-MuiInputBase-root-MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
             }}
             InputProps={{
               sx: {
@@ -138,9 +134,6 @@ const EditInformation = ({
               sx={{
                 maxWidth: "340px",
                 width: { xs: "80%", md: "90%" },
-                borderRadius: "12px !important",
-                boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 3px",
-                border: "1px solid rgba(0, 0, 0, 0.06) !important",
                 paddingBlock: "5px",
                 height: "48px",
                 marginBlock: "4px 12px",

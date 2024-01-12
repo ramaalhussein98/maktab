@@ -12,7 +12,7 @@ import {
   styled,
   Fade,
 } from "@mui/material";
-
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   EditInformation,
   EditDescription,
@@ -202,7 +202,7 @@ const Unit = () => {
         to={"/dashboard/properties"}
         className="text-2xl font-semibold hover:bg-[#c20000ab] w-fit py-1 px-4 rounded-lg hover:text-white mb-5 block"
       >
-        {unit?.title}
+        <KeyboardArrowRightIcon /> {unit?.title}
       </Link>
       <Box className="custom-grid-container1">
         <Box>
@@ -367,7 +367,7 @@ const Unit = () => {
                             key={i}
                             src={`https://dashboard.maktab.sa/${ele.path}`}
                             alt=""
-                            className=" flex-1 h-[50px] rounded-lg"
+                            className="flex-[49%] flex-grow-0 h-[80px] rounded-lg object-cover"
                           />
                         ))}
                     </div>
@@ -425,6 +425,9 @@ const Unit = () => {
                       setEditDetails(false);
                     }}
                     details={unit.ads_details}
+                    id={unit.id}
+                    refetch={refetch}
+                    setIsChangingData={setIsChangingData}
                   />
                 </Box>
               </Fade>
