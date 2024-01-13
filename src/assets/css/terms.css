@@ -1,0 +1,13 @@
+.TermsTitle{
+    font-size: 44px;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+.list-marker{
+    font-size: 25px;
+  margin-left: 10px;
+}
+.color-green{
+    color: var(--green-color);
+}

@@ -640,5 +640,8 @@
     "Wetransfer": "نقوم تحويل مستحقاتك",
     "Officenumbers": "أرقام مكتب",
     "dowanlad": "حمل التطبيق الاّن"
+  },
+  "notifications": {
+    "title": "الاشعارات"
   }
 }

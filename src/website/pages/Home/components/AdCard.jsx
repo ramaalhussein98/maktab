@@ -46,9 +46,7 @@ const AdCard = ({ officeData }) => {
     navigate(`/details/${officeData?.id}`, { state: { officeData } });
   };
   return (
-    <div
-    className="mb-5"
-    >
+    <div className="mb-5 onHoverCard">
       <div>
         <div
           className={
@@ -84,10 +82,10 @@ const AdCard = ({ officeData }) => {
             ))}
           </div>
           <div className="price justify-between">
-            <div >
+            <div>
               <span>قبل:</span>
               <span className="redprice ">2000</span>
-              <span >ر.س</span>
+              <span>ر.س</span>
             </div>
             {officeData?.ads_prices?.length > 0 && (
               <span

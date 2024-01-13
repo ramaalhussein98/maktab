@@ -51,6 +51,8 @@ import Coupons from "./dashboard/pages/coupons/Coupons";
 import TermOfService from "./website/pages/term-of-service/TermOfService";
 import AllDeals from "./website/pages/all_deals/AllDeals";
 import PaymentDone from "./website/pages/done_payment/PaymentDone";
+import Notification from "./dashboard/pages/Notification/Notification";
+import TermsOfUse from "./website/pages/terms of use/TermsOfUse";
 
 const PrivateRoute = ({ element }) => {
   const thereisToken = localStorage.getItem("user_token");
@@ -222,6 +224,14 @@ function App() {
           }
         />
         <Route
+          path="/terms_of_use"
+          element={
+            <Layout>
+              <TermsOfUse />
+            </Layout>
+          }
+        />
+        <Route
           path="business"
           element={
             <Layout>
@@ -262,6 +272,7 @@ function App() {
           <Route path="statements" element={<AccountStatements />} />
           <Route path="paymentReceiption" element={<PaymentReceiption />} />
           <Route path="electronic_invoices" element={<ElectronicInvoices />} />
+          <Route path="notifications" element={<Notification />} />
 
           <Route path="acc">
             <Route index path="requests" element={<Requests />} />

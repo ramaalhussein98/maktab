@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -11,8 +11,6 @@ const UserName = () => {
   const { user, setToken, setUser } = useStateContext();
   const userName = user?.username;
   const nav = useNavigate();
-
-  const userNameContext = "rama";
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const loginListRef = useRef(null);
@@ -34,9 +32,28 @@ const UserName = () => {
     event.stopPropagation();
     setShowLoginList(!showLoginList);
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        loginListRef.current &&
+        !loginListRef.current.contains(event.target) &&
+        !event.target.closest("button#user-button")
+      ) {
+        // Clicked outside the login list and not on the button, close it
+        setShowLoginList(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [loginListRef]);
   return (
     <Box sx={{ display: { xs: "none", md: "block" }, position: "relative" }}>
       <Button
+      id="user-button"
         sx={{ color: "var(--green-color)" }}
         onClick={toggleShowLoginList}
       >

@@ -6,7 +6,12 @@
   border-radius: 12px;
   cursor: pointer;
 }
-
+.onHoverCard {
+  transition: transform 0.05s ease-in-out;
+}
+.onHoverCard:hover {
+  transform: scale(1.01);
+}
 .slider_img_container {
   margin-bottom: 12px;
   aspect-ratio: 20/19;
@@ -83,7 +88,7 @@
   outline: 4px solid rgba(255, 255, 255, 0.3);
   padding: 5px;
 }
-.accpet_rent{
+.accpet_rent {
   font-size: 13px;
   color: black;
 }

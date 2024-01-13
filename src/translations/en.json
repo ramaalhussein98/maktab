@@ -632,14 +632,17 @@
     "welcome": "Welcome to the Business Office",
     "please": "Please log in as business to be able to add your office",
     "Howdoyouhost": "How do you host?",
-    "Addunitdata":"Add unit data",
-    "Addprice":"Add price and terms",
-    "unitexp":"Your unit is exposed to more than 500,000 tenants",
-    "make":"Make sure the unit is ready to rent",
-    "recive":"You will receive a message with each rental request.",
-    "contract":"Create a contract between you and the tenant",
-    "Wetransfer":"We transfer your dues",
-    "Officenumbers":"Office numbers",
-    "dowanlad":"Download the application now"
+    "Addunitdata": "Add unit data",
+    "Addprice": "Add price and terms",
+    "unitexp": "Your unit is exposed to more than 500,000 tenants",
+    "make": "Make sure the unit is ready to rent",
+    "recive": "You will receive a message with each rental request.",
+    "contract": "Create a contract between you and the tenant",
+    "Wetransfer": "We transfer your dues",
+    "Officenumbers": "Office numbers",
+    "dowanlad": "Download the application now"
+  },
+  "notifications": {
+    "title": "notifications"
   }
 }

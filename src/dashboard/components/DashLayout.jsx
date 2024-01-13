@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import UserName from "./UserName";
+import Notification from "../../ui/Notification";
 const DashLayout = () => {
   const { t } = useTranslation();
   const location = useLocation().pathname;
@@ -113,8 +114,12 @@ const DashLayout = () => {
               </div>
             ))}
           </div>
+          <div className="d-flex">
+          <Notification />
+          <LanguageBtn />
           <UserName />
-          {/* <LanguageBtn /> */}
+          </div>
+          
         </nav>
         <section className={paddingClass}>
           <Outlet />

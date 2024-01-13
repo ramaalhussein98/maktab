@@ -28,9 +28,9 @@ const CustomStepConnector = styled(StepConnector)(
     [`&.${stepConnectorClasses.active}, &.${stepConnectorClasses.completed}`]: {
       [`& .${stepConnectorClasses.line}`]: {
         backgroundImage: gradientBackground([
-          "rgb(242,113,33) 0%",
-          "rgb(233,64,87) 50%",
-          "rgb(138,35,135) 100%",
+          "rgb(25, 24, 24) 0%",
+          "rgb(184, 174, 175) 50%",
+          "rgb(235, 220, 222) 100%",
         ]),
       },
     },
@@ -46,7 +46,7 @@ const CustomStepConnector = styled(StepConnector)(
 
 const CustomStepIcon = styled("div")(({ theme, ownerState }) => ({
   backgroundColor:
-    theme.palette.mode === "dark" ? theme.palette.grey[700] : "#c20000",
+    theme.palette.mode === "dark" ? theme.palette.grey[700] : "gray",
   zIndex: 1,
   color: "#fff",
   width: 50,
@@ -57,17 +57,17 @@ const CustomStepIcon = styled("div")(({ theme, ownerState }) => ({
   alignItems: "center",
   ...(ownerState.active && {
     backgroundImage: gradientBackground([
-      "rgb(255, 241, 233) 0%",
-      "rgb(118, 103, 105) 50%",
-      "rgb(138,35,135) 100%",
+      "rgb(25, 24, 24) 0%",
+      "rgb(184, 174, 175) 50%",
+      "rgb(235, 220, 222) 100%",
     ]),
     boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
   }),
   ...(ownerState.completed && {
     backgroundImage: gradientBackground([
-      "rgb(255, 241, 233) 0%",
-      "rgb(118, 103, 105) 50%",
-      "rgb(138,35,135) 100%",
+      "rgb(25, 24, 24) 0%",
+      "rgb(184, 174, 175) 50%",
+      "rgb(235, 220, 222) 100%",
     ]),
   }),
 }));

@@ -18,7 +18,12 @@ const UlFirst = [
   {
     url: "/all_deals",
     label: "جميع الإعلانات ",
+
   },
+  {
+    url:"/terms_of_use",
+    label:"شروط الاستخدام"
+  }
 ];
 const UlThird = [
   {
