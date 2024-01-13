@@ -194,7 +194,7 @@ const Unit = () => {
   };
 
   if (isLoading) return <Loader />;
-  console.log(unit);
+
   return (
     <>
       {(isRefetching || isChangingData) && <Loader />}
@@ -612,15 +612,15 @@ const Unit = () => {
             )}
           </OrderCard>
           {/* services section  */}
-          {/* <OrderCard sx={{ background: "#fff" }}>
+          <OrderCard sx={{ background: "#fff" }}>
             {editServices && (
               <Fade in={editServices}>
                 <Box>
                   <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
-                    {lang === "ar" ? " وسائل الراحة" : "comforts"}
+                    {lang === "ar" ? "الخدمات " : "Services  "}
                   </Typography>
                   <EditServices
-                    serivces={unit?.services}
+                    services={unit?.services}
                     setIsChangingData={setIsChangingData}
                     onCancel={() => {
                       setEditServices(false);
@@ -650,16 +650,16 @@ const Unit = () => {
                     </Typography>
                   </Box>
                   <Typography>
-                    {unit?.comforts
-                      .map((feature) =>
-                        lang === "ar" ? feature.ar_name : feature.en_name
+                    {unit?.services
+                      .map((service) =>
+                        lang === "ar" ? service.ar_name : service.en_name
                       )
                       .join(", ")}
                   </Typography>
                 </Box>
               </Fade>
             )}
-          </OrderCard> */}
+          </OrderCard>
         </Box>
       </Box>
     </>

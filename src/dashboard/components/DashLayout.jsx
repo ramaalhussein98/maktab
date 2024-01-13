@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import UserName from "./UserName";
+import NotificationsModal from "../../ui/NotificationsModal";
 const DashLayout = () => {
   const { t } = useTranslation();
   const location = useLocation().pathname;
@@ -113,8 +114,8 @@ const DashLayout = () => {
               </div>
             ))}
           </div>
+          <NotificationsModal />
           <UserName />
-          {/* <LanguageBtn /> */}
         </nav>
         <section className={paddingClass}>
           <Outlet />
