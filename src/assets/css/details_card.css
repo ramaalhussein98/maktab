@@ -25,6 +25,19 @@
   position: relative;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 20px 64px;
 }
+.discount_div {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  text-align: center;
+  background-color: rgba(216, 9, 9, 0.3);
+  padding: 9px 20px;
+  width: fit-content;
+  border-radius: 20px 0px 15px;
+  color: rgb(216, 9, 9);
+  font-weight: 700;
+  font-size: 20px;
+}
 
 .card_container_Box {
   line-height: 28px;
@@ -61,7 +74,35 @@
 .box_padding {
   padding: 20px 20px 28px;
 }
+.price_details_modal {
+  color: black;
 
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.price_details_modal:hover {
+  background-color: #f5f5f5;
+}
+.PriceDetailsPaper {
+  width: 25rem;
+  padding: 20px;
+  position: absolute;
+  left: 60%;
+  bottom: 20%;
+  .title_price_details{
+    font-weight: 600;
+    text-align: center;
+    margin: auto;
+  }
+}
+.cursor_pointer{
+  cursor: pointer;
+}
 .d_flex_spaceBetween {
   display: flex;
   justify-content: space-between;

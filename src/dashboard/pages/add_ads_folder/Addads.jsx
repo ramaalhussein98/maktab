@@ -416,7 +416,10 @@ const Addads = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            license_number: " license number should be equals to 7",
+            license_number:
+              lang === "ar"
+                ? "رقم الرخصة يجب ان يتألف من 7 ارقام"
+                : " license number should be equals to 7",
           }));
         }
         break;
@@ -430,7 +433,10 @@ const Addads = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            titleError: "title should be at least 4 chars",
+            titleError:
+              lang === "ar"
+                ? "الاسم يجب على الاقل ان يكون مؤلف من 4 محارف"
+                : "title should be at least 4 chars",
           }));
         } else {
           setError(false);
@@ -481,7 +487,10 @@ const Addads = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            descriptionError: "description should be at least 8 chars",
+            descriptionError:
+              lang === "ar"
+                ? "الوصف يجب على الاقل ان يكون 8 محارف"
+                : "description should be at least 8 chars",
           }));
         } else {
           setError(false);
@@ -522,7 +531,10 @@ const Addads = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            veiwerNameError: "name should be at least 4 chars",
+            veiwerNameError:
+              lang === "ar"
+                ? "اسم المعاين على الاقل 4 محارف"
+                : "veiwer name should be at least 4 chars",
           }));
         } else {
           setError(false);
@@ -535,7 +547,10 @@ const Addads = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            veiwerNumberError: "name should be at least 10 to 11 chars",
+            veiwerNumberError:
+              lang === "ar"
+                ? "رقم المعاين يجب ان يكون بين 10 الى 11 رقم"
+                : "veiwer number should be at least 10 to 11 chars",
           }));
         } else {
           setError(false);

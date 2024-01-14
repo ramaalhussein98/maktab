@@ -13,6 +13,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { toast } from "react-toastify";
+import PriceDetailsPaper from "./details_lg_components/PriceDetailsPaper";
 
 const DetailsCard = ({ adInfo }) => {
   const { t, i18n } = useTranslation();
@@ -32,6 +33,7 @@ const DetailsCard = ({ adInfo }) => {
   const [selectedServices, setSelectedServices] = useState([]);
   const [singleDate, setSingleDate] = useState(true);
   const [modalReportOpen, setModalReportOpen] = useState(false);
+  const [PriceDetails, setPriceDetails] = useState(false);
   const dateRangeRef = useRef(null);
   const excludedBoxRef = useRef(null);
   const [dateRange, setDateRange] = useState({
@@ -97,12 +99,12 @@ const DetailsCard = ({ adInfo }) => {
   return (
     <>
       <Box className="card_container">
-        <Box className="card_container_Box">
+        <div className="discount_div ">خصم 20%</div>
+        <Box className="card_container_Box mt-7">
           <Box className="d_flex_justifu">
             <span>
-              <span style={{ fontSize: "30px", color: "var(--main-color)" }}>
-                400{" "}
-              </span>
+              <span className="redprice">160</span>
+              <span style={{ fontSize: "30px", color: "#47454599" }}>400 </span>
               {t("Rial")}
             </span>
             <span className="font_Gray">شهري/سنوي</span>
@@ -233,7 +235,7 @@ const DetailsCard = ({ adInfo }) => {
           </Box>
         </Box>
         <Box className="box_divder"></Box>
-        {selectedDates.length > 0 && (
+        {selectedDates?.length > 0 && (
           <Box className="box_padding">
             <Box className="d_flex_spaceBetween">
               <Box sx={{ width: "50%", paddingRight: "8px" }}>
@@ -356,6 +358,16 @@ const DetailsCard = ({ adInfo }) => {
               +44 {t("Rial")}
             </Box>
           </Box>
+          <div
+            className="price_details_modal"
+            onClick={() => setPriceDetails(!PriceDetails)}
+          >
+            تفاصيل السعر الإجمالي
+          </div>
+          {PriceDetails && (
+            <PriceDetailsPaper setPriceDetails={setPriceDetails} />
+          )}
+
           {toggleTask && (
             <Typography sx={{ fontSize: "12px" }}>
               {t("details_page.details_tabs.calender_card.help_us")}

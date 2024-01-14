@@ -53,6 +53,7 @@ import AllDeals from "./website/pages/all_deals/AllDeals";
 import PaymentDone from "./website/pages/done_payment/PaymentDone";
 import Notification from "./dashboard/pages/Notification/Notification";
 import TermsOfUse from "./website/pages/terms of use/TermsOfUse";
+import { CalendarProvider } from "./dashboard/context/calendarContext";
 
 const PrivateRoute = ({ element }) => {
   const thereisToken = localStorage.getItem("user_token");
@@ -255,7 +256,15 @@ function App() {
         > */}
         <Route
           path="dashboard"
-          element={<PrivateRoute element={<DashLayout />} />}
+          element={
+            <PrivateRoute
+              element={
+                <CalendarProvider>
+                  <DashLayout />
+                </CalendarProvider>
+              }
+            />
+          }
         >
           <Route path="home">
             <Route index element={<InformationPage />} />

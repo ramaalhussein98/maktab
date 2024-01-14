@@ -32,8 +32,11 @@ const UnitImages = ({
   const [selectedVideoFile, setSelectedVideoFile] = useState(
     images?.find((ele) => ele.type_file === "video")
   );
+  const [selectedVideoFileId, setSelectedVideoFileId] = useState(
+    images?.find((ele) => ele.type_file === "video")
+  );
   const [_images, setImages] = useState([]);
-  console.log(_images);
+  console.log(selectedVideoFileId);
   useEffect(() => {
     // Update the formData when selectedImages or selectedVideoFile changes
     if (selectedVideoFile) {
@@ -90,7 +93,7 @@ const UnitImages = ({
             );
             return updatedImages;
           });
-          // dispatch({ type: "deletedFiles", value: index });
+          refetch();
         }
       });
   };
@@ -116,16 +119,20 @@ const UnitImages = ({
 
   const onVideoRemove = async (index) => {
     await myAxios
-      .delete(`/api/v1/user/offices/deleteFiles/${officeId}`, {
+      .delete(`/api/v1/user/offices/deleteFiles/${id}`, {
         data: {
-          file_id: state?.videoId,
+          file_id: index,
         },
       })
       .then((res) => {
         if (res.data.status === true) {
           setSelectedVideoFile(null);
+          setSelectedVideoFileId(null);
+          refetch();
         } else {
+          setSelectedVideoFileId(null);
           setSelectedVideoFile(null);
+          refetch();
         }
       });
   };
@@ -162,18 +169,23 @@ const UnitImages = ({
       setSelectedVideoFile(null);
     }
   };
-
   const handleSubmit = async () => {
     setIsChangingData(true);
-    console.log(thumbnail, _images, selectedVideoFile);
     const updateFiles = new FormData();
     updateFiles.append("main_image", thumbnail.file);
-
+    if (
+      selectedVideoFileId &&
+      typeof selectedVideoFile === "object" &&
+      selectedVideoFile instanceof File
+    ) {
+      updateFiles.append("video[id]", selectedVideoFileId.id);
+      updateFiles.append("video[video]", selectedVideoFile);
+    }
     const addFiles = new FormData();
     _images.forEach((file) => {
-      addFiles.append("images[]", file);
+      addFiles.append("images[]", file.file);
     });
-    if (selectedVideoFile) {
+    if (!selectedVideoFileId) {
       addFiles.append("video", selectedVideoFile);
     }
     await myAxios.post(`/api/v1/user/offices/updateFiles/${id}`, updateFiles);
@@ -184,24 +196,35 @@ const UnitImages = ({
     await refetch();
     onCancel();
   };
-
   return (
     <Box>
       <Box sx={{ marginY: "14px", fontSize: "16px", fontWeight: "600" }}>
-        <Typography variant="label">
-          {t("dashboard.property_images.label1")}
-        </Typography>
-        <Typography
-          sx={{
-            fontWeight: "400",
-            fontSize: "16px",
-            color: "rgb(118, 118, 118)",
-          }}
-        >
-          {lang === "ar"
-            ? "عدد الثواني المسموح بها 30 ثانية"
-            : "The number of seconds allowed is 30 seconds"}
-        </Typography>
+        <div className="flex justify-between items-center">
+          <div>
+            <Typography variant="label">
+              {t("dashboard.property_images.label1")}
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: "400",
+                fontSize: "16px",
+                color: "rgb(118, 118, 118)",
+              }}
+            >
+              {lang === "ar"
+                ? "عدد الثواني المسموح بها 30 ثانية"
+                : "The number of seconds allowed is 30 seconds"}
+            </Typography>
+          </div>
+          {selectedVideoFileId && (
+            <button
+              onClick={() => handleDeleteVideo(selectedVideoFileId.id)}
+              className="bg-red-500 text-white p-2 rounded-md text-sm"
+            >
+              {lang === "ar" ? "حذف الفيديو" : "delete video"}{" "}
+            </button>
+          )}
+        </div>
         <Box>
           <input
             id="video-input"
@@ -222,9 +245,18 @@ const UnitImages = ({
             }}
           >
             {selectedVideoFile ? (
-              <video autoPlay style={{ width: "100%", height: "100%" }}>
-                <source src={URL.createObjectURL(selectedVideoFile)} />
-              </video>
+              typeof selectedVideoFile === "object" &&
+              selectedVideoFile instanceof File ? (
+                <video autoPlay style={{ width: "100%", height: "100%" }}>
+                  <source src={URL.createObjectURL(selectedVideoFile)} />
+                </video>
+              ) : (
+                <video autoPlay style={{ width: "100%", height: "100%" }}>
+                  <source
+                    src={`https://dashboard.maktab.sa/${selectedVideoFile?.path}`}
+                  />
+                </video>
+              )
             ) : (
               <Box
                 sx={{

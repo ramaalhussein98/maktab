@@ -74,10 +74,6 @@ const EditInformation = ({
               maxWidth: "340px",
               width: { xs: "80%", md: "90%" },
               borderRadius: "12px !important",
-              boxShadow: "1",
-              "& .css-1iy5sao-MuiInputBase-root-MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
             }}
             InputProps={{
               sx: {
@@ -107,10 +103,6 @@ const EditInformation = ({
               maxWidth: "340px",
               width: { xs: "80%", md: "90%" },
               borderRadius: "12px !important",
-              boxShadow: "1",
-              "& .css-1iy5sao-MuiInputBase-root-MuiOutlinedInput-root": {
-                borderRadius: "12px",
-              },
             }}
             InputProps={{
               sx: {

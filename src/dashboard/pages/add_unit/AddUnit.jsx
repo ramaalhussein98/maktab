@@ -15,6 +15,7 @@ import { HomeImagesAdd } from "../add_ads_folder/add_ads_components";
 import { toast } from "react-toastify";
 import myAxios from "../../../api/myAxios";
 import UnitDetailsNumber from "./components/UnitDetailsNumber";
+import Services from "./components/services/Services";
 
 const reducerFunc = (unit, action) => {
   switch (action.type) {
@@ -188,6 +189,53 @@ const reducerFunc = (unit, action) => {
         }
       }
       break;
+    case "services":
+      if (action.sub_type === "add") {
+        return {
+          ...unit,
+          services: [
+            ...unit.services,
+            {
+              id: Math.floor(Math.random() * 100) + 1,
+              ar_name: "",
+              en_name: "",
+              price: "",
+              service_toggle: true,
+              status: false,
+            },
+          ],
+        };
+      } else if (action.sub_type === "remove") {
+        const updatedBoxes = [...unit.services];
+        updatedBoxes.splice(action.index, 1);
+        return {
+          ...unit,
+          services: updatedBoxes,
+        };
+      } else if (action.sub_type === "toggle") {
+        const updatedBoxes = [...unit.services];
+        updatedBoxes[action.index].service_toggle = action.toggleNewVal;
+
+        return {
+          ...unit,
+          services: updatedBoxes,
+        };
+      } else if (action.sub_type === "changeService") {
+        const updatedServices = [...unit.services];
+        const { name, value } = action;
+        const indexToUpdate = action.index;
+
+        if (indexToUpdate !== -1) {
+          // Update the specific property
+          updatedServices[indexToUpdate][name] = value;
+
+          return {
+            ...unit,
+            services: updatedServices,
+          };
+        }
+      }
+      break;
     case "prices":
       if (action.sub_type === "add") {
         const newPrices = action.array.map((ele) => {
@@ -313,6 +361,7 @@ const AddUnit = () => {
     comfort: [],
     images: [],
     details: [],
+    services: [],
   });
   const [step, setStep] = useState(1);
   const [isLastStep, setIsLastStep] = useState();
@@ -479,7 +528,10 @@ const AddUnit = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            titleError: "title should be at least 4 chars",
+            titleError:
+              lang === "ar"
+                ? "الاسم يجب على الاقل ان يكون 4 محارف"
+                : "title should be at least 4 chars",
           }));
         } else {
           setError(false);
@@ -499,7 +551,10 @@ const AddUnit = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            descriptionError: "description should be at least 8 chars",
+            descriptionError:
+              lang === "ar"
+                ? "الوصف يجب على الاقل ان يكون 8 محارف"
+                : "description should be at least 8 chars",
           }));
         } else {
           setError(false);
@@ -533,7 +588,10 @@ const AddUnit = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            veiwerNameError: "name should be at least 4 chars",
+            veiwerNameError:
+              lang === "ar"
+                ? "اسم المعاين يجب على الاقل ان يكون 4 محارف"
+                : "veiwer name should be at least 4 chars",
           }));
         } else {
           setError(false);
@@ -546,7 +604,10 @@ const AddUnit = () => {
           setError(true);
           setStepErrors((prev) => ({
             ...prev,
-            veiwerNumberError: "name should be at least 10 to 11 chars",
+            veiwerNumberError:
+              lang === "ar"
+                ? "رقم المعاين يجب ان يكون بين 10 و 11 رقم"
+                : "veiwer number should be at least 10 to 11 chars",
           }));
         } else {
           setError(false);
@@ -579,8 +640,14 @@ const AddUnit = () => {
         );
       case 3:
         return (
-          <UnitFeatures
-            unit={unit}
+          // <UnitFeatures
+          //   unit={unit}
+          //   dispatch={dispatch}
+          //   comfort={comfort}
+          //   features={unitsFeatures}
+          // />
+          <Services
+            state={unit}
             dispatch={dispatch}
             comfort={comfort}
             features={unitsFeatures}

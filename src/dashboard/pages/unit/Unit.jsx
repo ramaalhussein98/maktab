@@ -12,7 +12,7 @@ import {
   styled,
   Fade,
 } from "@mui/material";
-
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   EditInformation,
   EditDescription,
@@ -32,6 +32,7 @@ import EditFacilities from "./components/EditFacilities";
 import EditFeatures from "./components/EditFeatures";
 import EditComforts from "./components/EditComforts";
 import Loader from "../../../ui/Loader";
+import EditServices from "./components/EditServices";
 
 const getData = async (paramId) => {
   const res = await myAxios.get(`api/v1/user/offices/${paramId}`);
@@ -99,6 +100,7 @@ const Unit = () => {
   const [editFacilities, setEditFacilities] = useState(false);
   const [editFeatures, setEditFeatures] = useState(false);
   const [editComforts, setEditComforts] = useState(false);
+  const [editServices, setEditServices] = useState(false);
   const handleEditInformation = () => {
     setEditInfo(true);
   };
@@ -192,7 +194,7 @@ const Unit = () => {
   };
 
   if (isLoading) return <Loader />;
-  console.log(unit);
+
   return (
     <>
       {(isRefetching || isChangingData) && <Loader />}
@@ -200,7 +202,7 @@ const Unit = () => {
         to={"/dashboard/properties"}
         className="text-2xl font-semibold hover:bg-[#c20000ab] w-fit py-1 px-4 rounded-lg hover:text-white mb-5 block"
       >
-        {unit?.title}
+        <KeyboardArrowRightIcon /> {unit?.title}
       </Link>
       <Box className="custom-grid-container1">
         <Box>
@@ -365,7 +367,7 @@ const Unit = () => {
                             key={i}
                             src={`https://dashboard.maktab.sa/${ele.path}`}
                             alt=""
-                            className=" flex-1 h-[50px] rounded-lg"
+                            className="flex-[49%] flex-grow-0 h-[80px] rounded-lg object-cover"
                           />
                         ))}
                     </div>
@@ -423,6 +425,9 @@ const Unit = () => {
                       setEditDetails(false);
                     }}
                     details={unit.ads_details}
+                    id={unit.id}
+                    refetch={refetch}
+                    setIsChangingData={setIsChangingData}
                   />
                 </Box>
               </Fade>
@@ -599,6 +604,55 @@ const Unit = () => {
                     {unit?.comforts
                       .map((feature) =>
                         lang === "ar" ? feature.ar_name : feature.en_name
+                      )
+                      .join(", ")}
+                  </Typography>
+                </Box>
+              </Fade>
+            )}
+          </OrderCard>
+          {/* services section  */}
+          <OrderCard sx={{ background: "#fff" }}>
+            {editServices && (
+              <Fade in={editServices}>
+                <Box>
+                  <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
+                    {lang === "ar" ? "الخدمات " : "Services  "}
+                  </Typography>
+                  <EditServices
+                    services={unit?.services}
+                    setIsChangingData={setIsChangingData}
+                    onCancel={() => {
+                      setEditServices(false);
+                    }}
+                    refetch={refetch}
+                    unitId={unit.id}
+                  />
+                </Box>
+              </Fade>
+            )}
+            {!editServices && (
+              <Fade in={!editServices}>
+                <Box>
+                  <Box className="custom-flex-container-space">
+                    <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
+                      {lang === "ar" ? "الخدمات الاضافية" : "more services"}
+                    </Typography>
+
+                    <Typography
+                      className="eitBtn"
+                      onClick={() => {
+                        setEditServices(true);
+                      }}
+                    >
+                      {!editServices &&
+                        t("dashboard.outgoing_requests.edit_btn")}
+                    </Typography>
+                  </Box>
+                  <Typography>
+                    {unit?.services
+                      .map((service) =>
+                        lang === "ar" ? service.ar_name : service.en_name
                       )
                       .join(", ")}
                   </Typography>

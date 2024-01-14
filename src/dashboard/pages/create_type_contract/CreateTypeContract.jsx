@@ -1,9 +1,10 @@
 import { Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import "../../../assets/css/Bills.css";
 import TinyEditor from "../../../website/pages/CreateContract/components/TinyEditor";
 import * as Yup from "yup";
+import ReactQuill from "react-quill";
 const CreateTypeContract = () => {
   const initialValues = {
     type_name: "",
@@ -25,6 +26,29 @@ const CreateTypeContract = () => {
     }
     setSubmitting(false);
   };
+  var toolbarOptions = [
+    ["bold", "italic", "underline", "strike"], // toggled buttons
+    ["blockquote", "code-block"],
+
+    [{ header: 1 }, { header: 2 }], // custom button values
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ script: "sub" }, { script: "super" }], // superscript/subscript
+    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+    [{ direction: "rtl" }], // text direction
+
+    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+    [{ font: [] }],
+    [{ align: [] }],
+
+    ["clean"], // remove formatting button
+  ];
+  const modules = {
+    toolbar: toolbarOptions,
+  };
+  const [value, setValue] = useState("");
   return (
     <div>
       <Typography variant="h6" gutterBottom style={{ fontWeight: "700" }}>
@@ -65,7 +89,13 @@ const CreateTypeContract = () => {
           </div>
         </div>
       </Formik>
-      <TinyEditor />
+      <ReactQuill
+        modules={modules}
+        theme="snow"
+        value={value}
+        onChange={setValue}
+      />
+
       <button className="btnAddContarct">إضافة</button>
     </div>
   );

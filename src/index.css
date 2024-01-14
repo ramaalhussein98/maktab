@@ -84,3 +84,6 @@
   background-color: transparent;
   /* Background color of the corner */
 }
+.ql-container {
+  min-height: 300px;
+}

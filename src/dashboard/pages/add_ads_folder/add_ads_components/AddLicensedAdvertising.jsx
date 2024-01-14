@@ -129,6 +129,7 @@ const AddLicensedAdvertising = ({
           </span>
           <input
             value={state?.license_number}
+            maxLength={7}
             onChange={handleLicesneNumbervaule}
             placeholder={t("dashboard.contract.plzenter")}
             onKeyUp={() => setShowError(true)}

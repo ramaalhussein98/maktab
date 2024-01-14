@@ -54,23 +54,23 @@
   .pricebold {
     font-weight: bold;
   }
-  .redprice {
-    color: var(--main-color);
-    margin-right: 2px;
-    margin-left: 2px;
-    position: relative;
-    font-size: 18px;
-  }
-  .redprice::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 100%;
+}
+.redprice {
+  color: var(--main-color);
+  margin-right: 2px;
+  margin-left: 2px;
+  position: relative;
+  font-size: 18px;
+}
+.redprice::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
 
-    height: 1.5px;
-    top: 50%;
-    background-color: var(--main-color);
-  }
+  height: 1.5px;
+  top: 50%;
+  background-color: var(--main-color);
 }
 .offer_div {
   background-color: #c03838;

@@ -35,7 +35,7 @@ export const useOfficeHook = ({ page = 1, filter }) => {
   });
   useEffect(() => {
     refetch();
-  }, [location.pathname, refetch]);
+  }, [speacilPage, refetch]);
   return {
     data,
     error,
