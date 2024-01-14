@@ -111,6 +111,9 @@
 }
 .pExplain {
   line-height: 30px;
+  width: 85%;
+  margin: auto;
+  font-weight: 600;
 }
 .headingStyle {
   margin-top: 2rem;

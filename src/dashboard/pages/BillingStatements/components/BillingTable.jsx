@@ -19,26 +19,30 @@ const billsContent = [
     column1: "#22222222",
     column2: "31-07-2023",
     column3: " 12030 ",
-    column4: "  مسددة",
-    column5: <VisibilityIcon />,
-    column6: <SettingsIcon />,
+    column4: " 0 ",
+    column5: "  مسددة",
+    column6: <VisibilityIcon />,
+    column7: <SettingsIcon />,
   },
   {
     id: 2,
-    column1: "#476474674",
+    column1: "#22222222",
     column2: "31-07-2023",
-    column3: " 2000",
-    column4: "مسددة",
-    column5: <VisibilityIcon />,
-    column6: <SettingsIcon />,
+    column3: " 12030 ",
+    column4: " 1000 ",
+    column5: "  دفع جزئي",
+    column6: <VisibilityIcon />,
+    column7: <SettingsIcon />,
   },
   {
     id: 3,
-    column1: "#476474674",
+    column1: "#22222222",
     column2: "31-07-2023",
-    column3: " 2000",
-    column4: " مسددة ",
-    column5: <VisibilityIcon />,
+    column3: "  ",
+    column4: "  ",
+    column5: "  بانتظار تأكيد الدفع",
+    column6: <VisibilityIcon />,
+    column7: <SettingsIcon />,
   },
 ];
 
@@ -65,19 +69,30 @@ const BillingRow = ({ data }) => {
         {/* <CalendarTodayIcon className="calenderIcon" /> */}
         {data.column3}
       </TableCell>
+      <TableCell sx={{ textAlign: "right" }}>
+        {/* <CalendarTodayIcon className="calenderIcon" /> */}
+        {data.column4}
+      </TableCell>
       <TableCell
         sx={{
           textAlign: "right",
-          color: "var(--green-color)",
+          color:
+            data.column5 === "  مسددة"
+              ? "var(--green-color)"
+              : data.column5 === "  دفع جزئي"
+              ? "orange"
+              : data.column5 === "  بانتظار تأكيد الدفع"
+              ? "red"
+              : "inherit", // fallback color
           fontWeight: "600",
         }}
       >
-        {data.column4}
+        {data.column5}
       </TableCell>
       <TableCell
         sx={{ textAlign: "right", color: "#0f5eb3", cursor: "pointer" }}
       >
-        <Link to="/dashboard/acc/contact_details">{data.column5}</Link>
+        <Link to="/dashboard/acc/contact_details">{data.column6}</Link>
       </TableCell>
       {contractDetails && (
         <Paper
@@ -134,8 +149,9 @@ const BillingTable = () => {
     { id: "column1", label: t("dashboard.sub_page.label1") },
     { id: "column2", label: t("dashboard.Invoices.ReleaseDate") },
     { id: "column3", label: t("dashboard.Invoices.theamount") },
-    { id: "column4", label: t("dashboard.incoming_orders.card3.label1") },
-    { id: "column5", label: " مشاهدة" },
+    { id: "column4", label: "مبلغ المتبقي" },
+    { id: "column5", label: t("dashboard.incoming_orders.card3.label1") },
+    { id: "column6", label: " مشاهدة" },
   ];
   return (
     <div className="mt-5">

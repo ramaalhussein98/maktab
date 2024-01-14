@@ -37,14 +37,14 @@ const ContractDetails = () => {
         <div style={{ display: "flex" }}>
           <Link
             to="/dashboard/electronic_invoices"
-            sx={{
+            style={{
               backgroundColor: "var(--green-color)",
               color: "white",
               cursor: "pointer",
               padding: "5px 10px",
               border: "1px solid transparent",
               borderRadius: "5px",
-              marginX: "0.5rem",
+              marginLeft: "0.5rem",
             }}
           >
             {t("dashboard.contarctDetails.downalconpy")}
