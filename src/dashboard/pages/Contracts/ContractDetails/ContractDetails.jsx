@@ -8,6 +8,7 @@ import ElevatorIcon from "@mui/icons-material/Elevator";
 import PersonIcon from "@mui/icons-material/Person";
 import Swal from "sweetalert2";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const ContractDetails = () => {
   const { t, i18n } = useTranslation();
@@ -34,7 +35,8 @@ const ContractDetails = () => {
           {t("dashboard.contarctDetails.Residentialcontract")} #576788655
         </Typography>
         <div style={{ display: "flex" }}>
-          <Box
+          <Link
+            to="/dashboard/electronic_invoices"
             sx={{
               backgroundColor: "var(--green-color)",
               color: "white",
@@ -46,7 +48,7 @@ const ContractDetails = () => {
             }}
           >
             {t("dashboard.contarctDetails.downalconpy")}
-          </Box>
+          </Link>
           <Box
             sx={{
               backgroundColor: "red",

@@ -24,3 +24,28 @@
     margin-right: 10px;
   }
 }
+.map_center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  background-color: rgba(226, 48, 48, 0.4);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 2px solid red;
+}
+.map_close_icon{
+  position: absolute;
+  z-index: 1;
+  right: 1rem;
+  top: 1rem;
+  color: gray;
+  background-color: white;
+  border-radius: 50%;
+  padding: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}

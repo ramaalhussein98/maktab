@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import {
   Tabs,
   Tab,
@@ -13,8 +12,10 @@ import DetailsTabContent from "./DetailsTabContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import Map from "../../../../../assets/images/map.jpg";
 import DetailsFeaturesBox from "./DetailsFeaturesBox";
+import CloseIcon from "@mui/icons-material/Close";
 import FiveStars from "./FiveStars";
 import { useTranslation } from "react-i18next";
+import MapModal from "../MapModal";
 // import LogInModal from "../../../../authentication/loginFolder/LogInModal";
 
 const DetailsTabs = ({ data }) =>
@@ -27,11 +28,13 @@ const DetailsTabs = ({ data }) =>
     const [showCommentForm, setShowCommentForm] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const modalRef = useRef(null);
-
+    const [modalMapOpen, setModalMapOpen] = useState(false);
     const handleOpenLoginModal = () => {
       setShowLoginModal(true);
     };
-
+    const handleMapCloseModal = () => {
+      setModalMapOpen(false);
+    };
     const handleTabChange = (event, newValue) => {
       setSelectedTab(newValue);
     };
@@ -160,18 +163,25 @@ const DetailsTabs = ({ data }) =>
               border: "1px solid transparent",
               borderRadius: "2rem",
             }}
+            onClick={() => setModalMapOpen(true)}
           >
-            <Link
+            {/* <Link
               href={`https://www.google.com/maps/dir/My+Location/${data?.location?.lat},${data?.location?.lng}/@${data?.location?.lat},${data?.location?.lng},12z/data=!3m1!4b1?entry=ttu`}
               target="_blank"
-            >
-              <img
-                src={Map}
-                alt="mapImg"
-                style={{ width: "100%", borderRadius: "2rem" }}
-              />
-            </Link>
+            > */}
+            <img
+              src={Map}
+              alt="mapImg"
+              style={{ width: "100%", borderRadius: "2rem" }}
+            />
+            {/* </Link> */}
           </Box>
+          <MapModal
+            lat={24.7136}
+            lng={46.6753}
+            open={modalMapOpen}
+            onClose={handleMapCloseModal}
+          />
         </Box>
         <Box hidden={selectedTab !== 2}>
           <DetailsTabContent

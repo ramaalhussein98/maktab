@@ -10,7 +10,6 @@ import CompleteModal from "./common_components/CompleteModal";
 const RealEstates = () => {
   const [showAddoffice, setAddShowOffice] = useState(false);
   const [openModalAddUnit, setOpenModalAddUnit] = useState(false);
-
   const [openModalAddOffice, setOpenModalAddOfice] = useState(false);
   const { t } = useTranslation();
   const handleAddOfficeModal = () => {

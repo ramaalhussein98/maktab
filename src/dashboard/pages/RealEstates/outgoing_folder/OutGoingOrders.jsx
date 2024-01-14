@@ -20,14 +20,12 @@ import OrderCard from "../common_components/OrderCard";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Map } from "../../../../assets/images";
 import HourglassDisabledIcon from "@mui/icons-material/HourglassDisabled";
-
 import {
   EditInformation,
   EditLocation,
   EditMap,
   EditDescription,
 } from "./outgoingcomponents";
-
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useQueryHook } from "../../../../hooks/useQueryHook";
@@ -242,52 +240,55 @@ const OutGoingOrders = () => {
     <Box>
       <>
         <Box className="outGoingclass">
-          {offices?.map((office) => (
-            <CustomAccordion
-              key={office.id}
-              TransitionProps={{ unmountOnExit: true }}
-              // expanded={expanded === `panel${office.id}`}
-              // onChange={handleChange(`panel${office.id}`, office)}
-            >
-              <Box sx={{ paddingInline: "20px" }}>
-                <CustomAccordionSummary
-                  expandIcon={
-                    <CircleIconButton size="small">
-                      <ExpandMoreIcon sx={{ fontSize: "2rem" }} />
-                    </CircleIconButton>
-                  }
-                  // aria-controls={`panel${office.id}-content`}
-                  // id={`panel${office.id}-header`}
-                >
-                  <Box className="custom-flex-container">
-                    <div className="custom-flex-container2">
-                      <Typography sx={{ fontSize: "24px", fontWeight: "700" }}>
-                        {office.title}
-                      </Typography>
-                      {office?.status === 0 ? (
+          {offices?.length > 0 ? (
+            offices?.map((office) => (
+              <CustomAccordion
+                key={office.id}
+                TransitionProps={{ unmountOnExit: true }}
+                // expanded={expanded === `panel${office.id}`}
+                // onChange={handleChange(`panel${office.id}`, office)}
+              >
+                <Box sx={{ paddingInline: "20px" }}>
+                  <CustomAccordionSummary
+                    expandIcon={
+                      <CircleIconButton size="small">
+                        <ExpandMoreIcon sx={{ fontSize: "2rem" }} />
+                      </CircleIconButton>
+                    }
+                    // aria-controls={`panel${office.id}-content`}
+                    // id={`panel${office.id}-header`}
+                  >
+                    <Box className="custom-flex-container">
+                      <div className="custom-flex-container2">
                         <Typography
-                          sx={{
-                            color: "rgb(244, 67, 54)",
-                            fontWeight: "600",
-                            margin: "0px 16px",
-                          }}
+                          sx={{ fontSize: "24px", fontWeight: "700" }}
                         >
-                          غير معروض
+                          {office.title}
                         </Typography>
-                      ) : (
-                        <Typography
-                          sx={{
-                            color: "var(--green-color)",
-                            fontWeight: "600",
-                            margin: "0px 16px",
-                          }}
-                        >
-                          معروض
-                        </Typography>
-                      )}
-                    </div>
+                        {office?.status === 0 ? (
+                          <Typography
+                            sx={{
+                              color: "rgb(244, 67, 54)",
+                              fontWeight: "600",
+                              margin: "0px 16px",
+                            }}
+                          >
+                            غير معروض
+                          </Typography>
+                        ) : (
+                          <Typography
+                            sx={{
+                              color: "var(--green-color)",
+                              fontWeight: "600",
+                              margin: "0px 16px",
+                            }}
+                          >
+                            معروض
+                          </Typography>
+                        )}
+                      </div>
 
-                    {/* <div
+                      {/* <div
                       style={{
                         display: "flex",
                         marginTop: "4px",
@@ -314,272 +315,303 @@ const OutGoingOrders = () => {
                         <DeleteForeverIcon className="deleteicon" />
                       </Box>
                     </div> */}
-                  </Box>
-                </CustomAccordionSummary>
-              </Box>
-              <CustomAccordionDetails>
-                <Box className="custom-grid-container1">
-                  <Box>
-                    <OrderCard>
-                      <Box className="custom-flex-container-space">
-                        <Typography
-                          sx={{ fontWeight: "600", fontSize: "1.2rem" }}
-                        >
-                          {t("dashboard.incoming_orders.card1.label1")}
-                        </Typography>
+                    </Box>
+                  </CustomAccordionSummary>
+                </Box>
+                <CustomAccordionDetails>
+                  <Box className="custom-grid-container1">
+                    <Box>
+                      <OrderCard>
+                        <Box className="custom-flex-container-space">
+                          <Typography
+                            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+                          >
+                            {t("dashboard.incoming_orders.card1.label1")}
+                          </Typography>
 
-                        <Typography
-                          className="eitBtn"
-                          onClick={handleEditInformation}
-                        >
-                          {!edditInfo &&
-                            t("dashboard.outgoing_requests.edit_btn")}
-                        </Typography>
-                      </Box>
-                      {edditInfo && (
-                        <Fade in={edditInfo}>
-                          <Box>
-                            <EditInformation
-                              title={office.title}
-                              editTitleMutation={editTitleMutation}
-                              id={office.id}
-                              onCancel={onCancel}
-                              categoryId={office.category_aqar.id}
-                            />
-                          </Box>
-                        </Fade>
-                      )}
-                      {!edditInfo && (
-                        <Fade in={!edditInfo}>
-                          <Box>
-                            <Box className="custom-flex-container-space">
-                              <Typography>
-                                {t("dashboard.incoming_orders.card1.label1")}
-                              </Typography>
-                              <Typography>{office.title} </Typography>
+                          <Typography
+                            className="eitBtn"
+                            onClick={handleEditInformation}
+                          >
+                            {!edditInfo &&
+                              t("dashboard.outgoing_requests.edit_btn")}
+                          </Typography>
+                        </Box>
+                        {edditInfo && (
+                          <Fade in={edditInfo}>
+                            <Box>
+                              <EditInformation
+                                title={office.title}
+                                editTitleMutation={editTitleMutation}
+                                id={office.id}
+                                onCancel={onCancel}
+                                categoryId={office.category_aqar.id}
+                              />
                             </Box>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                marginBottom: "1rem",
-                              }}
-                            >
-                              <Typography>
-                                {lang === "ar" ? "نوع المكتب" : "office type"}
-                              </Typography>
-                              <Typography>
-                                {lang === "ar"
-                                  ? office?.category_aqar?.ar_name
-                                  : office?.category_aqar?.en_name}
-                              </Typography>
+                          </Fade>
+                        )}
+                        {!edditInfo && (
+                          <Fade in={!edditInfo}>
+                            <Box>
+                              <Box className="custom-flex-container-space">
+                                <Typography>
+                                  {t("dashboard.incoming_orders.card1.label1")}
+                                </Typography>
+                                <Typography>{office.title} </Typography>
+                              </Box>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  marginBottom: "1rem",
+                                }}
+                              >
+                                <Typography>
+                                  {lang === "ar" ? "نوع المكتب" : "office type"}
+                                </Typography>
+                                <Typography>
+                                  {lang === "ar"
+                                    ? office?.category_aqar?.ar_name
+                                    : office?.category_aqar?.en_name}
+                                </Typography>
+                              </Box>
                             </Box>
-                          </Box>
-                        </Fade>
-                      )}
-                    </OrderCard>
-                    <OrderCard>
-                      <Box
-                        className="custom-flex-container-space"
-                        sx={{
-                          marginTop: "1rem",
-                        }}
-                      >
-                        <Typography
+                          </Fade>
+                        )}
+                      </OrderCard>
+                      <OrderCard>
+                        <Box
+                          className="custom-flex-container-space"
                           sx={{
-                            fontWeight: "600",
-                            fontSize: "1.2rem",
                             marginTop: "1rem",
                           }}
                         >
-                          {t("dashboard.incoming_orders.card2.title")}
-                        </Typography>
-
-                        <Typography
-                          className="eitBtn"
-                          onClick={handleEditLocation}
-                        >
-                          {!edditLoc &&
-                            t("dashboard.outgoing_requests.edit_btn")}
-                        </Typography>
-                      </Box>
-                      {edditLoc && (
-                        <Fade in={edditLoc}>
-                          <Box>
-                            <EditLocation
-                              interfaceId={office?.interface_aqar?.id}
-                              id={office.id}
-                              editInterfaceMutation={editInterfaceMutation}
-                              onCancel={handleCloseEditLocation}
-                            />
-                          </Box>
-                        </Fade>
-                      )}
-                      {!edditLoc && (
-                        <Fade in={!edditLoc}>
-                          <Box>
-                            <Box className="custom-flex-container-space">
-                              <Typography>
-                                {t("dashboard.incoming_orders.card2.label1")}
-                              </Typography>
-                              <Typography>{office?.location?.city}</Typography>
-                            </Box>
-                            <Box className="custom-flex-container-space">
-                              <Typography>
-                                {" "}
-                                {t("dashboard.incoming_orders.card2.label2")}
-                              </Typography>
-                              <Typography>
-                                {office?.location?.neighborhood}
-                              </Typography>
-                            </Box>
-                            <Box className="custom-flex-container-space">
-                              <Typography>
-                                {lang === "ar" ? "الشارع" : "road"}
-                              </Typography>
-                              <Typography>
-                                {office?.location?.street}
-                              </Typography>
-                            </Box>
-                            <Box className="custom-flex-container-space">
-                              <Typography>
-                                {" "}
-                                {t(
-                                  "dashboard.incoming_orders.card2.label3"
-                                )}{" "}
-                              </Typography>
-                              <Typography>
-                                {lang === "ar"
-                                  ? office?.interface_aqar?.ar_name
-                                  : office?.interface_aqar?.en_name}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Fade>
-                      )}
-                    </OrderCard>
-                  </Box>
-                  <Box>
-                    <OrderCard>
-                      <Box className="custom-flex-container-space">
-                        <Typography
-                          sx={{ fontWeight: "600", fontSize: "1.2rem" }}
-                        >
-                          {t("dashboard.incoming_orders.card3.title")}
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography>
-                          {" "}
-                          {t("dashboard.incoming_orders.card3.label1")}
-                        </Typography>
-                        {office?.status == 0 ? (
                           <Typography
                             sx={{
-                              color: "rgb(244, 67, 54)",
                               fontWeight: "600",
-                              marginBottom: "1rem",
+                              fontSize: "1.2rem",
+                              marginTop: "1rem",
                             }}
                           >
-                            غير معروض
+                            {t("dashboard.incoming_orders.card2.title")}
                           </Typography>
-                        ) : (
-                          <Typography className="eitBtn">معروض</Typography>
-                        )}
-                      </Box>
-                    </OrderCard>
-                    <OrderCard>
-                      <Box className="custom-flex-container-space">
-                        <Typography
-                          sx={{ fontWeight: "600", fontSize: "1.2rem" }}
-                        >
-                          {t("dashboard.incoming_orders.card4.title")}
-                        </Typography>
 
-                        <Typography className="eitBtn" onClick={handleMapEdit}>
-                          {!MapEdit &&
-                            t("dashboard.outgoing_requests.edit_btn")}
-                        </Typography>
-                      </Box>
-                      {MapEdit && (
-                        <Fade in={MapEdit}>
-                          <Box>
-                            <EditMap
-                              location={office?.location}
-                              onCancel={handleCloseEditMap}
-                              editMapLocationMutation={editMapLocationMutation}
-                              id={office?.id}
-                            />
-                          </Box>
-                        </Fade>
-                      )}
-                      {!MapEdit && (
-                        <Fade in={!MapEdit}>
-                          <Box sx={{ display: "flex" }}>
-                            <Typography
-                              sx={{
-                                color: "rgb(132, 132, 132)",
-                                width: "35%",
-                              }}
-                            >
-                              {office?.location?.city +
-                                ", " +
-                                office?.location?.neighborhood +
-                                ", " +
-                                office?.location?.street}
-                            </Typography>
-                            <Box className="map-image-container">
-                              <img
-                                src={Map}
-                                alt="My "
-                                className="custom-image"
+                          <Typography
+                            className="eitBtn"
+                            onClick={handleEditLocation}
+                          >
+                            {!edditLoc &&
+                              t("dashboard.outgoing_requests.edit_btn")}
+                          </Typography>
+                        </Box>
+                        {edditLoc && (
+                          <Fade in={edditLoc}>
+                            <Box>
+                              <EditLocation
+                                interfaceId={office?.interface_aqar?.id}
+                                id={office.id}
+                                editInterfaceMutation={editInterfaceMutation}
+                                onCancel={handleCloseEditLocation}
                               />
                             </Box>
-                          </Box>
-                        </Fade>
-                      )}
-                    </OrderCard>
-                  </Box>
-                </Box>
-                <OrderCard>
-                  <Box className="custom-flex-container-space">
-                    <Typography sx={{ fontWeight: "600", fontSize: "1.2rem" }}>
-                      {lang === "ar" ? "وحدات هذا المكتب" : "all units"}{" "}
-                      <span>{office?.units?.length}</span>
-                    </Typography>
-                  </Box>
-                  <div className="flex gap-4 my-8 flex-wrap justify-between">
-                    {office?.units.map((ele) => (
-                      <>
-                        <Link
-                          key={ele.id}
-                          to={`${ele.id}`}
-                          className="flex flex-[49%] gap-3 items-center hover:bg-gray-100"
+                          </Fade>
+                        )}
+                        {!edditLoc && (
+                          <Fade in={!edditLoc}>
+                            <Box>
+                              <Box className="custom-flex-container-space">
+                                <Typography>
+                                  {t("dashboard.incoming_orders.card2.label1")}
+                                </Typography>
+                                <Typography>
+                                  {office?.location?.city}
+                                </Typography>
+                              </Box>
+                              <Box className="custom-flex-container-space">
+                                <Typography>
+                                  {" "}
+                                  {t("dashboard.incoming_orders.card2.label2")}
+                                </Typography>
+                                <Typography>
+                                  {office?.location?.neighborhood}
+                                </Typography>
+                              </Box>
+                              <Box className="custom-flex-container-space">
+                                <Typography>
+                                  {lang === "ar" ? "الشارع" : "road"}
+                                </Typography>
+                                <Typography>
+                                  {office?.location?.street}
+                                </Typography>
+                              </Box>
+                              <Box className="custom-flex-container-space">
+                                <Typography>
+                                  {" "}
+                                  {t(
+                                    "dashboard.incoming_orders.card2.label3"
+                                  )}{" "}
+                                </Typography>
+                                <Typography>
+                                  {lang === "ar"
+                                    ? office?.interface_aqar?.ar_name
+                                    : office?.interface_aqar?.en_name}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </Fade>
+                        )}
+                      </OrderCard>
+                    </Box>
+                    <Box>
+                      <OrderCard>
+                        <Box className="custom-flex-container-space">
+                          <Typography
+                            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+                          >
+                            {t("dashboard.incoming_orders.card3.title")}
+                          </Typography>
+                        </Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
                         >
-                          <img
-                            className="w-[100px] h-[100px] rounded-lg"
-                            src={`https://dashboard.maktab.sa/${ele.main_image}`}
-                            alt=""
-                          />
-                          <div className="flex flex-col text-lg font-semibold  gap-2">
-                            <span>{ele.title}</span>
-                            <span className="text-gray-500">
-                              {lang === "ar" ? "تعديل" : "edit"}
-                            </span>
-                          </div>
-                        </Link>
-                      </>
-                    ))}
-                  </div>
-                </OrderCard>
-              </CustomAccordionDetails>
-            </CustomAccordion>
-          ))}
+                          <Typography>
+                            {" "}
+                            {t("dashboard.incoming_orders.card3.label1")}
+                          </Typography>
+                          {office?.status == 0 ? (
+                            <Typography
+                              sx={{
+                                color: "rgb(244, 67, 54)",
+                                fontWeight: "600",
+                                marginBottom: "1rem",
+                              }}
+                            >
+                              غير معروض
+                            </Typography>
+                          ) : (
+                            <Typography className="eitBtn">معروض</Typography>
+                          )}
+                        </Box>
+                      </OrderCard>
+                      <OrderCard>
+                        <Box className="custom-flex-container-space">
+                          <Typography
+                            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+                          >
+                            {t("dashboard.incoming_orders.card4.title")}
+                          </Typography>
+
+                          <Typography
+                            className="eitBtn"
+                            onClick={handleMapEdit}
+                          >
+                            {!MapEdit &&
+                              t("dashboard.outgoing_requests.edit_btn")}
+                          </Typography>
+                        </Box>
+                        {MapEdit && (
+                          <Fade in={MapEdit}>
+                            <Box>
+                              <EditMap
+                                location={office?.location}
+                                onCancel={handleCloseEditMap}
+                                editMapLocationMutation={
+                                  editMapLocationMutation
+                                }
+                                id={office?.id}
+                              />
+                            </Box>
+                          </Fade>
+                        )}
+                        {!MapEdit && (
+                          <Fade in={!MapEdit}>
+                            <Box sx={{ display: "flex" }}>
+                              <Typography
+                                sx={{
+                                  color: "rgb(132, 132, 132)",
+                                  width: "35%",
+                                }}
+                              >
+                                {office?.location?.city +
+                                  ", " +
+                                  office?.location?.neighborhood +
+                                  ", " +
+                                  office?.location?.street}
+                              </Typography>
+                              <Box className="map-image-container">
+                                <img
+                                  src={Map}
+                                  alt="My "
+                                  className="custom-image"
+                                />
+                              </Box>
+                            </Box>
+                          </Fade>
+                        )}
+                      </OrderCard>
+                    </Box>
+                  </Box>
+                  <OrderCard>
+                    <Box className="custom-flex-container-space">
+                      <Typography
+                        sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+                      >
+                        {lang === "ar" ? "وحدات هذا المكتب" : "all units"}{" "}
+                        <span>{office?.units?.length}</span>
+                      </Typography>
+                    </Box>
+                    <div className="flex gap-4 my-8 flex-wrap justify-between">
+                      {office?.units.map((ele) => (
+                        <>
+                          <Link
+                            key={ele.id}
+                            to={`${ele.id}`}
+                            className="flex flex-[49%] gap-3 items-center hover:bg-gray-100"
+                          >
+                            <img
+                              className="w-[100px] h-[100px] rounded-lg"
+                              src={`https://dashboard.maktab.sa/${ele.main_image}`}
+                              alt=""
+                            />
+                            <div className="flex flex-col text-lg font-semibold  gap-2">
+                              <span>{ele.title}</span>
+                              <span className="text-gray-500">
+                                {lang === "ar" ? "تعديل" : "edit"}
+                              </span>
+                            </div>
+                          </Link>
+                        </>
+                      ))}
+                    </div>
+                  </OrderCard>
+                </CustomAccordionDetails>
+              </CustomAccordion>
+            ))
+          ) : (
+            <Box
+              sx={{
+                width: { xs: "100%", md: "100%" },
+                height: "400px",
+                boxShadow: "1",
+                backgroundColor: "white",
+                borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <HourglassDisabledIcon
+                sx={{ fontSize: "2rem", marginBottom: "2rem" }}
+              />
+              <Typography sx={{ fontSize: "25px", color: "var(--main-color)" }}>
+                {lang === "ar" ? "لا يوجد بيانات" : "there is no Ads"}
+              </Typography>
+            </Box>
+          )}
         </Box>
       </>
     </Box>

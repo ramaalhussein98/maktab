@@ -20,6 +20,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FiveStars from "../details_lg_components/FiveStars";
 import DetailsAppoiment from "./DetailsAppoiment";
 import { useTranslation } from "react-i18next";
+import MapModal from "../MapModal";
 
 // Define your custom theme
 const theme = createTheme({
@@ -63,7 +64,10 @@ const DetailsXsTabs = ({ adInfo }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const modalRef = useRef(null);
   const userToken = localStorage.getItem("user_token");
-
+  const [modalMapOpen, setModalMapOpen] = useState(false);
+  const handleMapCloseModal = () => {
+    setModalMapOpen(false);
+  };
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
@@ -355,22 +359,31 @@ const DetailsXsTabs = ({ adInfo }) => {
                 {/* <Button sx={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "16px" }}>
                   {t("details_page.details_tabs.location_and_map_tab.desc")}
                 </Button> */}
-                <Box sx={{ marginTop: "1rem" }}>
-                  <Link
+                <Box
+                  sx={{ marginTop: "1rem" }}
+                  onClick={() => setModalMapOpen(true)}
+                >
+                  {/* <Link
                     href={`https://www.google.com/maps/dir/My+Location/${adInfo?.location?.lat},${adInfo?.location?.lng}/@${adInfo?.location?.lat},${adInfo?.location?.lng},12z/data=!3m1!4b1?entry=ttu`}
                     target="_blank"
-                  >
-                    <img
-                      src={Map}
-                      alt="map"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        borderRadius: "20px",
-                      }}
-                    />
-                  </Link>
+                  > */}
+                  <img
+                    src={Map}
+                    alt="map"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "20px",
+                    }}
+                  />
+                  {/* </Link> */}
                 </Box>
+                <MapModal
+                  lat={24.7136}
+                  lng={46.6753}
+                  open={modalMapOpen}
+                  onClose={handleMapCloseModal}
+                />
               </Box>
             )}
             {activeTab === 2 && (
